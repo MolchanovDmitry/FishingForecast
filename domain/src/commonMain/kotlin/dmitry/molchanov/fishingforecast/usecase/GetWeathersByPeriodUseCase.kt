@@ -1,0 +1,25 @@
+package dmitry.molchanov.fishingforecast.usecase
+
+import dmitry.molchanov.fishingforecast.model.MapPoint
+import dmitry.molchanov.fishingforecast.model.WeatherData
+import dmitry.molchanov.fishingforecast.utils.UnixTime
+import dmitry.molchanov.fishingforecast.utils.ioDispatcher
+import kotlinx.coroutines.withContext
+
+/**
+ * Получить список погодных показаний за период.
+ */
+class GetWeathersByPeriodUseCase(
+    private val getSavedWeatherDataUseCase: GetSavedWeatherDataUseCase
+) {
+
+    /**
+     * @param mapPoint точка на карте.
+     * @param from начиная с какой даты смотреть.
+     * @param to до какой даты смотреть.
+     */
+    suspend fun execute(mapPoint: MapPoint, from: UnixTime, to: UnixTime): List<WeatherData> =
+        withContext(ioDispatcher) {
+            getSavedWeatherDataUseCase.execute(mapPoint, from, to)
+        }
+}
