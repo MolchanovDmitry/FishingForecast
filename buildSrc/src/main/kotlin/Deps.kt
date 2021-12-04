@@ -40,6 +40,29 @@ object Deps {
     const val androidx_leanback_preference = "androidx.leanback:leanback-preference:1.1.0-beta01"
     const val exo_tv_extension = "com.google.android.exoplayer:extension-leanback:2.14.1"
 
+    /* Compose */
+    const val compose_version = "1.0.5"
+
+    const val compose_activity = "androidx.activity:activity-compose:1.3.1"
+    const val compose_ui = "androidx.compose.ui:ui:$compose_version"
+
+    // Tooling support (Previews, etc.)
+    const val compose_ui_tooling = "androidx.compose.ui:ui-tooling:$compose_version"
+
+    // Foundation (Border, Background, Box, Image, Scroll, shapes, animations, etc.)
+    const val compose_foundation = "androidx.compose.foundation:foundation:$compose_version"
+
+    // Material Design
+    const val compose_material = "androidx.compose.material:material:$compose_version"
+
+    // Material design icons
+    const val compose_icons_core = "androidx.compose.material:material-icons-core:$compose_version"
+    const val compose_icons_extended =
+        "androidx.compose.material:material-icons-extended:$compose_version"
+
+    // Integration with ViewModels
+    const val compose_view_model = "androidx.lifecycle:lifecycle-viewmodel-compose:2.4.0"
+
     // Unit test
     const val junit = "junit:junit:4.13.2"
     const val mockito_core = "org.mockito:mockito-core:4.1.0"
