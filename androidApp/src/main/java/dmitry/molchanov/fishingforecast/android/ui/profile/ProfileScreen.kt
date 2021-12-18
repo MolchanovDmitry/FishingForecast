@@ -50,7 +50,7 @@ fun ProfileScreen(vm: MainViewModel) {
                     openCreateDialog.value = true
                 }
         )
-        CreateProfileDialog(openCreateDialog) { profileName ->
+        CreateProfileDialog(openCreateDialog, profiles) { profileName ->
             vm.onEvent(CreateProfile(profileName))
         }
     }

@@ -8,12 +8,18 @@ import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun CreateProfileDialog(openDialog: MutableState<Boolean>, profileTyped: (String) -> Unit) {
+fun CreateProfileDialog(
+    openDialog: MutableState<Boolean>,
+    profiles: List<String>,
+    profileTyped: (String) -> Unit
+) {
     var profileEdit by remember { mutableStateOf("") }
+    var checkText by remember { mutableStateOf("Пустой профиль") }
 
     if (openDialog.value) {
         AlertDialog(
@@ -33,8 +39,16 @@ fun CreateProfileDialog(openDialog: MutableState<Boolean>, profileTyped: (String
                     )
                     TextField(
                         value = profileEdit,
-                        onValueChange = { profileEdit = it }
+                        onValueChange = {
+                            profileEdit = it
+                            checkText = when {
+                                it.isEmpty() -> "Пустой профиль"
+                                it in profiles -> "Профиль уже создан"
+                                else -> ""
+                            }
+                        }
                     )
+                    Text(checkText, color = Color.Red)
                 }
             },
             buttons = {
@@ -59,8 +73,10 @@ fun CreateProfileDialog(openDialog: MutableState<Boolean>, profileTyped: (String
                         modifier = Modifier
                             .padding(8.dp)
                             .clickable {
-                                openDialog.value = false
-                                profileTyped(profileEdit)
+                                if(checkText.isEmpty()) {
+                                    openDialog.value = false
+                                    profileTyped(profileEdit)
+                                }
                             }
                     )
                 }
