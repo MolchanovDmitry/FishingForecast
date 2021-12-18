@@ -66,4 +66,7 @@ data class MainViewState(
 
 sealed class Event
 
+class CreateProfile(val name: String): Event()
+class SelectProfile(val name: String): Event()
+class DeleteProfile(val name: String): Event()
 data class SavePoint(val latitude: Double, val longitude: Double) : Event()

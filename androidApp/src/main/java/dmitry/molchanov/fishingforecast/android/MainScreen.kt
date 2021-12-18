@@ -9,6 +9,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import dmitry.molchanov.fishingforecast.android.ui.profile.ProfileScreen
 
 @Composable
 fun MainScreen(vm: MainViewModel) {
@@ -29,7 +30,7 @@ fun MainScreen(vm: MainViewModel) {
                         label = { Text(navItem.label) },
                         selected = currentDestination?.route == navItem.label,
                         onClick = {
-
+                            navController.navigate(navItem.destination.label)
                         }
                     )
                 }
@@ -43,6 +44,9 @@ fun MainScreen(vm: MainViewModel) {
         ) {
             composable(Screens.MAP.label) {
                 MapScreen(vm)
+            }
+            composable(Screens.PROFILE.label) {
+                ProfileScreen(vm)
             }
         }
     }
