@@ -24,7 +24,7 @@ object Deps {
 
     // Lifecycle
     const val androidx_lifecycle_runtime_ktx =
-        "androidx.lifecycle:lifecycle-runtime-ktx:2.4.0-alpha03"
+        "androidx.lifecycle:lifecycle-runtime-ktx:2.4.0"
     const val androidx_lifecycle_viewmodel_ktx =
         "androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.0-alpha03"
 
@@ -35,10 +35,13 @@ object Deps {
     // Leak canary
     const val leak_canary = "com.squareup.leakcanary:leakcanary-android:2.7"
 
-    // Tv
-    const val androidx_leanback = "androidx.leanback:leanback:1.0.0"
-    const val androidx_leanback_preference = "androidx.leanback:leanback-preference:1.1.0-beta01"
-    const val exo_tv_extension = "com.google.android.exoplayer:extension-leanback:2.14.1"
+    // map
+    const val play_services_maps = "com.google.android.gms:play-services-maps:18.0.0"
+
+    // for custom marker
+    const val maps_utils = "com.google.maps.android:android-maps-utils-v3:2.3.0"
+
+    const val maps_v3 = "com.google.maps.android:maps-v3-ktx:2.2.0"
 
     /* Compose */
     const val compose_version = "1.0.5"
@@ -69,6 +72,6 @@ object Deps {
     const val mockito_inline = "org.mockito:mockito-inline:4.1.0"
     const val robolectric = "org.robolectric:robolectric:4.5.1"
     const val androidx_test_core_ktx = "androidx.test:core-ktx:1.3.0"
-    const val mock_web_server =  "com.squareup.okhttp3:mockwebserver:4.3.1"
+    const val mock_web_server = "com.squareup.okhttp3:mockwebserver:4.3.1"
     const val coroutine_test = "org.jetbrains.kotlinx:kotlinx-coroutines-test:1.4.2"
 }
