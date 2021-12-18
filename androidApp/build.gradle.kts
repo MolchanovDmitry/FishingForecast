@@ -66,4 +66,6 @@ dependencies {
     implementation(Deps.compose_icons_core)
     implementation(Deps.compose_icons_extended)
     implementation(Deps.compose_view_model)
+    implementation("androidx.navigation:navigation-compose:2.4.0-beta02")
+    //implementation("androidx.navigation:navigation-runtime-ktx:2.3.5")
 }

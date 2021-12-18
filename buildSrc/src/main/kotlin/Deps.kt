@@ -66,6 +66,7 @@ object Deps {
     // Integration with ViewModels
     const val compose_view_model = "androidx.lifecycle:lifecycle-viewmodel-compose:2.4.0"
 
+
     // Unit test
     const val junit = "junit:junit:4.13.2"
     const val mockito_core = "org.mockito:mockito-core:4.1.0"
