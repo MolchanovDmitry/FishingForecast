@@ -2,22 +2,21 @@ package dmitry.molchanov.data
 
 import com.squareup.sqldelight.runtime.coroutines.asFlow
 import com.squareup.sqldelight.runtime.coroutines.mapToList
-import dmitry.molchanov.db.AppDatabase
+import dmitry.molchanov.db.ProfileQueries
 import dmitry.molchanov.fishingforecast.model.Profile
 import dmitry.molchanov.fishingforecast.repository.ProfileRepository
 import kotlinx.coroutines.flow.Flow
 
-class ProfileRepositoryImpl(private val dataBase: AppDatabase) : ProfileRepository {
+class ProfileRepositoryImpl(private val profileQueries: ProfileQueries) : ProfileRepository {
 
     override fun getProfilesFlow(): Flow<List<String>> =
-        dataBase.dbSampleQueries.selectAll().asFlow().mapToList()
+        profileQueries.selectAll().asFlow().mapToList()
 
 
     override suspend fun createProfile(profile: Profile) {
         runCatching {
-            dataBase.dbSampleQueries.insert(dmitry.molchanov.db.Profile(profile.name))
+            profileQueries.insert(dmitry.molchanov.db.Profile(profile.name))
         }
-
     }
 
     override suspend fun fetchCurrentProfile(): Profile {
@@ -29,6 +28,6 @@ class ProfileRepositoryImpl(private val dataBase: AppDatabase) : ProfileReposito
     }
 
     override suspend fun deleteProfile(profile: Profile) {
-        dataBase.dbSampleQueries.delete(profile.name)
+        profileQueries.delete(profile.name)
     }
 }

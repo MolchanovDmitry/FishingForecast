@@ -11,10 +11,11 @@ import dmitry.molchanov.db.AppDatabase
 import dmitry.molchanov.fishingforecast.model.MapPoint
 import dmitry.molchanov.fishingforecast.model.Profile
 import dmitry.molchanov.fishingforecast.usecase.*
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
+@ExperimentalCoroutinesApi
 class MainViewModel(
     private val saveMapPointUseCase: SaveMapPointUseCase,
     private val getMapPointsUseCase: GetMapPointsUseCase,
@@ -27,16 +28,14 @@ class MainViewModel(
     val state: StateFlow<MainViewState> = _state.asStateFlow()
 
     init {
-
-        getProfilesUseCase
-            .execute()
-            .map {
-                // TODO слить 2 flow в будущем.
-                it to getMapPointsUseCase.execute()
-            }
-            .flowOn(Dispatchers.IO)
+        getMapPointsUseCase.execute()
             .onEach {
-                _state.value = MainViewState(it.second, it.first)
+                _state.value = state.value.copy(mapPoints = it)
+            }
+            .launchIn(viewModelScope)
+        getProfilesUseCase.execute()
+            .onEach {
+                _state.value = state.value.copy(profiles = it)
             }.launchIn(viewModelScope)
     }
 
@@ -53,7 +52,12 @@ class MainViewModel(
         viewModelScope.launch {
             saveMapPointUseCase.execute(
                 Profile(""),
-                MapPoint("", latitude = event.latitude, longitude = event.longitude)
+                MapPoint(
+                    "",
+                    profileName = "",
+                    latitude = event.latitude,
+                    longitude = event.longitude
+                )
             )
         }
     }
@@ -81,8 +85,8 @@ class MainViewModelFactory(private val context: Context) : ViewModelProvider.Fac
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         val driver = DriverFactory(context.applicationContext).createDriver()
         val database = AppDatabase(driver)
-        val mapPointRepository = MapPointRepositoryImpl()
-        val profileRepository = ProfileRepositoryImpl(database)
+        val mapPointRepository = MapPointRepositoryImpl(database.mapPointQueries)
+        val profileRepository = ProfileRepositoryImpl(database.profileQueries)
         val saveMapPointUseCase = SaveMapPointUseCase(mapPointRepository)
         val getMapPointsUseCase = GetMapPointsUseCase(mapPointRepository)
         val getProfileUseCase = GetProfilesUseCase(profileRepository)
