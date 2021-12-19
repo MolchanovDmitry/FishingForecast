@@ -10,7 +10,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.PersonAddAlt
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -23,7 +23,8 @@ import dmitry.molchanov.fishingforecast.android.SelectProfile
 
 @Composable
 fun ProfileScreen(vm: MainViewModel) {
-    val profiles by remember { mutableStateOf(listOf("Profile 1", "Profile 2")) }
+    val state = vm.state.collectAsState()
+    val profiles = state.value.profiles
     val openCreateDialog = remember { mutableStateOf(false) }
     Box(
         modifier = Modifier.fillMaxSize()

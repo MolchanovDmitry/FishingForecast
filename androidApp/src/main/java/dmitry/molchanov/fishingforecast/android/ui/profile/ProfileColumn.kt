@@ -65,7 +65,7 @@ fun ProfileColumn(
                     imageVector = Icons.Filled.Delete,
                     contentDescription = null,
                     tint = MaterialTheme.colors.primary,
-                    modifier = Modifier.clickable {  }
+                    modifier = Modifier.clickable { deleteOption(item)  }
                 )
             }
             Divider(
