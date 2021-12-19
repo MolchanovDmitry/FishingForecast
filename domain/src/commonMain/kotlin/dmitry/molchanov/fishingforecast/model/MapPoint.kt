@@ -3,8 +3,9 @@ package dmitry.molchanov.fishingforecast.model
 /**
  * Точка на карте.
  */
-class MapPoint(
+data class MapPoint(
     val name: String,
-    val latitude: Long,
-    val longitude: Long
+    val profileName: String,
+    val latitude: Double,
+    val longitude: Double
 )

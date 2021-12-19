@@ -1,0 +1,15 @@
+CREATE TABLE Profile(
+    name TEXT NOT NULL PRIMARY KEY
+);
+
+selectAll:
+SELECT *
+FROM Profile;
+
+insert:
+INSERT INTO Profile(name)
+VALUES ?;
+
+delete:
+DELETE FROM Profile
+WHERE name = ?;

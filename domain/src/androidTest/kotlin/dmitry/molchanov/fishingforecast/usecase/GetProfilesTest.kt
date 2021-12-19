@@ -17,6 +17,6 @@ class GetProfilesTest {
     @Test
     fun execute(): Unit = runBlocking {
         getProfilesUseCase.execute()
-        verify(profileRepository).fetchProfile()
+        verify(profileRepository).fetchProfiles()
     }
 }
