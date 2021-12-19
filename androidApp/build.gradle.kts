@@ -44,33 +44,31 @@ android {
 }
 
 dependencies {
-    implementation(project(":data"))
-    implementation(project(":domain"))
+    listOf(
+        project(":data"),
+        project(":domain"),
 
-    implementation("com.google.android.material:material:1.4.0")
-    implementation("androidx.appcompat:appcompat:1.4.0")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.2")
+        Deps.material,
+        Deps.androidx_appcompat,
+        Deps.coroutines_android,
 
-    implementation(Deps.androidx_lifecycle_runtime_ktx)
+        Deps.androidx_lifecycle_runtime_ktx,
 
-    implementation(Deps.play_services_maps)
-    implementation(Deps.maps_utils)
-    //implementation(Deps.maps_v3)
-    implementation("com.google.maps.android:maps-ktx:3.0.0")
-    //implementation("com.google.maps.android:maps-utils-ktx:3.0.0")
+        Deps.play_services_maps,
+        Deps.maps_utils,
+        Deps.maps_ktx,
 
-    implementation(Deps.compose_activity)
-    implementation(Deps.compose_ui)
-    implementation(Deps.compose_ui_tooling)
-    implementation(Deps.compose_foundation)
-    implementation(Deps.compose_material)
-    implementation(Deps.compose_icons_core)
-    implementation(Deps.compose_icons_extended)
-    implementation(Deps.compose_view_model)
-    implementation("androidx.navigation:navigation-compose:2.4.0-beta02")
-    //implementation("androidx.navigation:navigation-runtime-ktx:2.3.5")
+        Deps.compose_activity,
+        Deps.compose_ui,
+        Deps.compose_ui_tooling,
+        Deps.compose_foundation,
+        Deps.compose_material,
+        Deps.compose_icons_core,
+        Deps.compose_icons_extended,
+        Deps.compose_view_model,
+        Deps.compose_navigation,
 
-    val koin_version = "3.1.4"
-    implementation("io.insert-koin:koin-core:$koin_version")
-    implementation ("io.insert-koin:koin-android:$koin_version")
+        Deps.koin_core,
+        Deps.koin_android,
+    ).forEach(::implementation)
 }

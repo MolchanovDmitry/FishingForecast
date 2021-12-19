@@ -14,6 +14,8 @@ object Deps {
     // kotlinx
     const val coroutines_android = "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.0"
     const val serialization_json = "org.jetbrains.kotlinx:kotlinx-serialization-json:1.2.2"
+    const val coroutines_core = "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.2-native-mt"
+    const val coroutines_core_serialization = "org.jetbrains.kotlinx:kotlinx-serialization-core:1.3.1"
 
     // Video player
     const val exo_player = "com.google.android.exoplayer:exoplayer:2.14.1"
@@ -40,6 +42,7 @@ object Deps {
 
     // for custom marker
     const val maps_utils = "com.google.maps.android:android-maps-utils-v3:2.3.0"
+    const val maps_ktx = "com.google.maps.android:maps-ktx:3.0.0"
 
     const val maps_v3 = "com.google.maps.android:maps-v3-ktx:2.2.0"
 
@@ -65,6 +68,13 @@ object Deps {
 
     // Integration with ViewModels
     const val compose_view_model = "androidx.lifecycle:lifecycle-viewmodel-compose:2.4.0"
+
+    const val compose_navigation = "androidx.navigation:navigation-compose:2.4.0-rc01"
+
+    //Koin
+    private const val koin_version = "3.1.4"
+    const val koin_core = "io.insert-koin:koin-core:$koin_version"
+    const val koin_android = "io.insert-koin:koin-android:$koin_version"
 
 
     // Unit test

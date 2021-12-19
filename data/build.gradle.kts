@@ -34,14 +34,13 @@ kotlin {
     }
 
     sourceSets {
-        val coroutinesVersion = "1.5.2-native-mt"
         val sqlDelightVersion = "1.5.3"
         val commonMain by getting {
             dependencies {
                 implementation(project(":domain"))
-                implementation("io.insert-koin:koin-core:3.1.4")
-                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion")
-                implementation("org.jetbrains.kotlinx:kotlinx-serialization-core:1.3.1")
+                implementation(Deps.koin_core)
+                implementation(Deps.coroutines_core)
+                implementation(Deps.coroutines_core_serialization)
                 implementation("com.squareup.sqldelight:runtime:$sqlDelightVersion")
                 implementation("com.squareup.sqldelight:coroutines-extensions:${sqlDelightVersion}")
             }
