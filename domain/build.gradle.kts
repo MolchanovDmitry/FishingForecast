@@ -24,6 +24,7 @@ kotlin {
         val commonMain by getting{
             val coroutinesVersion = "1.5.2-native-mt"
             dependencies{
+                implementation("io.insert-koin:koin-core:3.1.4")
                 implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.3.1")
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion")
                 implementation("org.jetbrains.kotlinx:kotlinx-serialization-core:1.3.1")

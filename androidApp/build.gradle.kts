@@ -3,6 +3,7 @@ import java.util.*
 plugins {
     id("com.android.application")
     kotlin("android")
+    kotlin("kapt")
 }
 
 val properties = Properties()
@@ -68,4 +69,8 @@ dependencies {
     implementation(Deps.compose_view_model)
     implementation("androidx.navigation:navigation-compose:2.4.0-beta02")
     //implementation("androidx.navigation:navigation-runtime-ktx:2.3.5")
+
+    val koin_version = "3.1.4"
+    implementation("io.insert-koin:koin-core:$koin_version")
+    implementation ("io.insert-koin:koin-android:$koin_version")
 }

@@ -1,25 +1,17 @@
 package dmitry.molchanov.fishingforecast.android
 
-import android.content.Context
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import dmitry.molchanov.data.DriverFactory
-import dmitry.molchanov.data.MapPointRepositoryImpl
-import dmitry.molchanov.data.ProfileRepositoryImpl
-import dmitry.molchanov.db.AppDatabase
 import dmitry.molchanov.fishingforecast.model.MapPoint
 import dmitry.molchanov.fishingforecast.model.Profile
 import dmitry.molchanov.fishingforecast.usecase.*
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
-@ExperimentalCoroutinesApi
 class MainViewModel(
+    getMapPointsUseCase: GetMapPointsUseCase,
+    getProfilesUseCase: GetProfilesUseCase,
     private val saveMapPointUseCase: SaveMapPointUseCase,
-    private val getMapPointsUseCase: GetMapPointsUseCase,
-    private val getProfilesUseCase: GetProfilesUseCase,
     private val saveProfileUseCase: SaveProfileUseCase,
     private val deleteProfileUseCase: DeleteProfileUseCase,
 ) : ViewModel() {
@@ -78,29 +70,6 @@ class MainViewModel(
             saveProfileUseCase.execute(Profile(name))
         }
     }
-}
-
-class MainViewModelFactory(private val context: Context) : ViewModelProvider.Factory {
-
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-        val driver = DriverFactory(context.applicationContext).createDriver()
-        val database = AppDatabase(driver)
-        val mapPointRepository = MapPointRepositoryImpl(database.mapPointQueries)
-        val profileRepository = ProfileRepositoryImpl(database.profileQueries)
-        val saveMapPointUseCase = SaveMapPointUseCase(mapPointRepository)
-        val getMapPointsUseCase = GetMapPointsUseCase(mapPointRepository)
-        val getProfileUseCase = GetProfilesUseCase(profileRepository)
-        val createProfileUseCase = SaveProfileUseCase(profileRepository)
-        val deleteProfileUseCase = DeleteProfileUseCase(profileRepository)
-        return MainViewModel(
-            saveMapPointUseCase,
-            getMapPointsUseCase,
-            getProfileUseCase,
-            createProfileUseCase,
-            deleteProfileUseCase
-        ) as T
-    }
-
 }
 
 data class MainViewState(

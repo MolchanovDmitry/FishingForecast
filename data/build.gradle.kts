@@ -39,6 +39,7 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 implementation(project(":domain"))
+                implementation("io.insert-koin:koin-core:3.1.4")
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion")
                 implementation("org.jetbrains.kotlinx:kotlinx-serialization-core:1.3.1")
                 implementation("com.squareup.sqldelight:runtime:$sqlDelightVersion")

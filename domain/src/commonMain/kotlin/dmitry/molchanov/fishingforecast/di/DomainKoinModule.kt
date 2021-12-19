@@ -1,0 +1,52 @@
+package dmitry.molchanov.fishingforecast.di
+
+import dmitry.molchanov.fishingforecast.usecase.*
+import org.koin.dsl.module
+
+val domainKoinModule = module {
+
+    factory<DeleteProfileUseCase> {
+        DeleteProfileUseCase(profileRepository = get())
+    }
+
+    factory<GetCurrentWeatherDataUseCase> {
+        GetCurrentWeatherDataUseCase(yandexWeatherRepository = get())
+    }
+
+    factory<GetForecastUseCase> {
+        GetForecastUseCase()
+    }
+
+    factory<GetMapPointsUseCase> {
+        GetMapPointsUseCase(mapPointRepository = get())
+    }
+
+    factory<GetProfileForecastSettingsUseCase> {
+        GetProfileForecastSettingsUseCase(forecastSettingsRepository = get())
+    }
+
+    factory<GetProfilesUseCase> {
+        GetProfilesUseCase(profileRepository = get())
+    }
+
+    factory<GetSavedWeatherDataUseCase> {
+        GetSavedWeatherDataUseCase(weatherDataRepository = get())
+    }
+
+    factory<SaveForecastSettingMarkUseCase> {
+        SaveForecastSettingMarkUseCase(repository = get())
+    }
+
+    factory<SaveMapPointUseCase> {
+        SaveMapPointUseCase(repository = get())
+    }
+
+    factory<SaveProfileUseCase> {
+        SaveProfileUseCase(profileRepository = get())
+    }
+
+    factory<SaveWeatherDataUseCase> {
+        SaveWeatherDataUseCase(repository = get())
+    }
+
+}
