@@ -1,4 +1,4 @@
-package dmitry.molchanov.fishingforecast.android
+package dmitry.molchanov.fishingforecast.android.ui
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Map

@@ -18,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import dmitry.molchanov.fishingforecast.android.*
+import dmitry.molchanov.fishingforecast.model.Profile
 
 @Composable
 fun ProfileScreen(vm: MainViewModel) {
@@ -38,10 +39,10 @@ fun ProfileScreen(vm: MainViewModel) {
             radioOptions = profiles,
             defaultOption = state.value.currentProfile.name,
             deleteOption = { profileName ->
-                vm.onEvent(DeleteProfile(profileName))
+                vm.onEvent(DeleteProfile(Profile(profileName)))
             },
             onOptionSelected = { profileName ->
-                vm.onEvent(SelectProfile(profileName))
+                vm.onEvent(SelectProfile(Profile(profileName)))
             }
         )
         Icon(
@@ -57,7 +58,7 @@ fun ProfileScreen(vm: MainViewModel) {
                 }
         )
         CreateProfileDialog(openCreateDialog, profiles) { profileName ->
-            vm.onEvent(CreateProfile(profileName))
+            vm.onEvent(CreateProfile(Profile(profileName)))
         }
     }
 }

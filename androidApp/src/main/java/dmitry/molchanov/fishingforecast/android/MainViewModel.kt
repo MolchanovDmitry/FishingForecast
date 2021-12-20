@@ -63,22 +63,22 @@ class MainViewModel(
         }
     }
 
-    private fun selectProfile(name: String) {
+    private fun selectProfile(name: Profile) {
         viewModelScope.launch {
-            selectProfileUseCase.execute(Profile(name))
+            selectProfileUseCase.execute(name)
         }
     }
 
-    private fun deleteProfile(name: String) {
+    private fun deleteProfile(name: Profile) {
         viewModelScope.launch {
-            deleteProfileUseCase.execute(Profile(name))
+            deleteProfileUseCase.execute(name)
         }
 
     }
 
-    private fun createProfile(name: String) {
+    private fun createProfile(name: Profile) {
         viewModelScope.launch {
-            saveProfileUseCase.execute(Profile(name))
+            saveProfileUseCase.execute(name)
         }
     }
 }
@@ -92,7 +92,12 @@ data class MainViewState(
 
 sealed class Event
 
-class CreateProfile(val name: String) : Event()
-class SelectProfile(val name: String) : Event()
-class DeleteProfile(val name: String) : Event()
-data class SavePoint(val latitude: Double, val longitude: Double) : Event()
+class CreateProfile(val name: Profile) : Event()
+class SelectProfile(val name: Profile) : Event()
+class DeleteProfile(val name: Profile) : Event()
+data class SavePoint(
+    val title: String,
+    val profile: Profile,
+    val latitude: Double,
+    val longitude: Double
+) : Event()
