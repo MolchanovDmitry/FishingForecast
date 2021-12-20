@@ -1,5 +1,7 @@
 package dmitry.molchanov.data.di
 
+import com.russhwolf.settings.ObservableSettings
+import dmitry.molchanov.data.AppSettings
 import dmitry.molchanov.data.DriverFactory
 import dmitry.molchanov.db.AppDatabase
 import dmitry.molchanov.db.MapPointQueries
@@ -18,6 +20,10 @@ actual val dataPlatformModule = module {
 
     single<ProfileQueries> {
         get<AppDatabase>().profileQueries
+    }
+
+    single<ObservableSettings> {
+        AppSettings(context = get()).settings
     }
 
 }

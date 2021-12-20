@@ -14,7 +14,7 @@ val dataCommonKoinModule = module {
     }
 
     single<ProfileRepository> {
-        ProfileRepositoryImpl(profileQueries = get())
+        ProfileRepositoryImpl(profileQueries = get(), appSettings = get())
     }
 
 }

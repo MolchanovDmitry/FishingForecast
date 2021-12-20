@@ -49,4 +49,12 @@ val domainKoinModule = module {
         SaveWeatherDataUseCase(repository = get())
     }
 
+    factory<SelectProfileUseCase> {
+        SelectProfileUseCase(profileRepository = get())
+    }
+
+    factory<GetCurrentProfileUseCase> {
+        GetCurrentProfileUseCase(profileRepository = get())
+    }
+
 }

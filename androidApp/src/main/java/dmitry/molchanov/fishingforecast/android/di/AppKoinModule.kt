@@ -13,6 +13,8 @@ val appKoinModule = module {
             getProfilesUseCase = get(),
             saveProfileUseCase = get(),
             deleteProfileUseCase = get(),
+            selectProfileUseCase = get(),
+            getCurrentProfileUseCase = get()
         )
     }
 }

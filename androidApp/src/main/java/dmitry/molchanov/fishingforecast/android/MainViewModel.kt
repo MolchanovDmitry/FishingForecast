@@ -4,19 +4,22 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dmitry.molchanov.fishingforecast.model.MapPoint
 import dmitry.molchanov.fishingforecast.model.Profile
+import dmitry.molchanov.fishingforecast.model.commonProfile
 import dmitry.molchanov.fishingforecast.usecase.*
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
 class MainViewModel(
-    getMapPointsUseCase: GetMapPointsUseCase,
     getProfilesUseCase: GetProfilesUseCase,
+    getMapPointsUseCase: GetMapPointsUseCase,
+    getCurrentProfileUseCase: GetCurrentProfileUseCase,
     private val saveMapPointUseCase: SaveMapPointUseCase,
     private val saveProfileUseCase: SaveProfileUseCase,
     private val deleteProfileUseCase: DeleteProfileUseCase,
+    private val selectProfileUseCase: SelectProfileUseCase,
 ) : ViewModel() {
 
-    private val _state = MutableStateFlow(MainViewState(emptyList(), emptyList()))
+    private val _state = MutableStateFlow(MainViewState())
     val state: StateFlow<MainViewState> = _state.asStateFlow()
 
     init {
@@ -29,6 +32,12 @@ class MainViewModel(
             .onEach {
                 _state.value = state.value.copy(profiles = it)
             }.launchIn(viewModelScope)
+
+        getCurrentProfileUseCase.execute()
+            .onEach {
+                _state.value = state.value.copy(currentProfile = it)
+            }
+            .launchIn(viewModelScope)
     }
 
     fun onEvent(event: Event) {
@@ -55,7 +64,9 @@ class MainViewModel(
     }
 
     private fun selectProfile(name: String) {
-
+        viewModelScope.launch {
+            selectProfileUseCase.execute(Profile(name))
+        }
     }
 
     private fun deleteProfile(name: String) {
@@ -73,9 +84,11 @@ class MainViewModel(
 }
 
 data class MainViewState(
-    val mapPoints: List<MapPoint>,
-    val profiles: List<String>
+    val currentProfile: Profile = commonProfile,
+    val mapPoints: List<MapPoint> = emptyList(),
+    val profiles: List<Profile> = emptyList()
 )
+
 
 sealed class Event
 

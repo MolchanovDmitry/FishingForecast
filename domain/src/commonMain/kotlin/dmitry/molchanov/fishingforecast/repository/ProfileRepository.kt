@@ -5,13 +5,13 @@ import kotlinx.coroutines.flow.Flow
 
 interface ProfileRepository {
 
-    fun getProfilesFlow(): Flow<List<String>>
+    fun getProfilesFlow(): Flow<List<Profile>>
+
+    val currentProfileFlow: Flow<Profile>
 
     suspend fun createProfile(profile: Profile)
 
-    suspend fun fetchCurrentProfile(): Profile
-
-    suspend fun saveCurrentProfile(profile: Profile)
+    suspend fun setCurrentProfile(profile: Profile)
 
     suspend fun deleteProfile(profile: Profile)
 }
