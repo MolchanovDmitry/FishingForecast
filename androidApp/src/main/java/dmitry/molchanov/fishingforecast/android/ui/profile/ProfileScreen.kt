@@ -15,28 +15,34 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import dmitry.molchanov.fishingforecast.android.CreateProfile
-import dmitry.molchanov.fishingforecast.android.DeleteProfile
-import dmitry.molchanov.fishingforecast.android.MainViewModel
-import dmitry.molchanov.fishingforecast.android.SelectProfile
+import dmitry.molchanov.fishingforecast.android.*
+import dmitry.molchanov.fishingforecast.model.Profile
 
 @Composable
 fun ProfileScreen(vm: MainViewModel) {
     val state = vm.state.collectAsState()
-    val profiles = state.value.profiles
+    val profiles = state.value.profiles.map {
+        if (it.name.isEmpty()) {
+            stringResource(R.string.common_profile)
+        } else {
+            it.name
+        }
+    }
+
     val openCreateDialog = remember { mutableStateOf(false) }
     Box(
         modifier = Modifier.fillMaxSize()
     ) {
         ProfileColumn(
             radioOptions = profiles,
-            defaultOption = "Profile 1",
+            defaultOption = state.value.currentProfile.name,
             deleteOption = { profileName ->
-                vm.onEvent(DeleteProfile(profileName))
+                vm.onEvent(DeleteProfile(Profile(profileName)))
             },
             onOptionSelected = { profileName ->
-                vm.onEvent(SelectProfile(profileName))
+                vm.onEvent(SelectProfile(Profile(profileName)))
             }
         )
         Icon(
@@ -52,7 +58,7 @@ fun ProfileScreen(vm: MainViewModel) {
                 }
         )
         CreateProfileDialog(openCreateDialog, profiles) { profileName ->
-            vm.onEvent(CreateProfile(profileName))
+            vm.onEvent(CreateProfile(Profile(profileName)))
         }
     }
 }

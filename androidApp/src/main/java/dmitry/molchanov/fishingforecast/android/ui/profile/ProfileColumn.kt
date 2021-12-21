@@ -22,8 +22,8 @@ import androidx.compose.ui.unit.sp
 @Preview
 @Composable
 fun ProfileColumn(
-    radioOptions: List<String> = listOf("Red", "Green", "Blue"),
-    defaultOption: String = "Green",
+    radioOptions: List<String> = listOf("Profile1", "Profile2", "Profile3"),
+    defaultOption: String = "Profile2",
     onOptionSelected: (String) -> Unit = {},
     deleteOption: (String) -> Unit = {}
 ) {

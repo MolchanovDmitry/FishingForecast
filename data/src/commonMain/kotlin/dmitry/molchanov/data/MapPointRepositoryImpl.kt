@@ -4,7 +4,6 @@ import com.squareup.sqldelight.runtime.coroutines.asFlow
 import com.squareup.sqldelight.runtime.coroutines.mapToList
 import dmitry.molchanov.db.MapPointQueries
 import dmitry.molchanov.fishingforecast.model.MapPoint
-import dmitry.molchanov.fishingforecast.model.Profile
 import dmitry.molchanov.fishingforecast.repository.MapPointRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -19,7 +18,7 @@ class MapPointRepositoryImpl(private val mapPointQueries: MapPointQueries) : Map
             .map(::mapDataMapPointsToDomain)
     }
 
-    override suspend fun saveMapPoint(profile: Profile, mapPoint: MapPoint) {
+    override suspend fun saveMapPoint(mapPoint: MapPoint) {
         mapPointQueries.insert(mapPoint.mapToData())
     }
 

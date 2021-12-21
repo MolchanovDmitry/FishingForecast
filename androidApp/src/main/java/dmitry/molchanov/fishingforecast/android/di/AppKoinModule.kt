@@ -11,8 +11,10 @@ val appKoinModule = module {
             saveMapPointUseCase = get(),
             getMapPointsUseCase = get(),
             getProfilesUseCase = get(),
-            saveProfileUseCase = get(),
-            deleteProfileUseCase = get(),
+            //saveProfileUseCase = get(),
+            deleteProfileUseCase = inject() ,
+            selectProfileUseCase = inject(),
+            //getCurrentProfileUseCase = get()
         )
     }
 }

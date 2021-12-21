@@ -9,6 +9,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import dmitry.molchanov.fishingforecast.android.ui.NavItem
+import dmitry.molchanov.fishingforecast.android.ui.Screens
+import dmitry.molchanov.fishingforecast.android.ui.map.MapScreen
 import dmitry.molchanov.fishingforecast.android.ui.profile.ProfileScreen
 
 @Composable

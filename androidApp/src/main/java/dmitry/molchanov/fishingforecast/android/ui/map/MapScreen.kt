@@ -1,4 +1,4 @@
-package dmitry.molchanov.fishingforecast.android
+package dmitry.molchanov.fishingforecast.android.ui.map
 
 import android.os.Bundle
 import androidx.compose.foundation.background
@@ -10,6 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.Lifecycle.Event
 import androidx.lifecycle.LifecycleEventObserver
@@ -19,6 +20,10 @@ import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.maps.android.ktx.awaitMap
+import dmitry.molchanov.fishingforecast.android.MainViewModel
+import dmitry.molchanov.fishingforecast.android.MainViewState
+import dmitry.molchanov.fishingforecast.android.R
+import dmitry.molchanov.fishingforecast.android.SavePoint
 import kotlinx.coroutines.launch
 
 
@@ -38,21 +43,20 @@ fun MapScreen(vm: MainViewModel) {
 @Composable
 fun MapView(state: State<MainViewState>, vm: MainViewModel) {
     val mapView = rememberMapViewWithLifecycle()
-    var map by remember { mutableStateOf<GoogleMap?>(null) }
     val coroutineScope = rememberCoroutineScope()
+    var map by remember { mutableStateOf<GoogleMap?>(null) }
+    val isOpedDialog = remember { mutableStateOf(false) }
+    var longClickPoint by remember { mutableStateOf(Pair(0.0, 0.0)) }
     Box {
         AndroidView(factory = {
             coroutineScope.launch {
                 map = mapView.awaitMap()
                 map?.uiSettings?.isZoomControlsEnabled = true
                 map?.setOnMapLongClickListener {
-                    vm.onEvent(
-                        SavePoint(
-                            latitude = it.latitude,
-                            longitude = it.longitude
-                        )
-                    )
+                    longClickPoint = it.latitude to it.longitude
+                    isOpedDialog.value = true
                 }
+                map?.setOnMapClickListener(null)
                 state.value.mapPoints.lastOrNull()?.let {
                     val position = LatLng(it.latitude, it.longitude)
                     map?.moveCamera(CameraUpdateFactory.newLatLngZoom(position, 6f))
@@ -69,6 +73,22 @@ fun MapView(state: State<MainViewState>, vm: MainViewModel) {
             }
         })
     }
+    CreateMapPointDialog(
+        openDialog = isOpedDialog,
+        profiles = state.value.profiles.map {
+            if (it.name.isEmpty()) stringResource(R.string.common_profile) else it.name
+        },
+        createMapPoint = { title, profile ->
+            vm.onEvent(
+                SavePoint(
+                    title = title,
+                    profile = profile,
+                    latitude = longClickPoint.first,
+                    longitude = longClickPoint.second
+                )
+            )
+        }
+    )
 }
 
 @Composable
