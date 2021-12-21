@@ -5,8 +5,8 @@ import org.koin.dsl.module
 
 val domainKoinModule = module {
 
-    factory<DeleteProfileUseCase> {
-        DeleteProfileUseCase(profileRepository = get())
+    factory<Lazy<DeleteProfileUseCase>> {
+        lazy { DeleteProfileUseCase(profileRepository = get()) }
     }
 
     factory<GetCurrentWeatherDataUseCase> {

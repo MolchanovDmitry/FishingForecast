@@ -12,10 +12,10 @@ import kotlinx.coroutines.launch
 class MainViewModel(
     getProfilesUseCase: GetProfilesUseCase,
     getMapPointsUseCase: GetMapPointsUseCase,
-    getCurrentProfileUseCase: GetCurrentProfileUseCase,
+    //getCurrentProfileUseCase: GetCurrentProfileUseCase,
+    //private val saveProfileUseCase: SaveProfileUseCase,
     private val saveMapPointUseCase: SaveMapPointUseCase,
-    private val saveProfileUseCase: SaveProfileUseCase,
-    private val deleteProfileUseCase: DeleteProfileUseCase,
+    private val deleteProfileUseCase: Lazy<DeleteProfileUseCase>,
     private val selectProfileUseCase: SelectProfileUseCase,
 ) : ViewModel() {
 
@@ -23,19 +23,26 @@ class MainViewModel(
     val state: StateFlow<MainViewState> = _state.asStateFlow()
 
     init {
-        getMapPointsUseCase.execute()
+        val mapPointFlow = getMapPointsUseCase.execute()
+
+        /*getCurrentProfileUseCase.execute()
             .onEach {
-                _state.value = state.value.copy(mapPoints = it)
+                TODO("Разобраться, почему collect собирает невалидные данные")
+                _state.value = state.value.copy(
+                    currentProfile = it,
+                    mapPoints = mapPointFlow.last().let(::mapPointsByCurrentProfile)
+                )
             }
-            .launchIn(viewModelScope)
+            .launchIn(viewModelScope)*/
+
         getProfilesUseCase.execute()
             .onEach {
                 _state.value = state.value.copy(profiles = it)
             }.launchIn(viewModelScope)
 
-        getCurrentProfileUseCase.execute()
+        mapPointFlow
             .onEach {
-                _state.value = state.value.copy(currentProfile = it)
+                _state.value = state.value.copy(mapPoints = it)
             }
             .launchIn(viewModelScope)
     }
@@ -52,12 +59,11 @@ class MainViewModel(
     private fun saveMapPoint(event: SavePoint) {
         viewModelScope.launch {
             saveMapPointUseCase.execute(
-                Profile(""),
                 MapPoint(
-                    "",
-                    profileName = "",
+                    name = event.title,
                     latitude = event.latitude,
-                    longitude = event.longitude
+                    longitude = event.longitude,
+                    profileName = event.profile.name,
                 )
             )
         }
@@ -71,14 +77,14 @@ class MainViewModel(
 
     private fun deleteProfile(name: Profile) {
         viewModelScope.launch {
-            deleteProfileUseCase.execute(name)
+            deleteProfileUseCase.value.execute(name)
         }
 
     }
 
     private fun createProfile(name: Profile) {
         viewModelScope.launch {
-            saveProfileUseCase.execute(name)
+            //saveProfileUseCase.execute(name)
         }
     }
 }

@@ -30,7 +30,9 @@ class ProfileRepositoryImpl(
     }
 
     override suspend fun setCurrentProfile(profile: Profile) {
+        println("1488 setCurrentProfile = ${profile}")
         appSettings[PROFILE_FLOW] = profile.name
+        println("1488 setCurrentProfile after = ${appSettings.getString(PROFILE_FLOW)}")
     }
 
     override suspend fun deleteProfile(profile: Profile) {

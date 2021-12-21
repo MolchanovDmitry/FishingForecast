@@ -52,7 +52,6 @@ fun DropDown(
         ) {
             suggestions.forEachIndexed { index, label ->
                 DropdownMenuItem(onClick = {
-                    println("1488 index = ${index} label = ${label}")
                     onSelectIndex(index)
                     selectIndex = index
                     expanded.value = false

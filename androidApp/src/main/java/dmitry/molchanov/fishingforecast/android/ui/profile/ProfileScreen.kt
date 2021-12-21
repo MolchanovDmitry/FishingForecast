@@ -23,14 +23,15 @@ import dmitry.molchanov.fishingforecast.model.Profile
 @Composable
 fun ProfileScreen(vm: MainViewModel) {
     val state = vm.state.collectAsState()
+    println("1488 state = ${state.value.currentProfile}")
     val profiles = state.value.profiles.map {
         if (it.name.isEmpty()) {
             stringResource(R.string.common_profile)
         } else {
             it.name
         }
-
     }
+
     val openCreateDialog = remember { mutableStateOf(false) }
     Box(
         modifier = Modifier.fillMaxSize()

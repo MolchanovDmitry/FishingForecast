@@ -56,6 +56,7 @@ fun MapView(state: State<MainViewState>, vm: MainViewModel) {
                     longClickPoint = it.latitude to it.longitude
                     isOpedDialog.value = true
                 }
+                map?.setOnMapClickListener(null)
                 state.value.mapPoints.lastOrNull()?.let {
                     val position = LatLng(it.latitude, it.longitude)
                     map?.moveCamera(CameraUpdateFactory.newLatLngZoom(position, 6f))
