@@ -16,7 +16,7 @@ class MainViewModel(
     //private val saveProfileUseCase: SaveProfileUseCase,
     private val saveMapPointUseCase: SaveMapPointUseCase,
     private val deleteProfileUseCase: Lazy<DeleteProfileUseCase>,
-    private val selectProfileUseCase: SelectProfileUseCase,
+    private val selectProfileUseCase: Lazy<SelectProfileUseCase>,
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(MainViewState())
@@ -71,7 +71,7 @@ class MainViewModel(
 
     private fun selectProfile(name: Profile) {
         viewModelScope.launch {
-            selectProfileUseCase.execute(name)
+            selectProfileUseCase.value.execute(name)
         }
     }
 
