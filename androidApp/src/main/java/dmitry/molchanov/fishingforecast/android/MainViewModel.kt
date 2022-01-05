@@ -5,7 +5,6 @@ import androidx.lifecycle.viewModelScope
 import dmitry.molchanov.fishingforecast.model.ForecastSetting
 import dmitry.molchanov.fishingforecast.model.MapPoint
 import dmitry.molchanov.fishingforecast.model.Profile
-import dmitry.molchanov.fishingforecast.model.commonProfile
 import dmitry.molchanov.fishingforecast.usecase.*
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -13,8 +12,8 @@ import kotlinx.coroutines.launch
 class MainViewModel(
     getProfilesUseCase: GetProfilesUseCase,
     getMapPointsUseCase: GetMapPointsUseCase,
-    //getCurrentProfileUseCase: GetCurrentProfileUseCase,
-    //private val saveProfileUseCase: SaveProfileUseCase,
+    getCurrentProfileUseCase: GetCurrentProfileUseCase,
+    private val saveProfileUseCase: SaveProfileUseCase,
     private val saveMapPointUseCase: SaveMapPointUseCase,
     private val deleteProfileUseCase: Lazy<DeleteProfileUseCase>,
     private val selectProfileUseCase: Lazy<SelectProfileUseCase>,
@@ -24,27 +23,41 @@ class MainViewModel(
     private val _state = MutableStateFlow(MainViewState())
     val state: StateFlow<MainViewState> = _state.asStateFlow()
 
-    init {
-        val mapPointFlow = getMapPointsUseCase.execute()
+    private var allMapPoints: List<MapPoint> = emptyList()
 
-        /*getCurrentProfileUseCase.execute()
-            .onEach {
-                TODO("Разобраться, почему collect собирает невалидные данные")
-                _state.value = state.value.copy(
-                    currentProfile = it,
-                    mapPoints = mapPointFlow.last().let(::mapPointsByCurrentProfile)
-                )
+    init {
+
+        getCurrentProfileUseCase.execute()
+            .onEach { profile ->
+                _state.update { mainViewState ->
+                    mainViewState.copy(
+                        currentProfile = profile,
+                        mapPoints = if (profile.isCommon) {
+                            allMapPoints
+                        } else {
+                            allMapPoints.filter { it.profileName == profile.name }
+                        }
+                    )
+                }
             }
-            .launchIn(viewModelScope)*/
+            .launchIn(viewModelScope)
 
         getProfilesUseCase.execute()
-            .onEach {
-                _state.value = state.value.copy(profiles = it)
+            .onEach { profiles ->
+                _state.update { it.copy(profiles = profiles) }
             }.launchIn(viewModelScope)
 
-        mapPointFlow
-            .onEach {
-                _state.value = state.value.copy(mapPoints = it)
+        getMapPointsUseCase.execute()
+            .onEach { mapPoints ->
+                this.allMapPoints = mapPoints
+                _state.update { mainViewState ->
+                    mainViewState.copy(mapPoints =
+                    if (state.value.currentProfile.isCommon) {
+                        mapPoints
+                    } else {
+                        mapPoints.filter { it.profileName == state.value.currentProfile.name }
+                    })
+                }
             }
             .launchIn(viewModelScope)
     }
@@ -61,19 +74,20 @@ class MainViewModel(
 
     private fun saveForecastSettingMark(event: SaveForecastSettingMark) {
         viewModelScope.launch {
-            saveForecastSettingMarkUseCase.value.execute(Profile(""), event.forecastSetting)
+            saveForecastSettingMarkUseCase.value.execute(
+                profile = state.value.currentProfile,
+                forecastSetting = event.forecastSetting
+            )
         }
     }
 
     private fun saveMapPoint(event: SavePoint) {
         viewModelScope.launch {
             saveMapPointUseCase.execute(
-                MapPoint(
-                    name = event.title,
-                    latitude = event.latitude,
-                    longitude = event.longitude,
-                    profileName = event.profile.name,
-                )
+                pointName = event.title,
+                profile = event.profile,
+                latitude = event.latitude,
+                longitude = event.longitude,
             )
         }
     }
@@ -93,13 +107,13 @@ class MainViewModel(
 
     private fun createProfile(name: Profile) {
         viewModelScope.launch {
-            //saveProfileUseCase.execute(name)
+            saveProfileUseCase.execute(name)
         }
     }
 }
 
 data class MainViewState(
-    val currentProfile: Profile = commonProfile,
+    val currentProfile: Profile = Profile("", isCommon = true),
     val mapPoints: List<MapPoint> = emptyList(),
     val profiles: List<Profile> = emptyList()
 )

@@ -11,6 +11,9 @@ import kotlinx.coroutines.withContext
 class SaveProfileUseCase(private val profileRepository: ProfileRepository) {
 
     suspend fun execute(profile: Profile) = withContext(ioDispatcher) {
+        if (profile.isCommon) {
+            error("Нельзя создать общий профиль.")
+        }
         profileRepository.createProfile(profile)
     }
 }

@@ -15,34 +15,30 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import dmitry.molchanov.fishingforecast.android.*
-import dmitry.molchanov.fishingforecast.model.Profile
+import dmitry.molchanov.fishingforecast.android.CreateProfile
+import dmitry.molchanov.fishingforecast.android.DeleteProfile
+import dmitry.molchanov.fishingforecast.android.MainViewModel
+import dmitry.molchanov.fishingforecast.android.SelectProfile
 
 @Composable
 fun ProfileScreen(vm: MainViewModel) {
     val state = vm.state.collectAsState()
-    val profiles = state.value.profiles.map {
-        if (it.name.isEmpty()) {
-            stringResource(R.string.common_profile)
-        } else {
-            it.name
-        }
-    }
+    val profiles = state.value.profiles
 
     val openCreateDialog = remember { mutableStateOf(false) }
     Box(
         modifier = Modifier.fillMaxSize()
     ) {
+        println("1488 profileScreen = ${state.value.currentProfile}")
         ProfileColumn(
-            radioOptions = profiles,
-            defaultOption = state.value.currentProfile.name,
-            deleteOption = { profileName ->
-                vm.onEvent(DeleteProfile(Profile(profileName)))
+            profiles = profiles,
+            defaultOption = state.value.currentProfile,
+            deleteOption = { profile ->
+                vm.onEvent(DeleteProfile(profile))
             },
-            onOptionSelected = { profileName ->
-                vm.onEvent(SelectProfile(Profile(profileName)))
+            onOptionSelected = { profile ->
+                vm.onEvent(SelectProfile(profile))
             }
         )
         Icon(
@@ -57,8 +53,8 @@ fun ProfileScreen(vm: MainViewModel) {
                     openCreateDialog.value = true
                 }
         )
-        CreateProfileDialog(openCreateDialog, profiles) { profileName ->
-            vm.onEvent(CreateProfile(Profile(profileName)))
+        CreateProfileDialog(openCreateDialog, profiles) { profile ->
+            vm.onEvent(CreateProfile(profile))
         }
     }
 }

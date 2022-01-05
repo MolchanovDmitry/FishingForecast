@@ -15,41 +15,42 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import dmitry.molchanov.fishingforecast.android.R
+import dmitry.molchanov.fishingforecast.model.Profile
 
-@Preview
 @Composable
 fun ProfileColumn(
-    radioOptions: List<String> = listOf("Profile1", "Profile2", "Profile3"),
-    defaultOption: String = "Profile2",
-    onOptionSelected: (String) -> Unit = {},
-    deleteOption: (String) -> Unit = {}
+    profiles: List<Profile>,
+    defaultOption: Profile,
+    onOptionSelected: (Profile) -> Unit = {},
+    deleteOption: (Profile) -> Unit = {}
 ) {
-    if (radioOptions.isEmpty()) return
+    if (profiles.isEmpty()) return
     val selectedOption = remember {
         var defaultIndex = 0
-        radioOptions.forEachIndexed { index, option ->
+        profiles.forEachIndexed { index, option ->
             if (option == defaultOption) defaultIndex = index
         }
-        mutableStateOf(radioOptions[defaultIndex])
+        mutableStateOf(profiles[defaultIndex])
     }
 
     LazyColumn(modifier = Modifier.fillMaxWidth()) {
-        items(radioOptions) { item ->
+        items(profiles) { profile ->
             Row(
                 modifier = Modifier
                     .padding(all = 16.dp)
                     .padding(end = 4.dp)
                     .clickable {
-                        selectedOption.value = item
-                        onOptionSelected(item)
+                        selectedOption.value = profile
+                        onOptionSelected(profile)
                     },
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 RadioButton(
-                    selected = (item == selectedOption.value),
+                    selected = (profile == selectedOption.value),
                     colors = RadioButtonDefaults.colors(
                         selectedColor = MaterialTheme.colors.primary,
                         unselectedColor = MaterialTheme.colors.primary
@@ -57,15 +58,17 @@ fun ProfileColumn(
                     onClick = null
                 )
                 Text(
-                    text = item,
+                    text = if (profile.isCommon) stringResource(R.string.common_profile) else profile.name,
                     fontSize = 18.sp,
-                    modifier = Modifier.weight(1F).padding(8.dp)
+                    modifier = Modifier
+                        .weight(1F)
+                        .padding(8.dp)
                 )
                 Icon(
                     imageVector = Icons.Filled.Delete,
                     contentDescription = null,
                     tint = MaterialTheme.colors.primary,
-                    modifier = Modifier.clickable { deleteOption(item)  }
+                    modifier = Modifier.clickable { deleteOption(profile) }
                 )
             }
             Divider(

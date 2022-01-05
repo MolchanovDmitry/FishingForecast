@@ -10,6 +10,7 @@ import dmitry.molchanov.fishingforecast.model.Profile
 import dmitry.molchanov.fishingforecast.repository.ProfileRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import dmitry.molchanov.db.Profile as DataProfile
 
 
 class ProfileRepositoryImpl(
@@ -18,14 +19,18 @@ class ProfileRepositoryImpl(
 ) : ProfileRepository {
 
     override fun getProfilesFlow(): Flow<List<Profile>> =
-        profileQueries.selectAll().asFlow().mapToList().map { it.map(::Profile) }
+        profileQueries.selectAll().asFlow().mapToList().map {
+            it.map { dataProfile -> dataProfile.toDomainProfile() }
+        }
 
     override val currentProfileFlow: Flow<Profile> =
-        appSettings.toFlowSettings().getStringFlow(PROFILE_FLOW).map(::Profile)
+        appSettings.toFlowSettings().getStringFlow(PROFILE_FLOW).map {
+            Profile(name = it, isCommon = it.isEmpty())
+        }
 
     override suspend fun createProfile(profile: Profile) {
         runCatching {
-            profileQueries.insert(dmitry.molchanov.db.Profile(profile.name))
+            profileQueries.insert(DataProfile(profile.name, isCommon = false))
         }
     }
 
@@ -36,6 +41,8 @@ class ProfileRepositoryImpl(
     override suspend fun deleteProfile(profile: Profile) {
         profileQueries.delete(profile.name)
     }
+
+    private fun DataProfile.toDomainProfile() = Profile(name = this.name, isCommon = this.isCommon)
 
     private companion object {
         const val PROFILE_FLOW = "PROFILE_FLOW"

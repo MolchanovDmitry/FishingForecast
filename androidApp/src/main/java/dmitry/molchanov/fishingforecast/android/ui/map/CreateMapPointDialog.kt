@@ -8,15 +8,17 @@ import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import dmitry.molchanov.fishingforecast.android.R
 import dmitry.molchanov.fishingforecast.android.ui.DropDown
 import dmitry.molchanov.fishingforecast.model.Profile
 
 @Composable
 fun CreateMapPointDialog(
     openDialog: MutableState<Boolean>,
-    profiles: List<String>,
+    profiles: List<Profile>,
     createMapPoint: (String, Profile) -> Unit
 ) {
     var profileEdit by remember { mutableStateOf("") }
@@ -46,7 +48,7 @@ fun CreateMapPointDialog(
                     DropDown(
                         modifier = Modifier.fillMaxWidth(),
                         label = "",
-                        suggestions = profiles,
+                        suggestions = profiles.map { if (it.isCommon) stringResource(R.string.common_profile) else it.name },
                         defaultSelectedIndex = 0,
                         onSelectIndex = { index ->
                             profileIndex = index
@@ -77,7 +79,7 @@ fun CreateMapPointDialog(
                             .padding(8.dp)
                             .clickable {
                                 openDialog.value = false
-                                createMapPoint(profileEdit, Profile(profiles[profileIndex]))
+                                createMapPoint(profileEdit, profiles[profileIndex])
                             }
                     )
                 }
