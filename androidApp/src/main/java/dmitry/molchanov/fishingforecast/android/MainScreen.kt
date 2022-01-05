@@ -13,6 +13,7 @@ import dmitry.molchanov.fishingforecast.android.ui.NavItem
 import dmitry.molchanov.fishingforecast.android.ui.Screens
 import dmitry.molchanov.fishingforecast.android.ui.map.MapScreen
 import dmitry.molchanov.fishingforecast.android.ui.profile.ProfileScreen
+import dmitry.molchanov.fishingforecast.android.ui.setting.ForecastSettingsList
 
 @Composable
 fun MainScreen(vm: MainViewModel) {
@@ -50,6 +51,9 @@ fun MainScreen(vm: MainViewModel) {
             }
             composable(Screens.PROFILE.label) {
                 ProfileScreen(vm)
+            }
+            composable(Screens.FORECAST_SETTINGS.label) {
+                ForecastSettingsList()
             }
         }
     }
