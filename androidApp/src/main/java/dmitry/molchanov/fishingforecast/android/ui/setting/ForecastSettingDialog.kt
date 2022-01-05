@@ -16,34 +16,48 @@ import dmitry.molchanov.fishingforecast.model.*
 @Preview
 @Composable
 fun ForecastSettingDialog(
-    forecastSettingsItem: ForecastSettingsItem? = ForecastSettingsItem.WIND_SPEED,
-    values: List<ForecastSetting> = getPreviewValues(ForecastSettingsItem.WIND_SPEED),
-    availableMarksConformity: List<ForecastSettingItemToMarkConformity> =
-        forecastSettingItemToMarkConformity,
+    alreadySelectedForecastSettingsItem: List<ForecastSettingsItem> = listOf(ForecastSettingsItem.WIND_SPEED),
+    onDismiss: () -> Unit = {}
 ) {
+    val notSelectedItemToMarks = forecastSettingItemToMarkConformity
+        .filter { !alreadySelectedForecastSettingsItem.contains(it.forecastSettingsItem) }
     var activeForecastSettingsItem by remember {
-        mutableStateOf(forecastSettingsItem ?: values.first().forecastSettingsItem)
+        mutableStateOf(notSelectedItemToMarks.first().forecastSettingsItem)
     }
     AlertDialog(
         modifier = Modifier.fillMaxWidth(),
         onDismissRequest = {
+            onDismiss()
         },
         text = {
             Column {
                 DropDown(
                     modifier = Modifier.fillMaxWidth(),
                     label = "some label",
-                    suggestions = ForecastSettingsItem.values().map { it.name },
+                    suggestions = notSelectedItemToMarks.map { it.forecastSettingsItem.name },
                     defaultSelectedIndex = 0,
                     onSelectIndex = { index ->
-                        activeForecastSettingsItem = ForecastSettingsItem.values()[index]
+                        activeForecastSettingsItem =
+                            notSelectedItemToMarks[index].forecastSettingsItem
                     }
                 )
-                availableMarksConformity
-                    .filter { it.forecastSettingsItem == activeForecastSettingsItem }
-                    .forEach {
-
-                    }
+                Row(modifier = Modifier.fillMaxWidth()) {
+                    forecastSettingItemToMarkConformity
+                        .filter { it.forecastSettingsItem == activeForecastSettingsItem }
+                        .flatMap { it.forecastMarkTypes }
+                        .forEach { forecastMarkClass ->
+                            when (forecastMarkClass) {
+                                MinValueForecastMark::class ->
+                                    SettingItem(title = "min:", value = -1f)
+                                MaxValueForecastMark::class ->
+                                    SettingItem(title = "max:", value = -1f)
+                                DeltaForecastMark::class ->
+                                    SettingItem(title = "delta:", value = -1f)
+                                ExactValueForecastMark::class ->
+                                    SettingItem(title = "значение", value = -1f)
+                            }
+                        }
+                }
             }
         },
         buttons = {
@@ -59,7 +73,9 @@ fun ForecastSettingDialog(
                     fontSize = 18.sp,
                     modifier = Modifier
                         .padding(8.dp)
-                        .clickable { }
+                        .clickable {
+                            onDismiss()
+                        }
                 )
                 Text(
                     "Сохранить",
@@ -80,9 +96,9 @@ fun ForecastSettingDialog(
 @Composable
 private fun ForecastSettingView(
     forecastMark: ForecastMark = MaxValueForecastMark(99F)
-){
-    Row(modifier = Modifier.fillMaxWidth()){
-        when(forecastMark){
+) {
+    Row(modifier = Modifier.fillMaxWidth()) {
+        when (forecastMark) {
 
         }
     }

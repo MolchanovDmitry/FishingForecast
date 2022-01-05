@@ -18,9 +18,11 @@ import dmitry.molchanov.fishingforecast.model.*
 fun ForecastSettingItemView(
     forecastSettingItem: ForecastSetting = previewForecastSetting
 ) {
-    Column(modifier = Modifier
-        .fillMaxWidth()
-        .padding(8.dp)) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(8.dp)
+    ) {
         Text(text = forecastSettingItem.forecastSettingsItem.name)
         Row(modifier = Modifier.fillMaxWidth()) {
             forecastSettingItem.forecastMarks.forEach { forecastMark ->
@@ -45,7 +47,7 @@ fun ForecastSettingItemView(
 }
 
 @Composable
-private fun RowScope.SettingItem(title: String, value: Float) {
+fun RowScope.SettingItem(title: String, value: Float) {
     OutlinedTextField(
         value = value.toString(),
         label = { Text(title) },
