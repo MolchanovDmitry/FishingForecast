@@ -53,7 +53,7 @@ fun MainScreen(vm: MainViewModel) {
                 ProfileScreen(vm)
             }
             composable(Screens.FORECAST_SETTINGS.label) {
-                ForecastSettingsList()
+                ForecastSettingsList(vm = vm)
             }
         }
     }

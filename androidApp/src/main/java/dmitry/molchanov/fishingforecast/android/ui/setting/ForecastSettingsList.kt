@@ -11,14 +11,15 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import dmitry.molchanov.fishingforecast.android.MainViewModel
+import dmitry.molchanov.fishingforecast.android.SaveForecastSettingMark
 import dmitry.molchanov.fishingforecast.model.*
 
-@Preview
 @Composable
 fun ForecastSettingsList(
-    forecastSettings: List<ForecastSetting> = previewForecastSetting
+    forecastSettings: List<ForecastSetting> = previewForecastSetting,
+    vm: MainViewModel,
 ) {
     var showDialog by remember { mutableStateOf(false) }
     Box(modifier = Modifier.fillMaxSize()) {
@@ -40,9 +41,22 @@ fun ForecastSettingsList(
                 }
         )
         if (showDialog) {
-            ForecastSettingDialog {
-                showDialog = false
-            }
+            ForecastSettingDialog(
+                onDismiss = {
+                    showDialog = false
+                },
+                onSuccess = {
+                    showDialog = false
+                    vm.onEvent(
+                        SaveForecastSettingMark(
+                            ForecastSetting(
+                                forecastMarks = it.second,
+                                forecastSettingsItem = it.first,
+                            )
+                        )
+                    )
+                }
+            )
         }
     }
 }

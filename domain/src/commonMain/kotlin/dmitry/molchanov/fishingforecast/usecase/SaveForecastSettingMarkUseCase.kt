@@ -14,12 +14,12 @@ class SaveForecastSettingMarkUseCase(private val repository: ForecastSettingsRep
 
     /**
      * @param profile профиль, для которого сохранить настройку.
-     * @param forecastSettings список настроект прогнозирования.
+     * @param forecastSetting настройка прогнозирования.
      */
     suspend fun execute(
         profile: Profile,
-        forecastSettings: List<ForecastSetting>,
+        forecastSetting: ForecastSetting,
     ) = withContext(ioDispatcher) {
-        repository.saveForecastSettings(profile, forecastSettings)
+        repository.saveForecastSettings(profile, forecastSetting)
     }
 }

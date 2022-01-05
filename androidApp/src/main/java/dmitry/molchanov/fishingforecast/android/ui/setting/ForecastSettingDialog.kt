@@ -2,11 +2,15 @@ package dmitry.molchanov.fishingforecast.android.ui.setting
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.AlertDialog
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -17,13 +21,16 @@ import dmitry.molchanov.fishingforecast.model.*
 @Composable
 fun ForecastSettingDialog(
     alreadySelectedForecastSettingsItem: List<ForecastSettingsItem> = listOf(ForecastSettingsItem.WIND_SPEED),
-    onDismiss: () -> Unit = {}
+    onDismiss: () -> Unit = {},
+    onSuccess: (Pair<ForecastSettingsItem, List<ForecastMark>>) -> Unit = {}
 ) {
     val notSelectedItemToMarks = forecastSettingItemToMarkConformity
         .filter { !alreadySelectedForecastSettingsItem.contains(it.forecastSettingsItem) }
+    val selectedForecastMarks by remember { mutableStateOf(mutableListOf<ForecastMark>()) }
     var activeForecastSettingsItem by remember {
         mutableStateOf(notSelectedItemToMarks.first().forecastSettingsItem)
     }
+    var shouldAddHint by remember { mutableStateOf(false) }
     AlertDialog(
         modifier = Modifier.fillMaxWidth(),
         onDismissRequest = {
@@ -42,21 +49,43 @@ fun ForecastSettingDialog(
                     }
                 )
                 Row(modifier = Modifier.fillMaxWidth()) {
+                    selectedForecastMarks.clear()
                     forecastSettingItemToMarkConformity
-                        .filter { it.forecastSettingsItem == activeForecastSettingsItem }
-                        .flatMap { it.forecastMarkTypes }
-                        .forEach { forecastMarkClass ->
+                        .firstOrNull { it.forecastSettingsItem == activeForecastSettingsItem }
+                        ?.forecastMarkTypes
+                        ?.forEach { forecastMarkClass ->
                             when (forecastMarkClass) {
                                 MinValueForecastMark::class ->
-                                    SettingItem(title = "min:", value = -1f)
+                                    SettingItem(title = "min:") { minValue ->
+                                        shouldAddHint = false
+                                        MinValueForecastMark(minValue)
+                                            .let(selectedForecastMarks::replaceOrAdd)
+                                    }
                                 MaxValueForecastMark::class ->
-                                    SettingItem(title = "max:", value = -1f)
+                                    SettingItem(title = "max:") { maxValue ->
+                                        shouldAddHint = false
+                                        MaxValueForecastMark(maxValue)
+                                            .let(selectedForecastMarks::replaceOrAdd)
+                                    }
                                 DeltaForecastMark::class ->
-                                    SettingItem(title = "delta:", value = -1f)
+                                    SettingItem(title = "delta:") { delta ->
+                                        shouldAddHint = false
+                                        DeltaForecastMark(delta)
+                                            .let(selectedForecastMarks::replaceOrAdd)
+                                    }
                                 ExactValueForecastMark::class ->
-                                    SettingItem(title = "значение", value = -1f)
+                                    SettingItem(title = "значение") { value ->
+                                        shouldAddHint = false
+                                        ExactValueForecastMark(value)
+                                            .let(selectedForecastMarks::replaceOrAdd)
+                                    }
                             }
                         }
+                }
+                if (shouldAddHint) {
+                    Text(
+                        text = "Заполните хотя бы одно значение", color = Color.Red,
+                    )
                 }
             }
         },
@@ -84,6 +113,11 @@ fun ForecastSettingDialog(
                     modifier = Modifier
                         .padding(8.dp)
                         .clickable {
+                            if (selectedForecastMarks.isEmpty()) {
+                                shouldAddHint = true
+                            } else {
+                                onSuccess(activeForecastSettingsItem to selectedForecastMarks)
+                            }
                         }
                 )
             }
@@ -91,28 +125,24 @@ fun ForecastSettingDialog(
     )
 }
 
-
-@Preview
 @Composable
-private fun ForecastSettingView(
-    forecastMark: ForecastMark = MaxValueForecastMark(99F)
-) {
-    Row(modifier = Modifier.fillMaxWidth()) {
-        when (forecastMark) {
-
-        }
-    }
+private fun RowScope.SettingItem(title: String, value: Float? = null, onChange: (Float) -> Unit) {
+    var result by remember { mutableStateOf(value?.toString()) }
+    OutlinedTextField(
+        value = result ?: "",
+        label = { Text(title) },
+        modifier = Modifier
+            .padding(8.dp)
+            .weight(1F),
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+        onValueChange = { inputValue ->
+            result = inputValue
+            inputValue.toFloatOrNull()?.let { onChange(it) }
+        })
 }
 
-@Suppress("SameParameterValue")
-private fun getPreviewValues(forecastSettingsItem: ForecastSettingsItem): List<ForecastSetting> =
-    listOf(
-        ForecastSetting(
-            forecastSettingsItem = forecastSettingsItem,
-            forecastMarks = listOf(
-                MinValueForecastMark(1F),
-                MaxValueForecastMark(2.5F),
-                DeltaForecastMark(100F)
-            )
-        )
-    )
+private fun MutableList<ForecastMark>.replaceOrAdd(forecastMark: ForecastMark){
+    firstOrNull { it::class == forecastMark::class }
+        ?.let(::remove)
+    add(forecastMark)
+}

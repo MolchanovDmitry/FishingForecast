@@ -47,7 +47,7 @@ fun ForecastSettingItemView(
 }
 
 @Composable
-fun RowScope.SettingItem(title: String, value: Float) {
+private fun RowScope.SettingItem(title: String, value: Float? = null) {
     OutlinedTextField(
         value = value.toString(),
         label = { Text(title) },

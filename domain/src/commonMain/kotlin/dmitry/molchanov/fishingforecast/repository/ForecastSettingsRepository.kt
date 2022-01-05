@@ -7,5 +7,5 @@ interface ForecastSettingsRepository {
 
     suspend fun fetchForecastSettings(profile: Profile): List<ForecastSetting>
 
-    suspend fun saveForecastSettings(profile: Profile, forecastSettings: List<ForecastSetting>)
+    suspend fun saveForecastSettings(profile: Profile, forecastSetting: ForecastSetting)
 }

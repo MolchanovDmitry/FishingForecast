@@ -2,6 +2,7 @@ package dmitry.molchanov.fishingforecast.android
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dmitry.molchanov.fishingforecast.model.ForecastSetting
 import dmitry.molchanov.fishingforecast.model.MapPoint
 import dmitry.molchanov.fishingforecast.model.Profile
 import dmitry.molchanov.fishingforecast.model.commonProfile
@@ -17,6 +18,7 @@ class MainViewModel(
     private val saveMapPointUseCase: SaveMapPointUseCase,
     private val deleteProfileUseCase: Lazy<DeleteProfileUseCase>,
     private val selectProfileUseCase: Lazy<SelectProfileUseCase>,
+    private val saveForecastSettingMarkUseCase: Lazy<SaveForecastSettingMarkUseCase>,
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(MainViewState())
@@ -53,6 +55,13 @@ class MainViewModel(
             is CreateProfile -> createProfile(event.name)
             is DeleteProfile -> deleteProfile(event.name)
             is SelectProfile -> selectProfile(event.name)
+            is SaveForecastSettingMark -> saveForecastSettingMark(event)
+        }
+    }
+
+    private fun saveForecastSettingMark(event: SaveForecastSettingMark) {
+        viewModelScope.launch {
+            saveForecastSettingMarkUseCase.value.execute(Profile(""), event.forecastSetting)
         }
     }
 
@@ -101,9 +110,14 @@ sealed class Event
 class CreateProfile(val name: Profile) : Event()
 class SelectProfile(val name: Profile) : Event()
 class DeleteProfile(val name: Profile) : Event()
+
 data class SavePoint(
     val title: String,
     val profile: Profile,
     val latitude: Double,
     val longitude: Double
+) : Event()
+
+data class SaveForecastSettingMark(
+    val forecastSetting: ForecastSetting
 ) : Event()
