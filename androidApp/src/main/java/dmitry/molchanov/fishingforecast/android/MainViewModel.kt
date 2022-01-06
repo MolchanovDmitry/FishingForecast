@@ -17,6 +17,7 @@ class MainViewModel(
     private val saveMapPointUseCase: SaveMapPointUseCase,
     private val deleteProfileUseCase: Lazy<DeleteProfileUseCase>,
     private val selectProfileUseCase: Lazy<SelectProfileUseCase>,
+    private val getForecastSettingMarks: GetForecastSettingMarksUseCase,
     private val saveForecastSettingMarkUseCase: Lazy<SaveForecastSettingMarkUseCase>,
 ) : ViewModel() {
 
@@ -58,6 +59,12 @@ class MainViewModel(
                         mapPoints.filter { it.profileName == state.value.currentProfile.name }
                     })
                 }
+            }
+            .launchIn(viewModelScope)
+
+        getForecastSettingMarks.execute(Profile("", isCommon = true))
+            .onEach {
+                it
             }
             .launchIn(viewModelScope)
     }

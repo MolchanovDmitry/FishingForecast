@@ -4,6 +4,7 @@ import dmitry.molchanov.fishingforecast.model.ForecastSetting
 import dmitry.molchanov.fishingforecast.model.Profile
 import dmitry.molchanov.fishingforecast.repository.ForecastSettingsRepository
 import dmitry.molchanov.fishingforecast.utils.ioDispatcher
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
 
 /**
@@ -12,7 +13,7 @@ import kotlinx.coroutines.withContext
 class GetProfileForecastSettingsUseCase(
     private val forecastSettingsRepository: ForecastSettingsRepository
 ) {
-    suspend fun execute(profile: Profile): List<ForecastSetting> =
+    suspend fun execute(profile: Profile): Flow<List<ForecastSetting>> =
         withContext(ioDispatcher) {
             forecastSettingsRepository.fetchForecastSettings(profile)
         }

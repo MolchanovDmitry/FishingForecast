@@ -20,6 +20,7 @@ class SaveForecastSettingMarkUseCase(private val repository: ForecastSettingsRep
         profile: Profile,
         forecastSetting: ForecastSetting,
     ) = withContext(ioDispatcher) {
-        repository.saveForecastSettings(profile, forecastSetting)
+        val totalProfile = if (profile.isCommon) null else profile
+        repository.saveForecastSettings(totalProfile, forecastSetting)
     }
 }

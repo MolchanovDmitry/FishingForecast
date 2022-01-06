@@ -15,7 +15,8 @@ val appKoinModule = module {
             deleteProfileUseCase = inject(),
             selectProfileUseCase = inject(),
             getCurrentProfileUseCase = get(),
-            saveForecastSettingMarkUseCase = inject()
+            getForecastSettingMarks = get(),
+            saveForecastSettingMarkUseCase = inject(),
         )
     }
 }
