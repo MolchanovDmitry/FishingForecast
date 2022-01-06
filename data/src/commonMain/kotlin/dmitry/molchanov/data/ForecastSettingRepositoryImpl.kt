@@ -18,22 +18,12 @@ class ForecastSettingRepositoryImpl(
         forecastSettingQueries.selectAll().asFlow().mapToList()
             .map { it.toDomainForecastSetting(profile) }
 
-    private fun List<DataForecastSetting>.toDomainForecastSetting(profile: Profile) =
-        mapNotNull {
-            if (it.profileName != profile.name) return@mapNotNull null
-            val forecastMarks = mutableListOf<ForecastMark>()
-            it.delta?.toFloat()?.let(::DeltaForecastMark)?.let(forecastMarks::add)
-            it.minValue?.toFloat()?.let(::MinValueForecastMark)?.let(forecastMarks::add)
-            it.maxValue?.toFloat()?.let(::MaxValueForecastMark)?.let(forecastMarks::add)
-            it.exactValue?.toFloat()?.let(::ExactValueForecastMark)?.let(forecastMarks::add)
-            ForecastSetting(
-                forecastSettingsItem = ForecastSettingsItem.values()
-                    .associateBy(ForecastSettingsItem::name)
-                        [it.forecastSettingItemLabel]
-                    ?: error("Невозможно соотнести forecastSettingItemLabel к ForecastSettingsItem"),
-                forecastMarks = forecastMarks
-            )
-        }
+    override suspend fun deleteForecastSetting(profile: Profile, forecastSetting: ForecastSetting) {
+        forecastSettingQueries.delete(
+            profileName = profile.name,
+            forecastSettingItemLabel = forecastSetting.forecastSettingsItem.name,
+        )
+    }
 
     override suspend fun saveForecastSettings(profile: Profile?, forecastSetting: ForecastSetting) {
         var minValue: Double? = null
@@ -60,4 +50,21 @@ class ForecastSettingRepositoryImpl(
             )
         )
     }
+
+    private fun List<DataForecastSetting>.toDomainForecastSetting(profile: Profile) =
+        mapNotNull {
+            if (it.profileName != profile.name) return@mapNotNull null
+            val forecastMarks = mutableListOf<ForecastMark>()
+            it.delta?.toFloat()?.let(::DeltaForecastMark)?.let(forecastMarks::add)
+            it.minValue?.toFloat()?.let(::MinValueForecastMark)?.let(forecastMarks::add)
+            it.maxValue?.toFloat()?.let(::MaxValueForecastMark)?.let(forecastMarks::add)
+            it.exactValue?.toFloat()?.let(::ExactValueForecastMark)?.let(forecastMarks::add)
+            ForecastSetting(
+                forecastSettingsItem = ForecastSettingsItem.values()
+                    .associateBy(ForecastSettingsItem::name)
+                        [it.forecastSettingItemLabel]
+                    ?: error("Невозможно соотнести forecastSettingItemLabel к ForecastSettingsItem"),
+                forecastMarks = forecastMarks
+            )
+        }
 }

@@ -17,3 +17,7 @@ FROM ForecastSetting;
 insert:
 INSERT OR REPLACE INTO ForecastSetting(forecastSettingItemLabel, profileName, minValue, maxValue, delta, exactValue)
 VALUES ?;
+
+delete:
+DELETE FROM ForecastSetting
+WHERE forecastSettingItemLabel = ? AND profileName = ?;

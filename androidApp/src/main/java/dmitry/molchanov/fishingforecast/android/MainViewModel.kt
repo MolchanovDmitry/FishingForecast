@@ -18,6 +18,7 @@ class MainViewModel(
     private val saveMapPointUseCase: SaveMapPointUseCase,
     private val deleteProfileUseCase: Lazy<DeleteProfileUseCase>,
     private val selectProfileUseCase: Lazy<SelectProfileUseCase>,
+    private val deleteForecastSettings: Lazy<DeleteForecastSettingUseCase>,
     private val getForecastSettingMarks: GetForecastSettingMarksUseCase,
     private val saveForecastSettingMarkUseCase: Lazy<SaveForecastSettingMarkUseCase>,
 ) : ViewModel() {
@@ -71,7 +72,17 @@ class MainViewModel(
             is CreateProfile -> createProfile(event.name)
             is DeleteProfile -> deleteProfile(event.name)
             is SelectProfile -> selectProfile(event.name)
+            is DeleteForecastSetting -> deleteForecastSetting(event)
             is SaveForecastSettingMark -> saveForecastSettingMark(event)
+        }
+    }
+
+    private fun deleteForecastSetting(event: DeleteForecastSetting) {
+        viewModelScope.launch {
+            deleteForecastSettings.value.execute(
+                profile = state.value.currentProfile,
+                forecastSetting = event.forecastSetting
+            )
         }
     }
 
@@ -139,6 +150,7 @@ sealed class Event
 class CreateProfile(val name: Profile) : Event()
 class SelectProfile(val name: Profile) : Event()
 class DeleteProfile(val name: Profile) : Event()
+class DeleteForecastSetting(val forecastSetting: ForecastSetting) : Event()
 
 data class SavePoint(
     val title: String,

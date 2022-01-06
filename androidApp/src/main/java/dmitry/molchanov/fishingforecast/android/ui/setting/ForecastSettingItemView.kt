@@ -18,7 +18,8 @@ import dmitry.molchanov.fishingforecast.model.*
 @Preview
 @Composable
 fun ForecastSettingItemView(
-    forecastSettingItem: ForecastSetting = previewForecastSetting
+    forecastSettingItem: ForecastSetting = previewForecastSetting,
+    onDeletePressed: (ForecastSetting) -> Unit = {}
 ) {
     Column(modifier = Modifier.fillMaxWidth()) {
         Row(modifier = Modifier.fillMaxWidth()) {
@@ -55,7 +56,7 @@ fun ForecastSettingItemView(
                     .size(45.dp)
                     .padding(end = 8.dp)
                     .clickable {
-                        //showDialog = true
+                        onDeletePressed(forecastSettingItem)
                     }
             )
         }

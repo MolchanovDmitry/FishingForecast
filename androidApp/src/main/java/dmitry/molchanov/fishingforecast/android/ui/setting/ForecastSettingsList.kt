@@ -12,6 +12,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import dmitry.molchanov.fishingforecast.android.DeleteForecastSetting
 import dmitry.molchanov.fishingforecast.android.MainViewModel
 import dmitry.molchanov.fishingforecast.android.SaveForecastSettingMark
 import dmitry.molchanov.fishingforecast.model.ForecastSetting
@@ -25,7 +26,9 @@ fun ForecastSettingsList(
     Box(modifier = Modifier.fillMaxSize()) {
         LazyColumn(modifier = Modifier.fillMaxWidth()) {
             items(state.value.forecastSettings) { item ->
-                ForecastSettingItemView(item)
+                ForecastSettingItemView(item) { forecastSetting ->
+                    vm.onEvent(DeleteForecastSetting(forecastSetting))
+                }
             }
         }
         Icon(

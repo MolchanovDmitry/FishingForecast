@@ -8,5 +8,7 @@ interface ForecastSettingsRepository {
 
     fun fetchForecastSettings(profile: Profile): Flow<List<ForecastSetting>>
 
+    suspend fun deleteForecastSetting(profile: Profile, forecastSetting: ForecastSetting)
+
     suspend fun saveForecastSettings(profile: Profile?, forecastSetting: ForecastSetting)
 }
