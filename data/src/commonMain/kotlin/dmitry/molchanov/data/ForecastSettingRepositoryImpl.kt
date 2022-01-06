@@ -16,10 +16,11 @@ class ForecastSettingRepositoryImpl(
 
     override fun fetchForecastSettings(profile: Profile): Flow<List<ForecastSetting>> =
         forecastSettingQueries.selectAll().asFlow().mapToList()
-            .map(::getDomainForecastSetting)
+            .map { it.toDomainForecastSetting(profile) }
 
-    private fun getDomainForecastSetting(dataForecastSettings: List<DataForecastSetting>) =
-        dataForecastSettings.map {
+    private fun List<DataForecastSetting>.toDomainForecastSetting(profile: Profile) =
+        mapNotNull {
+            if (it.profileName != profile.name) return@mapNotNull null
             val forecastMarks = mutableListOf<ForecastMark>()
             it.delta?.toFloat()?.let(::DeltaForecastMark)?.let(forecastMarks::add)
             it.minValue?.toFloat()?.let(::MinValueForecastMark)?.let(forecastMarks::add)

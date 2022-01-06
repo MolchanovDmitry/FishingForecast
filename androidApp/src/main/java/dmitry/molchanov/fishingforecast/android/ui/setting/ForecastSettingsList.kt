@@ -14,17 +14,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import dmitry.molchanov.fishingforecast.android.MainViewModel
 import dmitry.molchanov.fishingforecast.android.SaveForecastSettingMark
-import dmitry.molchanov.fishingforecast.model.*
+import dmitry.molchanov.fishingforecast.model.ForecastSetting
 
 @Composable
 fun ForecastSettingsList(
-    forecastSettings: List<ForecastSetting> = previewForecastSetting,
     vm: MainViewModel,
 ) {
+    val state = vm.state.collectAsState()
     var showDialog by remember { mutableStateOf(false) }
     Box(modifier = Modifier.fillMaxSize()) {
         LazyColumn(modifier = Modifier.fillMaxWidth()) {
-            items(forecastSettings) { item ->
+            items(state.value.forecastSettings) { item ->
                 ForecastSettingItemView(item)
             }
         }
@@ -60,22 +60,3 @@ fun ForecastSettingsList(
         }
     }
 }
-
-private val previewForecastSetting = listOf(
-    ForecastSetting(
-        forecastSettingsItem = ForecastSettingsItem.TEMPERATURE_MAX,
-        forecastMarks = listOf(
-            MinValueForecastMark(value = 15F),
-            MaxValueForecastMark(value = 30F),
-            DeltaForecastMark(value = 5F)
-        )
-    ),
-    ForecastSetting(
-        forecastSettingsItem = ForecastSettingsItem.WIND_SPEED,
-        forecastMarks = listOf(
-            MinValueForecastMark(value = 1F),
-            MaxValueForecastMark(value = 7F),
-            DeltaForecastMark(value = 1F)
-        )
-    )
-)

@@ -6,6 +6,7 @@ import dmitry.molchanov.fishingforecast.model.ForecastSetting
 import dmitry.molchanov.fishingforecast.model.MapPoint
 import dmitry.molchanov.fishingforecast.model.Profile
 import dmitry.molchanov.fishingforecast.usecase.*
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
@@ -40,6 +41,7 @@ class MainViewModel(
                         }
                     )
                 }
+                updateForecastSettings(profile)
             }
             .launchIn(viewModelScope)
 
@@ -61,12 +63,6 @@ class MainViewModel(
                 }
             }
             .launchIn(viewModelScope)
-
-        getForecastSettingMarks.execute(Profile("", isCommon = true))
-            .onEach {
-                it
-            }
-            .launchIn(viewModelScope)
     }
 
     fun onEvent(event: Event) {
@@ -77,6 +73,17 @@ class MainViewModel(
             is SelectProfile -> selectProfile(event.name)
             is SaveForecastSettingMark -> saveForecastSettingMark(event)
         }
+    }
+
+    private var updateForecastJob: Job? = null
+
+    private fun updateForecastSettings(profile: Profile) {
+        updateForecastJob?.cancel()
+        updateForecastJob = getForecastSettingMarks.execute(profile)
+            .onEach { forecastSettings ->
+                _state.update { it.copy(forecastSettings = forecastSettings) }
+            }
+            .launchIn(viewModelScope)
     }
 
     private fun saveForecastSettingMark(event: SaveForecastSettingMark) {
@@ -122,7 +129,8 @@ class MainViewModel(
 data class MainViewState(
     val currentProfile: Profile = Profile("", isCommon = true),
     val mapPoints: List<MapPoint> = emptyList(),
-    val profiles: List<Profile> = emptyList()
+    val profiles: List<Profile> = emptyList(),
+    val forecastSettings: List<ForecastSetting> = emptyList()
 )
 
 
