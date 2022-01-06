@@ -1,4 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="common_profile">Общий(все точки)</string>
+
+    <!-- -->
+    <string name="observation_period">Период наблюдения (в днях)</string>
+    <string name="pressure_mm">Атмосферное давление (в мм ртутного столба)</string>
+    <string name="pressure_pa">Атмосферное давление (в паскалях)</string>
+    <string name="wind_speed">Скорость ветра</string>
+    <string name="wind_gust">Порыв ветра</string>
+    <string name="temperature_min">Минимальная температура окружающей среды</string>
+    <string name="temperature_avg">Средняя температура окружающей среды</string>
+    <string name="temperature_max">Максимальная температура окружающей среды</string>
+    <string name="temperature_water">Теспература воды</string>
+    <string name="humidity">Влажность</string>
 </resources>

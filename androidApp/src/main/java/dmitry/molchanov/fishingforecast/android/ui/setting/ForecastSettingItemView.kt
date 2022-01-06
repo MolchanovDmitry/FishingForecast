@@ -10,9 +10,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import dmitry.molchanov.fishingforecast.android.mapper.toString
 import dmitry.molchanov.fishingforecast.model.*
 
 @Preview
@@ -29,7 +31,7 @@ fun ForecastSettingItemView(
                     .padding(8.dp)
             ) {
                 Text(
-                    text = forecastSettingItem.forecastSettingsItem.name,
+                    text = forecastSettingItem.forecastSettingsItem.toString(LocalContext.current),
                     modifier = Modifier.padding(start = 8.dp)
                 )
                 Row(modifier = Modifier.fillMaxWidth()) {
