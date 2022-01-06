@@ -10,7 +10,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.Lifecycle.Event
 import androidx.lifecycle.LifecycleEventObserver
@@ -47,6 +46,8 @@ fun MapView(state: State<MainViewState>, vm: MainViewModel) {
     var map by remember { mutableStateOf<GoogleMap?>(null) }
     val isOpedDialog = remember { mutableStateOf(false) }
     var longClickPoint by remember { mutableStateOf(Pair(0.0, 0.0)) }
+
+    println("1488 map screen currentProfile = ${state.value.currentProfile}")
     Box {
         AndroidView(factory = {
             coroutineScope.launch {
@@ -67,7 +68,6 @@ fun MapView(state: State<MainViewState>, vm: MainViewModel) {
             state.value.mapPoints.forEach { mapPoint ->
                 val point = LatLng(mapPoint.latitude, mapPoint.longitude)
                 val markerOptions = MarkerOptions()
-                    .title("Sydney Opera House")
                     .position(point)
                 map?.addMarker(markerOptions)
             }
@@ -75,9 +75,7 @@ fun MapView(state: State<MainViewState>, vm: MainViewModel) {
     }
     CreateMapPointDialog(
         openDialog = isOpedDialog,
-        profiles = state.value.profiles.map {
-            if (it.name.isEmpty()) stringResource(R.string.common_profile) else it.name
-        },
+        profiles = state.value.profiles,
         createMapPoint = { title, profile ->
             vm.onEvent(
                 SavePoint(

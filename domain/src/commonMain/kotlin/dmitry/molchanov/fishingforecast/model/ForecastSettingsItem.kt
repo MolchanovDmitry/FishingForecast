@@ -1,5 +1,8 @@
 package dmitry.molchanov.fishingforecast.model
 
+import dmitry.molchanov.fishingforecast.model.ForecastSettingsItem.*
+import kotlin.reflect.KClass
+
 /**
  * Элемент прогнозирования.
  *
@@ -14,7 +17,7 @@ package dmitry.molchanov.fishingforecast.model
  * @property TEMPERATURE_WATER настройка температуры воды.
  * @property HUMIDITY настройка влажности.
  */
-enum class ForecastSettingsItem {
+enum class ForecastSettingsItem() {
     OBSERVATION_PERIOD,
     PRESSURE_MM,
     PRESSURE_PA,
@@ -46,9 +49,50 @@ class ExactValueForecastMark(val value: Float) : ForecastMark()
  * Настройка прогнозирования.
  *
  * @property forecastSettingsItem элемент прогнозирования.
- * @property forecastMark значение.
+ * @property forecastMarks список показателей.
  */
 class ForecastSetting(
     val forecastSettingsItem: ForecastSettingsItem,
-    val forecastMark: ForecastMark
+    val forecastMarks: List<ForecastMark>
 )
+
+/**
+ * Соответствие между [ForecastSettingsItem] и возможными значениями [ForecastMark].
+ * Чтобы на стороне ui определить допустимые поля для каждого [ForecastSettingsItem]
+ */
+class ForecastSettingItemToMarkConformity(
+    val forecastSettingsItem: ForecastSettingsItem,
+    val forecastMarkTypes: List<KClass<out ForecastMark>>
+)
+
+val forecastSettingItemToMarkConformity: List<ForecastSettingItemToMarkConformity> by lazy {
+    val results = mutableListOf(
+        ForecastSettingItemToMarkConformity(
+            forecastSettingsItem = OBSERVATION_PERIOD,
+            forecastMarkTypes = listOf(ExactValueForecastMark::class)
+        )
+    )
+    listOf(
+        PRESSURE_MM,
+        PRESSURE_PA,
+        WIND_SPEED,
+        WIND_GUST,
+        TEMPERATURE_MIN,
+        TEMPERATURE_AVG,
+        TEMPERATURE_MAX,
+        TEMPERATURE_WATER,
+        HUMIDITY
+    ).forEach {
+        results.add(
+            ForecastSettingItemToMarkConformity(
+                forecastSettingsItem = it,
+                forecastMarkTypes = listOf(
+                    MinValueForecastMark::class,
+                    MaxValueForecastMark::class,
+                    DeltaForecastMark::class,
+                )
+            )
+        )
+    }
+    results
+}

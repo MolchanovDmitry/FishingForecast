@@ -5,7 +5,7 @@ package dmitry.molchanov.fishingforecast.model
  */
 data class MapPoint(
     val name: String,
-    val profileName: String,
+    val profileName: String?,
     val latitude: Double,
     val longitude: Double
 )

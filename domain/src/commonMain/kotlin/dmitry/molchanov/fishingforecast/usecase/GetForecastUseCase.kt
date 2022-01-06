@@ -16,15 +16,16 @@ class GetForecastUseCase {
         weatherData: List<WeatherData>,
         forecastSettings: List<ForecastSetting>
     ): List<Forecast> {
-        return forecastSettings.map {
+        return forecastSettings.flatMap {
             val settingsItem = it.forecastSettingsItem
-            val mark = it.forecastMark
-
-            if (settingsItem == OBSERVATION_PERIOD) {
-                getForecastForPeriodObservation(weatherData, mark)
-            } else {
-                getForecastForMinMaxDeltaValues(settingsItem, weatherData, mark)
+            it.forecastMarks.map { mark ->
+                if (settingsItem == OBSERVATION_PERIOD) {
+                    getForecastForPeriodObservation(weatherData, mark)
+                } else {
+                    getForecastForMinMaxDeltaValues(settingsItem, weatherData, mark)
+                }
             }
+
         }
     }
 

@@ -57,4 +57,12 @@ val domainKoinModule = module {
         GetCurrentProfileUseCase(profileRepository = get())
     }
 
+    factory<GetForecastSettingMarksUseCase> {
+        GetForecastSettingMarksUseCase(repository = get())
+    }
+
+    factory<DeleteForecastSettingUseCase> {
+        DeleteForecastSettingUseCase(repository = get())
+    }
+
 }

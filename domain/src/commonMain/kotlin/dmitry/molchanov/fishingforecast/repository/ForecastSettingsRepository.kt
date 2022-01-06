@@ -2,10 +2,13 @@ package dmitry.molchanov.fishingforecast.repository
 
 import dmitry.molchanov.fishingforecast.model.ForecastSetting
 import dmitry.molchanov.fishingforecast.model.Profile
+import kotlinx.coroutines.flow.Flow
 
 interface ForecastSettingsRepository {
 
-    suspend fun fetchForecastSettings(profile: Profile): List<ForecastSetting>
+    fun fetchForecastSettings(profile: Profile): Flow<List<ForecastSetting>>
 
-    suspend fun saveForecastSettings(profile: Profile, forecastSettings: List<ForecastSetting>)
+    suspend fun deleteForecastSetting(profile: Profile, forecastSetting: ForecastSetting)
+
+    suspend fun saveForecastSettings(profile: Profile?, forecastSetting: ForecastSetting)
 }

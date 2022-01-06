@@ -1,6 +1,6 @@
 CREATE TABLE MapPoint(
     name TEXT NOT NULL,
-    profileName TEXT NOT NULL,
+    profileName TEXT,
     latitude REAL NOT NULL,
     longitude REAL NOT NULL,
     PRIMARY KEY (profileName, latitude, longitude),

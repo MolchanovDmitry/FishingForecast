@@ -1,0 +1,23 @@
+-- Нормализовать в будущем.
+CREATE TABLE ForecastSetting(
+    forecastSettingItemLabel TEXT NOT NULL,
+    profileName TEXT NOT NULL,
+    minValue REAL,
+    maxValue REAL,
+    delta REAL,
+    exactValue REAL,
+    PRIMARY KEY (forecastSettingItemLabel, profileName),
+    FOREIGN KEY(profileName) REFERENCES Profile(name)
+);
+
+selectAll:
+SELECT *
+FROM ForecastSetting;
+
+insert:
+INSERT OR REPLACE INTO ForecastSetting(forecastSettingItemLabel, profileName, minValue, maxValue, delta, exactValue)
+VALUES ?;
+
+delete:
+DELETE FROM ForecastSetting
+WHERE forecastSettingItemLabel = ? AND profileName = ?;
