@@ -1,11 +1,13 @@
 package dmitry.molchanov.fishingforecast.android.ui.setting
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.Divider
-import androidx.compose.material.OutlinedTextField
-import androidx.compose.material.Text
+import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.KeyboardType
@@ -18,31 +20,50 @@ import dmitry.molchanov.fishingforecast.model.*
 fun ForecastSettingItemView(
     forecastSettingItem: ForecastSetting = previewForecastSetting
 ) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(8.dp)
-    ) {
-        Text(text = forecastSettingItem.forecastSettingsItem.name)
+    Column(modifier = Modifier.fillMaxWidth()) {
         Row(modifier = Modifier.fillMaxWidth()) {
-            forecastSettingItem.forecastMarks.forEach { forecastMark ->
-                when (forecastMark) {
-                    is MinValueForecastMark ->
-                        SettingItem(title = "min:", value = forecastMark.value)
-                    is MaxValueForecastMark ->
-                        SettingItem(title = "max:", value = forecastMark.value)
-                    is DeltaForecastMark ->
-                        SettingItem(title = "delta:", value = forecastMark.value)
-                    is ExactValueForecastMark ->
-                        SettingItem(title = "значение", value = forecastMark.value)
+            Column(
+                modifier = Modifier
+                    .weight(1F)
+                    .padding(8.dp)
+            ) {
+                Text(
+                    text = forecastSettingItem.forecastSettingsItem.name,
+                    modifier = Modifier.padding(start = 8.dp)
+                )
+                Row(modifier = Modifier.fillMaxWidth()) {
+                    forecastSettingItem.forecastMarks.forEach { forecastMark ->
+                        when (forecastMark) {
+                            is MinValueForecastMark ->
+                                SettingItem(title = "min:", value = forecastMark.value)
+                            is MaxValueForecastMark ->
+                                SettingItem(title = "max:", value = forecastMark.value)
+                            is DeltaForecastMark ->
+                                SettingItem(title = "delta:", value = forecastMark.value)
+                            is ExactValueForecastMark ->
+                                SettingItem(title = "значение", value = forecastMark.value)
+                        }
+                    }
                 }
             }
+            Icon(
+                imageVector = Icons.Filled.Delete,
+                contentDescription = null,
+                tint = MaterialTheme.colors.primary,
+                modifier = Modifier
+                    .align(Alignment.CenterVertically)
+                    .size(45.dp)
+                    .padding(end = 8.dp)
+                    .clickable {
+                        //showDialog = true
+                    }
+            )
         }
         Divider(
             color = Color.LightGray,
-            thickness = 1.dp
+            thickness = 1.dp,
+            modifier = Modifier.padding(start = 16.dp)
         )
-
     }
 }
 
