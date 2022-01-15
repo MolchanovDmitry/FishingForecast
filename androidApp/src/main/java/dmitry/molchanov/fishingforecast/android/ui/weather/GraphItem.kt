@@ -28,17 +28,29 @@ fun GraphItem(
     val minBorderPoints = getMinBorderPoints(dataPoints, forecastMars)
     val maxY = maxBorderPoints?.firstOrNull()?.y ?: Float.MAX_VALUE
     val minY = minBorderPoints?.firstOrNull()?.y ?: Float.MIN_VALUE
+    val (topDeltaLine, bottomDeltaLine) =
+        getDeltaBorderPoints(dataPoints, forecastMars, minY)
+            ?: Pair(null, null)
+
     Column(modifier = Modifier.fillMaxWidth()) {
         Text(text = title)
         LineGraph(
             plot = LinePlot(
                 listOfNotNull(
-                    getDeltaBorderPoints(dataPoints, forecastMars)?.let {
+                    topDeltaLine?.let {
                         LinePlot.Line(
                             dataPoints = it,
-                            connection = LinePlot.Connection(Color.Green, 2.dp, alpha = 0.2f),
+                            connection = null,
                             intersection = null,
                             areaUnderLine = LinePlot.AreaUnderLine(Color.Green, alpha = 0.2f)
+                        )
+                    },
+                    bottomDeltaLine?.let {
+                        LinePlot.Line(
+                            dataPoints = it,
+                            connection = null,
+                            intersection = null,
+                            areaUnderLine = LinePlot.AreaUnderLine(Color.White, alpha = 1f)
                         )
                     },
                     getMaxBorderPoints(dataPoints, forecastMars)?.let {
@@ -84,8 +96,8 @@ private fun getMaxBorderPoints(
         (forecastMars.firstOrNull { it is MaxValueForecastMark } as? MaxValueForecastMark)
             ?.value
             ?: return null
-    val startX = dataPoints.minOf { it.x }
-    val endX = dataPoints.maxOf { it.x }
+    val startX = dataPoints.minOfOrNull { it.x } ?: return null
+    val endX = dataPoints.maxOfOrNull { it.x } ?: return null
     return listOf(
         DataPoint(x = startX, y = maxValue),
         DataPoint(x = endX, y = maxValue)
@@ -101,30 +113,44 @@ private fun getMinBorderPoints(
         (forecastMars.firstOrNull { it is MinValueForecastMark } as? MinValueForecastMark)
             ?.value
             ?: return null
-    val startX = dataPoints.minOf { it.x }
-    val endX = dataPoints.maxOf { it.x }
+    val startX = dataPoints.minOfOrNull { it.x } ?: return null
+    val endX = dataPoints.maxOfOrNull { it.x } ?: return null
     return listOf(
         DataPoint(x = startX, y = minValue),
         DataPoint(x = endX, y = minValue)
     )
 }
 
-
+/**
+ * Получить верхниюю и нижнию линии дельты показателей.
+ */
 private fun getDeltaBorderPoints(
     dataPoints: List<DataPoint>,
-    forecastMars: List<ForecastMark>
-): List<DataPoint>? {
+    forecastMars: List<ForecastMark>,
+    minY: Float
+): Pair<List<DataPoint>, List<DataPoint>>? {
     val deltaValue =
         (forecastMars.firstOrNull { it is DeltaForecastMark } as? DeltaForecastMark)
             ?.value
             ?: return null
-    val startX = dataPoints.minOf { it.x }
-    val endX = dataPoints.maxOf { it.x }
-    val minY = dataPoints.minOf { it.y }
-    return listOf(
-        DataPoint(x = startX, y = minY + deltaValue),
-        DataPoint(x = endX, y = minY + deltaValue)
+    val startX = dataPoints.minOfOrNull { it.x } ?: return null
+    val endX = dataPoints.maxOfOrNull { it.x } ?: return null
+    val minSuccessY = dataPoints
+        .filter { it.y >= minY }
+        .minOfOrNull { it.y }
+        ?: dataPoints
+            .minOfOrNull { it.y }
+        ?: return null
+
+    val topLine = listOf(
+        DataPoint(x = startX, y = minSuccessY + deltaValue),
+        DataPoint(x = endX, y = minSuccessY + deltaValue)
     )
+    val bottomLine = listOf(
+        DataPoint(x = startX, y = minSuccessY),
+        DataPoint(x = endX, y = minSuccessY)
+    )
+    return topLine to bottomLine
 }
 
 val defaultDataPoints = listOf(
