@@ -47,6 +47,14 @@ fun GraphItem(
                             intersection = null,
                         )
                     },
+                    getDeltaBorderPoints(dataPoints, forecastMars)?.let {
+                        LinePlot.Line(
+                            dataPoints = it,
+                            connection = LinePlot.Connection(Color.Yellow, 2.dp, alpha = 0.2f),
+                            intersection = null,
+                            areaUnderLine = LinePlot.AreaUnderLine(Color.Yellow, alpha = 0.2f)
+                        )
+                    },
                     LinePlot.Line(
                         dataPoints = dataPoints,
                         connection = LinePlot.Connection(Color.Blue, 3.dp),
@@ -98,6 +106,24 @@ private fun getMinBorderPoints(
     return listOf(
         DataPoint(x = startX, y = minValue),
         DataPoint(x = endX, y = minValue)
+    )
+}
+
+
+private fun getDeltaBorderPoints(
+    dataPoints: List<DataPoint>,
+    forecastMars: List<ForecastMark>
+): List<DataPoint>? {
+    val deltaValue =
+        (forecastMars.firstOrNull { it is DeltaForecastMark } as? DeltaForecastMark)
+            ?.value
+            ?: return null
+    val startX = dataPoints.minOf { it.x }
+    val endX = dataPoints.maxOf { it.x }
+    val minY = dataPoints.minOf { it.y }
+    return listOf(
+        DataPoint(x = startX, y = minY + deltaValue),
+        DataPoint(x = endX, y = minY + deltaValue)
     )
 }
 
