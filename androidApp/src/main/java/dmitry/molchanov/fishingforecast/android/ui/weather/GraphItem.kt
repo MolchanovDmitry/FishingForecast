@@ -33,6 +33,14 @@ fun GraphItem(
         LineGraph(
             plot = LinePlot(
                 listOfNotNull(
+                    getDeltaBorderPoints(dataPoints, forecastMars)?.let {
+                        LinePlot.Line(
+                            dataPoints = it,
+                            connection = LinePlot.Connection(Color.Green, 2.dp, alpha = 0.2f),
+                            intersection = null,
+                            areaUnderLine = LinePlot.AreaUnderLine(Color.Green, alpha = 0.2f)
+                        )
+                    },
                     getMaxBorderPoints(dataPoints, forecastMars)?.let {
                         LinePlot.Line(
                             dataPoints = it,
@@ -45,14 +53,6 @@ fun GraphItem(
                             dataPoints = it,
                             connection = LinePlot.Connection(Color.Red, 2.dp),
                             intersection = null,
-                        )
-                    },
-                    getDeltaBorderPoints(dataPoints, forecastMars)?.let {
-                        LinePlot.Line(
-                            dataPoints = it,
-                            connection = LinePlot.Connection(Color.Yellow, 2.dp, alpha = 0.2f),
-                            intersection = null,
-                            areaUnderLine = LinePlot.AreaUnderLine(Color.Yellow, alpha = 0.2f)
                         )
                     },
                     LinePlot.Line(
