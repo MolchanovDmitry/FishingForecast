@@ -30,7 +30,6 @@ fun ProfileScreen(vm: MainViewModel) {
     Box(
         modifier = Modifier.fillMaxSize()
     ) {
-        println("1488 profileScreen = ${state.value.currentProfile}")
         ProfileColumn(
             profiles = profiles,
             defaultOption = state.value.currentProfile,

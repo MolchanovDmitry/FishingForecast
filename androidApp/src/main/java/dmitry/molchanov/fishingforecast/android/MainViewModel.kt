@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import dmitry.molchanov.fishingforecast.model.ForecastSetting
 import dmitry.molchanov.fishingforecast.model.MapPoint
 import dmitry.molchanov.fishingforecast.model.Profile
+import dmitry.molchanov.fishingforecast.model.WeatherData
 import dmitry.molchanov.fishingforecast.usecase.*
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.*
@@ -16,6 +17,7 @@ class MainViewModel(
     getCurrentProfileUseCase: GetCurrentProfileUseCase,
     private val saveProfileUseCase: SaveProfileUseCase,
     private val saveMapPointUseCase: SaveMapPointUseCase,
+    private val getSavedWeatherData: GetSavedWeatherDataUseCase,
     private val deleteProfileUseCase: Lazy<DeleteProfileUseCase>,
     private val selectProfileUseCase: Lazy<SelectProfileUseCase>,
     private val deleteForecastSettings: Lazy<DeleteForecastSettingUseCase>,
@@ -64,6 +66,14 @@ class MainViewModel(
                 }
             }
             .launchIn(viewModelScope)
+
+        viewModelScope.launch {
+            _state.update {
+                it.copy(
+                    weatherData = getSavedWeatherData.execute(MapPoint("", "", 0.0, 0.0), 0, 0)
+                )
+            }
+        }
     }
 
     fun onEvent(event: Event) {
@@ -141,7 +151,8 @@ data class MainViewState(
     val currentProfile: Profile = Profile("", isCommon = true),
     val mapPoints: List<MapPoint> = emptyList(),
     val profiles: List<Profile> = emptyList(),
-    val forecastSettings: List<ForecastSetting> = emptyList()
+    val forecastSettings: List<ForecastSetting> = emptyList(),
+    val weatherData: List<WeatherData> = emptyList()
 )
 
 

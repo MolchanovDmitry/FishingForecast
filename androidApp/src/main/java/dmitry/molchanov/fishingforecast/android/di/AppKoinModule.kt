@@ -18,6 +18,7 @@ val appKoinModule = module {
             getForecastSettingMarks = get(),
             deleteForecastSettings = inject(),
             saveForecastSettingMarkUseCase = inject(),
+            getSavedWeatherData = get()
         )
     }
 }

@@ -68,6 +68,7 @@ dependencies {
         Deps.compose_view_model,
         Deps.compose_navigation,
 
+        Deps.plot,
         Deps.koin_core,
         Deps.koin_android,
     ).forEach(::implementation)

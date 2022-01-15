@@ -10,10 +10,12 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import dmitry.molchanov.fishingforecast.android.ui.NavItem
-import dmitry.molchanov.fishingforecast.android.ui.Screens
+import dmitry.molchanov.fishingforecast.android.ui.Screen
 import dmitry.molchanov.fishingforecast.android.ui.map.MapScreen
 import dmitry.molchanov.fishingforecast.android.ui.profile.ProfileScreen
 import dmitry.molchanov.fishingforecast.android.ui.setting.ForecastSettingsList
+import dmitry.molchanov.fishingforecast.android.ui.weather.WeatherListScreen
+import dmitry.molchanov.fishingforecast.android.ui.weather.WeatherScreen
 
 @Composable
 fun MainScreen(vm: MainViewModel) {
@@ -43,17 +45,36 @@ fun MainScreen(vm: MainViewModel) {
     ) { innerPadding ->
         NavHost(
             navController = navController,
-            startDestination = Screens.MAP.label,
+            startDestination = Screen.Map.label,
             modifier = Modifier.padding(innerPadding)
         ) {
-            composable(Screens.MAP.label) {
+            composable(Screen.Map.label) {
                 MapScreen(vm)
             }
-            composable(Screens.PROFILE.label) {
+            composable(Screen.Profile.label) {
                 ProfileScreen(vm)
             }
-            composable(Screens.FORECAST_SETTINGS.label) {
+            composable(Screen.ForecastSettings.label) {
                 ForecastSettingsList(vm)
+            }
+            composable(Screen.WeatherList.label) {
+                WeatherListScreen(vm) {
+                    navController.navigate(
+                        Screen.Weather.route(
+                            pointName = it.name,
+                            profileName = it.profileName ?: "",
+                        )
+                    )
+                }
+            }
+            composable(Screen.Weather.label) {
+                val profileName = it.arguments?.getString("profileName") ?: ""
+                val pointName = it.arguments?.getString("pointName")
+                val selectedWeatherData = vm.state.value.weatherData.filter { weatherData ->
+                    weatherData.mapPoint.profileName == profileName &&
+                            weatherData.mapPoint.name == pointName
+                }
+                WeatherScreen(selectedWeatherData)
             }
         }
     }

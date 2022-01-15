@@ -2,7 +2,7 @@ package dmitry.molchanov.fishingforecast.usecase.forecast
 
 import dmitry.molchanov.fishingforecast.model.ExactValueForecastMark
 import dmitry.molchanov.fishingforecast.model.ForecastSettingsItem.OBSERVATION_PERIOD
-import dmitry.molchanov.fishingforecast.utils.UnixTime
+import dmitry.molchanov.fishingforecast.utils.TimeMs
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toInstant
@@ -47,7 +47,7 @@ class GetForecastDayTest : BaseForecastTest() {
         assertEquals(1, forecasts.size)
     }
 
-    private fun getUnixDate(dayNumber: Int): UnixTime =
+    private fun getUnixDate(dayNumber: Int): TimeMs =
         LocalDateTime(
             year = 2016,
             monthNumber = 2,
