@@ -1,6 +1,5 @@
 package dmitry.molchanov.fishingforecast.model
 
-import dmitry.molchanov.fishingforecast.utils.string
 import kotlin.random.Random
 
 /**
@@ -48,11 +47,7 @@ val data = listOf(
     1641340800000,
     1641427200000,
     1641513600000
-).also {
-    it.forEach {
-        println("1488 " + it.string())
-    }
-}
+)
 val mockMapPoint = MapPoint("some point", profileName = "", 0.0, 0.0)
 val mockMapPoint2 = MapPoint("some point 2", profileName = "", 100.0, 100.0)
 val mockWeatherData by lazy {
