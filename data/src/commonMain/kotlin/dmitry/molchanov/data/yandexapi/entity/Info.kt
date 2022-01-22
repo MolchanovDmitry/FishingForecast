@@ -1,4 +1,4 @@
-package dmitry.molchanov.data.yandexapi
+package dmitry.molchanov.data.yandexapi.entity
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

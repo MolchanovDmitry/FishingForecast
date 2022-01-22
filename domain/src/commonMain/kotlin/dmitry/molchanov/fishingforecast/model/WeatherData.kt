@@ -16,7 +16,6 @@ class WeatherData(
     val mapPoint: MapPoint,
     val pressure: Pressure? = null,
     val temperature: Temperature? = null,
-    val temperatureWater: Float? = null,
     val wind: Wind? = null,
     val humidity: Float? = null
 
@@ -26,6 +25,7 @@ class Temperature(
     val min: Float? = null,
     val avg: Float? = null,
     val max: Float? = null,
+    val water: Float? = null
 )
 
 class Wind(

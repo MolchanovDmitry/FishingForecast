@@ -95,7 +95,7 @@ class GetForecastUseCase {
             TEMPERATURE_MIN -> weatherData.mapNotNull { it.temperature?.min }
             TEMPERATURE_AVG -> weatherData.mapNotNull { it.temperature?.avg }
             TEMPERATURE_MAX -> weatherData.mapNotNull { it.temperature?.max }
-            TEMPERATURE_WATER -> weatherData.mapNotNull { it.temperatureWater }
+            TEMPERATURE_WATER -> weatherData.mapNotNull { it.temperature?.water }
             HUMIDITY -> weatherData.mapNotNull { it.humidity }
             else -> error("Недопустимый элемент наблюдения $forecastSettingsItem")
         }

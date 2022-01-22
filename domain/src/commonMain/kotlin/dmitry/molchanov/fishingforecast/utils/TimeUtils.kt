@@ -6,6 +6,8 @@ typealias TimeMs = Long
 
 const val SEC_IN_DAY = 24 * 60 * 60
 
+const val ONE_SEC = 1_000L
+
 val nowUnixTime: TimeMs
     get() = Clock.System.now().epochSeconds
 
