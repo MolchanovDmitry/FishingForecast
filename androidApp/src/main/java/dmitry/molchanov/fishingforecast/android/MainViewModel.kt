@@ -6,6 +6,7 @@ import dmitry.molchanov.fishingforecast.model.ForecastSetting
 import dmitry.molchanov.fishingforecast.model.MapPoint
 import dmitry.molchanov.fishingforecast.model.Profile
 import dmitry.molchanov.fishingforecast.model.WeatherData
+import dmitry.molchanov.fishingforecast.repository.YandexWeatherRepository
 import dmitry.molchanov.fishingforecast.usecase.*
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.*
@@ -23,6 +24,7 @@ class MainViewModel(
     private val deleteForecastSettings: Lazy<DeleteForecastSettingUseCase>,
     private val getForecastSettingMarks: GetForecastSettingMarksUseCase,
     private val saveForecastSettingMarkUseCase: Lazy<SaveForecastSettingMarkUseCase>,
+    private val yandexWeatherRepository: YandexWeatherRepository
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(MainViewState())
@@ -31,7 +33,6 @@ class MainViewModel(
     private var allMapPoints: List<MapPoint> = emptyList()
 
     init {
-
         getCurrentProfileUseCase.execute()
             .onEach { profile ->
                 _state.update { mainViewState ->

@@ -21,6 +21,7 @@ android {
         versionName = "1.0"
 
         manifestPlaceholders["googleMapApiKey"] = googleMapApiKey
+        buildConfigField("String", "API_KEY", properties.getProperty("yandex.weather.api.key"))
     }
     buildTypes {
         getByName("release") {

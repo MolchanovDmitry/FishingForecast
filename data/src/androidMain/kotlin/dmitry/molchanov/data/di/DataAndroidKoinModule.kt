@@ -3,10 +3,12 @@ package dmitry.molchanov.data.di
 import com.russhwolf.settings.ObservableSettings
 import dmitry.molchanov.data.AppSettings
 import dmitry.molchanov.data.DriverFactory
+import dmitry.molchanov.data.yandexapi.YandexWeatherNetworkDataSourceImpl
 import dmitry.molchanov.db.AppDatabase
 import dmitry.molchanov.db.ForecastSettingQueries
 import dmitry.molchanov.db.MapPointQueries
 import dmitry.molchanov.db.ProfileQueries
+import dmitry.molchanov.fishingforecast.repository.YandexWeatherRepository
 import org.koin.dsl.module
 
 actual val dataPlatformModule = module {
@@ -29,6 +31,10 @@ actual val dataPlatformModule = module {
 
     single<ObservableSettings> {
         AppSettings(context = get()).settings
+    }
+
+    factory<YandexWeatherRepository> {
+        YandexWeatherNetworkDataSourceImpl(apiKey = get())
     }
 
 }

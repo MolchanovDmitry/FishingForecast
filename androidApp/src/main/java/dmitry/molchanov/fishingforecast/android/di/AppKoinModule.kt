@@ -1,10 +1,15 @@
 package dmitry.molchanov.fishingforecast.android.di
 
+import dmitry.molchanov.fishingforecast.android.BuildConfig
 import dmitry.molchanov.fishingforecast.android.MainViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
 val appKoinModule = module {
+
+    factory<String> {
+        BuildConfig.API_KEY
+    }
 
     viewModel<MainViewModel> {
         MainViewModel(
@@ -18,7 +23,8 @@ val appKoinModule = module {
             getForecastSettingMarks = get(),
             deleteForecastSettings = inject(),
             saveForecastSettingMarkUseCase = inject(),
-            getSavedWeatherData = get()
+            getSavedWeatherData = get(),
+            yandexWeatherRepository = get()
         )
     }
 }
