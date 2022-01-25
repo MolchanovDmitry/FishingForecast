@@ -11,6 +11,11 @@ selectAll:
 SELECT *
 FROM MapPoint;
 
+select:
+SELECT *
+FROM MapPoint
+WHERE id = ?;
+
 insert:
 INSERT INTO MapPoint(id, name, profileName, latitude, longitude)
 VALUES ?;
