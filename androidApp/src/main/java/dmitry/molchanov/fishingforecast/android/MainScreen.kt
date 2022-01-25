@@ -14,7 +14,7 @@ import dmitry.molchanov.fishingforecast.android.ui.Screen
 import dmitry.molchanov.fishingforecast.android.ui.map.MapScreen
 import dmitry.molchanov.fishingforecast.android.ui.profile.ProfileScreen
 import dmitry.molchanov.fishingforecast.android.ui.setting.ForecastSettingsList
-import dmitry.molchanov.fishingforecast.android.ui.weather.WeatherListScreen
+import dmitry.molchanov.fishingforecast.android.ui.weather.WeatherDebugScreen
 import dmitry.molchanov.fishingforecast.android.ui.weather.WeatherScreen
 
 @Composable
@@ -58,7 +58,7 @@ fun MainScreen(vm: MainViewModel) {
                 ForecastSettingsList(vm)
             }
             composable(Screen.WeatherList.label) {
-                WeatherListScreen(vm) {
+                WeatherDebugScreen(vm) {
                     navController.navigate(
                         Screen.Weather.route(
                             pointName = it.name,

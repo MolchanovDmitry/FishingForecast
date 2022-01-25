@@ -25,6 +25,7 @@ class MapPointRepositoryImpl(private val mapPointQueries: MapPointQueries) : Map
     private fun mapDataMapPointsToDomain(dataMapPoints: List<DataMapPoint>) =
         dataMapPoints.map {
             MapPoint(
+                id = it.id,
                 name = it.name,
                 profileName = it.profileName,
                 latitude = it.latitude,
@@ -34,6 +35,7 @@ class MapPointRepositoryImpl(private val mapPointQueries: MapPointQueries) : Map
 
     private fun MapPoint.mapToData() =
         DataMapPoint(
+            id = this.id,
             name = this.name,
             profileName = this.profileName,
             latitude = this.latitude,

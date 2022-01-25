@@ -48,8 +48,8 @@ val data = listOf(
     1641427200000,
     1641513600000
 )
-val mockMapPoint = MapPoint("some point", profileName = "", 0.0, 0.0)
-val mockMapPoint2 = MapPoint("some point 2", profileName = "", 100.0, 100.0)
+val mockMapPoint = MapPoint("1", "some point", profileName = "", 0.0, 0.0)
+val mockMapPoint2 = MapPoint("2", "some point 2", profileName = "", 100.0, 100.0)
 val mockWeatherData by lazy {
     data.map {
         WeatherData(

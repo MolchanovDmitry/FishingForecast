@@ -12,7 +12,7 @@ import dmitry.molchanov.fishingforecast.android.MainViewModel
 import dmitry.molchanov.fishingforecast.model.MapPoint
 
 @Composable
-fun WeatherListScreen(vm: MainViewModel, onMapPointSelected: (MapPoint) -> Unit) {
+fun WeatherDebugScreen(vm: MainViewModel, onMapPointSelected: (MapPoint) -> Unit) {
     val state = vm.state.collectAsState()
 
     LazyColumn(modifier = Modifier.fillMaxWidth()) {

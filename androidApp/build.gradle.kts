@@ -72,5 +72,6 @@ dependencies {
         Deps.plot,
         Deps.koin_core,
         Deps.koin_android,
+        Deps.koin_compose
     ).forEach(::implementation)
 }

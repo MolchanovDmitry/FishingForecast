@@ -1,0 +1,23 @@
+CREATE TABLE WeatherData(
+    mapPointId TEXT NOT NULL,
+    date INTEGER NOT NULL,
+    tempAvg REAL,
+    tempWater REAL,
+    windSpeed REAL,
+    windGust REAL,
+    windDir TEXT,
+    pressureMm REAL,
+    pressurePa REAL,
+    humidity REAL,
+    PRIMARY KEY (mapPointId, date),
+    FOREIGN KEY(mapPointId) REFERENCES MapPoint(id)
+);
+
+selectAll:
+SELECT *
+FROM WeatherData;
+
+insert:
+INSERT INTO WeatherData(mapPointId, date, tempAvg, tempWater, windSpeed, windGust, windDir,
+pressureMm, pressurePa, humidity)
+VALUES ?;

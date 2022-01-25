@@ -67,14 +67,6 @@ class MainViewModel(
                 }
             }
             .launchIn(viewModelScope)
-
-        viewModelScope.launch {
-            _state.update {
-                it.copy(
-                    weatherData = getSavedWeatherData.execute(MapPoint("", "", 0.0, 0.0), 0, 0)
-                )
-            }
-        }
     }
 
     fun onEvent(event: Event) {
