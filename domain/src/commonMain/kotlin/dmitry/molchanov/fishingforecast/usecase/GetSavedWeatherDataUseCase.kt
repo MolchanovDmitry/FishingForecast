@@ -5,6 +5,7 @@ import dmitry.molchanov.fishingforecast.model.WeatherData
 import dmitry.molchanov.fishingforecast.repository.WeatherDataRepository
 import dmitry.molchanov.fishingforecast.utils.TimeMs
 import dmitry.molchanov.fishingforecast.utils.ioDispatcher
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
 
 /**
@@ -12,8 +13,8 @@ import kotlinx.coroutines.withContext
  */
 class GetSavedWeatherDataUseCase(private val weatherDataRepository: WeatherDataRepository) {
 
-    suspend fun execute(mapPoint: MapPoint, from: TimeMs, to: TimeMs): List<WeatherData> =
+    suspend fun execute(mapPoint: MapPoint, from: TimeMs, to: TimeMs): Flow<List<WeatherData>> =
         withContext(ioDispatcher) {
-            weatherDataRepository.fetchWeatherData(mapPoint, from, to)
+            weatherDataRepository.fetchWeatherData(/*mapPoint, from, to*/)
         }
 }

@@ -4,6 +4,8 @@ import dmitry.molchanov.data.ForecastSettingRepositoryImpl
 import dmitry.molchanov.data.MapPointRepositoryImpl
 import dmitry.molchanov.data.ProfileRepositoryImpl
 import dmitry.molchanov.data.WeatherDataRepositoryImpl
+import dmitry.molchanov.db.AppDatabase
+import dmitry.molchanov.db.WeatherDataQueries
 import dmitry.molchanov.fishingforecast.repository.ForecastSettingsRepository
 import dmitry.molchanov.fishingforecast.repository.MapPointRepository
 import dmitry.molchanov.fishingforecast.repository.ProfileRepository
@@ -25,8 +27,15 @@ val dataCommonKoinModule = module {
         ForecastSettingRepositoryImpl(forecastSettingQueries = get())
     }
 
-    single<WeatherDataRepository>{
-        WeatherDataRepositoryImpl()
+    single<WeatherDataQueries> {
+        get<AppDatabase>().weatherDataQueries
+    }
+
+    single<WeatherDataRepository> {
+        WeatherDataRepositoryImpl(
+            weatherDataQueries = get(),
+            mapPointRepository = get()
+        )
     }
 
 }

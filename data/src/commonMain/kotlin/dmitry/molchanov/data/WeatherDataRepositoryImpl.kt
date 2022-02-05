@@ -3,13 +3,11 @@ package dmitry.molchanov.data
 import com.squareup.sqldelight.runtime.coroutines.asFlow
 import com.squareup.sqldelight.runtime.coroutines.mapToList
 import dmitry.molchanov.db.WeatherDataQueries
-import dmitry.molchanov.fishingforecast.model.MapPoint
 import dmitry.molchanov.fishingforecast.model.Pressure
 import dmitry.molchanov.fishingforecast.model.Temperature
 import dmitry.molchanov.fishingforecast.model.Wind
 import dmitry.molchanov.fishingforecast.repository.MapPointRepository
 import dmitry.molchanov.fishingforecast.repository.WeatherDataRepository
-import dmitry.molchanov.fishingforecast.utils.TimeMs
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import dmitry.molchanov.db.WeatherData as DataWeatherData
@@ -21,9 +19,9 @@ class WeatherDataRepositoryImpl(
 ) : WeatherDataRepository {
 
     override suspend fun fetchWeatherData(
-        mapPoint: MapPoint,
+        /*mapPoint: MapPoint,
         from: TimeMs,
-        to: TimeMs
+        to: TimeMs*/
     ): Flow<List<DomainWeatherData>> {
         return weatherDataQueries.selectAll()
             .asFlow()

@@ -17,6 +17,7 @@ class YandexWeatherNetworkDataSourceImpl(
                     "lat=${mapPoint.latitude}\n" +
                     "&lon=${mapPoint.longitude}"
         )
+        println("1488 result = $result")
         return result.getOrNull()
             ?.toDomainWeatherData(mapPoint)
             ?.let { Result.success(it) }

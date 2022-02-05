@@ -59,20 +59,13 @@ fun MainScreen(vm: MainViewModel) {
             }
             composable(Screen.WeatherList.label) {
                 WeatherDebugScreen(vm) {
-                    navController.navigate(
-                        Screen.Weather.route(
-                            pointName = it.name,
-                            profileName = it.profileName ?: "",
-                        )
-                    )
+                    navController.navigate(Screen.Weather.route(pointId = it.id,))
                 }
             }
             composable(Screen.Weather.label) {
-                val profileName = it.arguments?.getString("profileName") ?: ""
-                val pointName = it.arguments?.getString("pointName")
+                val pointId = it.arguments?.getString("pointId")
                 val selectedWeatherData = vm.state.value.weatherData.filter { weatherData ->
-                    weatherData.mapPoint.profileName == profileName &&
-                            weatherData.mapPoint.name == pointName
+                    weatherData.mapPoint.id == pointId
                 }
                 WeatherScreen(selectedWeatherData)
             }

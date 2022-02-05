@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
@@ -24,6 +25,8 @@ fun GraphItem(
     dataPoints: List<DataPoint> = defaultDataPoints,
     forecastMars: List<ForecastMark> = defaultForecastMarks
 ) {
+    //TODO
+    if (dataPoints.isEmpty()) return
     val maxBorderPoints = getMaxBorderPoints(dataPoints, forecastMars)
     val minBorderPoints = getMinBorderPoints(dataPoints, forecastMars)
     val maxY = maxBorderPoints?.firstOrNull()?.y ?: Float.MAX_VALUE
@@ -33,7 +36,7 @@ fun GraphItem(
             ?: Pair(null, null)
 
     Column(modifier = Modifier.fillMaxWidth()) {
-        Text(text = title)
+        Text(text = title, modifier = Modifier.align(Alignment.CenterHorizontally))
         LineGraph(
             plot = LinePlot(
                 listOfNotNull(

@@ -6,6 +6,7 @@ import dmitry.molchanov.fishingforecast.model.ForecastSetting
 import dmitry.molchanov.fishingforecast.model.MapPoint
 import dmitry.molchanov.fishingforecast.model.Profile
 import dmitry.molchanov.fishingforecast.model.WeatherData
+import dmitry.molchanov.fishingforecast.repository.WeatherDataRepository
 import dmitry.molchanov.fishingforecast.repository.YandexWeatherRepository
 import dmitry.molchanov.fishingforecast.usecase.*
 import kotlinx.coroutines.Job
@@ -24,7 +25,8 @@ class MainViewModel(
     private val deleteForecastSettings: Lazy<DeleteForecastSettingUseCase>,
     private val getForecastSettingMarks: GetForecastSettingMarksUseCase,
     private val saveForecastSettingMarkUseCase: Lazy<SaveForecastSettingMarkUseCase>,
-    private val yandexWeatherRepository: YandexWeatherRepository
+    private val yandexWeatherRepository: YandexWeatherRepository,
+    private val weatherDataRepository: WeatherDataRepository
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(MainViewState())
@@ -67,6 +69,14 @@ class MainViewModel(
                 }
             }
             .launchIn(viewModelScope)
+
+        viewModelScope.launch {
+            weatherDataRepository.fetchWeatherData()
+                .collect { weatherData ->
+                    println("1488 weather data = $weatherData")
+                    _state.update { it.copy(weatherData = weatherData) }
+                }
+        }
     }
 
     fun onEvent(event: Event) {
@@ -77,6 +87,22 @@ class MainViewModel(
             is SelectProfile -> selectProfile(event.name)
             is DeleteForecastSetting -> deleteForecastSetting(event)
             is SaveForecastSettingMark -> saveForecastSettingMark(event)
+            FetchWeatherData -> fetchWeatherData()
+        }
+    }
+
+    private fun fetchWeatherData() {
+        viewModelScope.launch {
+            state.value.mapPoints.forEach { mapPoint ->
+                // TODO
+                yandexWeatherRepository.getYandexWeatherDate(mapPoint)
+                    .onFailure { it.printStackTrace() }
+                    .getOrNull()
+                    ?.let { weatherData ->
+                        weatherDataRepository.saveWeatherData(weatherData)
+                        _state.update { it.copy(weatherData = weatherData) }
+                    }
+            }
         }
     }
 
@@ -151,6 +177,7 @@ data class MainViewState(
 
 sealed class Event
 
+object FetchWeatherData : Event()
 class CreateProfile(val name: Profile) : Event()
 class SelectProfile(val name: Profile) : Event()
 class DeleteProfile(val name: Profile) : Event()

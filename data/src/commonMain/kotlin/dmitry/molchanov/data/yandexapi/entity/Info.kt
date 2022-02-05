@@ -9,7 +9,7 @@ data class Info (
     @SerialName("url")
     val url: String,
     @SerialName("lat")
-    val lat: Int,
+    val lat: Double,
     @SerialName("lon")
-    val lon: Int,
+    val lon: Double,
 )

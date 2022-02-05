@@ -27,8 +27,7 @@ sealed class Screen(val label: String) {
     object Profile : Screen(label = "Profile")
     object ForecastSettings : Screen(label = "Forecast settings")
     object WeatherList : Screen(label = "Weather list")
-    object Weather : Screen(label = "Weather?profileName={profileName}/pointName={pointName}") {
-        fun route(profileName: String, pointName: String) =
-            "Weather?profileName=$profileName/pointName=$pointName"
+    object Weather : Screen(label = "Weather?pointId={pointId}") {
+        fun route(pointId: String) = "Weather?pointId=$pointId"
     }
 }

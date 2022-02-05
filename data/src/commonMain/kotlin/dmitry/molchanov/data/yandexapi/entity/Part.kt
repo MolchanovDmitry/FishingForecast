@@ -20,17 +20,17 @@ data class Part(
     @SerialName("wind_dir")
     val windDir: String? = null,
     @SerialName("pressure_mm")
-    val pressureMm: Int? = null,
+    val pressureMm: Double? = null,
     @SerialName("pressure_pa")
-    val pressurePa: Int? = null,
+    val pressurePa: Double? = null,
     @SerialName("humidity")
     val humidity: Int,
     @SerialName("prec_mm")
-    val precMm: Int? = null,
+    val precMm: Double? = null,
     @SerialName("prec_prob")
-    val precProb: Int? = null,
+    val precProb: Double? = null,
     @SerialName("prec_period")
-    val precPeriod: Int? = null,
+    val precPeriod: Double? = null,
     @SerialName("icon")
     val icon: String,
     @SerialName("condition")

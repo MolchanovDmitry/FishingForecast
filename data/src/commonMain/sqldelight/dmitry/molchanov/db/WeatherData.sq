@@ -18,6 +18,6 @@ SELECT *
 FROM WeatherData;
 
 insert:
-INSERT INTO WeatherData(mapPointId, date, tempAvg, tempWater, windSpeed, windGust, windDir,
+INSERT OR REPLACE INTO WeatherData(mapPointId, date, tempAvg, tempWater, windSpeed, windGust, windDir,
 pressureMm, pressurePa, humidity)
 VALUES ?;

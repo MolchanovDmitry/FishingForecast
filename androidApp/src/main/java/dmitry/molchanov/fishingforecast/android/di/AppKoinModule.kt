@@ -29,7 +29,8 @@ val appKoinModule = module {
             deleteForecastSettings = inject(),
             saveForecastSettingMarkUseCase = inject(),
             getSavedWeatherData = get(),
-            yandexWeatherRepository = get()
+            yandexWeatherRepository = get(),
+            weatherDataRepository = get()
         )
     }
 }
