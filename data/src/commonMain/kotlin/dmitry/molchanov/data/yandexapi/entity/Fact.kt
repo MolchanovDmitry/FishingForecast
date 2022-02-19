@@ -1,4 +1,4 @@
-package dmitry.molchanov.data.yandexapi
+package dmitry.molchanov.data.yandexapi.entity
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -8,9 +8,9 @@ data class Fact(
     @SerialName("obs_time")
     val obsTime: Int? = null,
     @SerialName("temp")
-    val temp: Int,
+    val temp: Float,
     @SerialName("temp_water")
-    val tempWater: Int? = null,
+    val tempWater: Float? = null,
     @SerialName("feels_like")
     val feelsLike: Int? = null,
     @SerialName("icon")
@@ -18,15 +18,15 @@ data class Fact(
     @SerialName("condition")
     val condition: String,
     @SerialName("wind_speed")
-    val windSpeed: Double? = null,
+    val windSpeed: Float? = null,
     @SerialName("wind_dir")
     val windDir: String? = null,
     @SerialName("pressure_mm")
-    val pressureMm: Int? = null,
+    val pressureMm: Float? = null,
     @SerialName("pressure_pa")
-    val pressurePa: Int? = null,
+    val pressurePa: Float? = null,
     @SerialName("humidity")
-    val humidity: Int,
+    val humidity: Float,
     @SerialName("daytime")
     val daytime: String,
     @SerialName("polar")
@@ -34,5 +34,5 @@ data class Fact(
     @SerialName("season")
     val season: String,
     @SerialName("wind_gust")
-    val windGust: Int? = null
+    val windGust: Float? = null
 )

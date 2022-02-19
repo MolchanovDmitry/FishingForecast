@@ -47,7 +47,6 @@ fun MapView(state: State<MainViewState>, vm: MainViewModel) {
     val isOpedDialog = remember { mutableStateOf(false) }
     var longClickPoint by remember { mutableStateOf(Pair(0.0, 0.0)) }
 
-    println("1488 map screen currentProfile = ${state.value.currentProfile}")
     Box {
         AndroidView(factory = {
             coroutineScope.launch {

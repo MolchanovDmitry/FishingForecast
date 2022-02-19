@@ -2,40 +2,41 @@ package dmitry.molchanov.fishingforecast.utils
 
 import kotlinx.datetime.*
 
-typealias UnixTime = Long
+typealias TimeMs = Long
 
 const val SEC_IN_DAY = 24 * 60 * 60
-private const val ONE_SEC = 1_000L
 
-val nowUnixTime: UnixTime
+const val ONE_SEC = 1_000L
+
+val nowUnixTime: TimeMs
     get() = Clock.System.now().epochSeconds
 
-val UnixTime.nightTime: UnixTime
+val TimeMs.nightTime: TimeMs
     get() = getTimeRoundedByDayPart(DayPart.NIGHT)
 
-val UnixTime.morningTime: UnixTime
+val TimeMs.morningTime: TimeMs
     get() = getTimeRoundedByDayPart(DayPart.MORNING)
 
-val UnixTime.midDayTime: UnixTime
+val TimeMs.midDayTime: TimeMs
     get() = getTimeRoundedByDayPart(DayPart.MIDDAY)
 
-val UnixTime.eveningTime: UnixTime
+val TimeMs.eveningTime: TimeMs
     get() = getTimeRoundedByDayPart(DayPart.EVENING)
 
-val UnixTime.daysCount: Int
-    get() = Instant.fromEpochMilliseconds((this) * ONE_SEC)
+val TimeMs.daysCount: Int
+    get() = Instant.fromEpochMilliseconds((this))
         .epochSeconds.getDayCount()
 
 /**
  * Получить время минус [count] дней.
  */
-fun UnixTime.getDayBefore(count: Int): UnixTime {
+fun TimeMs.getDayBefore(count: Int): TimeMs {
     val daysBeforeSec = count * SEC_IN_DAY
-    return Instant.fromEpochMilliseconds((this - daysBeforeSec) * ONE_SEC).epochSeconds
+    return Instant.fromEpochMilliseconds((this - daysBeforeSec)).epochSeconds
 }
 
-private fun UnixTime.getDayCount(): Int {
-    val nowMilliSec = Instant.fromEpochMilliseconds(this * ONE_SEC)
+fun TimeMs.getDayCount(): Int {
+    val nowMilliSec = Instant.fromEpochMilliseconds(this)
     val datetimeInUtc: LocalDateTime = nowMilliSec.toLocalDateTime(TimeZone.currentSystemDefault())
     return datetimeInUtc.dayOfMonth
 }
@@ -43,8 +44,8 @@ private fun UnixTime.getDayCount(): Int {
 /**
  * Получить время округленное значением [dayPart].
  */
-private fun UnixTime.getTimeRoundedByDayPart(dayPart: DayPart): UnixTime {
-    val nowMilliSec = Instant.fromEpochMilliseconds(this * ONE_SEC)
+private fun TimeMs.getTimeRoundedByDayPart(dayPart: DayPart): TimeMs {
+    val nowMilliSec = Instant.fromEpochMilliseconds(this)
     val datetimeInUtc: LocalDateTime = nowMilliSec.toLocalDateTime(TimeZone.currentSystemDefault())
     val roundedTime = LocalDateTime(
         year = datetimeInUtc.year,
@@ -61,14 +62,14 @@ private fun UnixTime.getTimeRoundedByDayPart(dayPart: DayPart): UnixTime {
 /**
  * Распечатать время.
  */
-fun UnixTime.string(): String {
-    val nowMilliSec = Instant.fromEpochMilliseconds(this * ONE_SEC)
+fun TimeMs.string(): String {
+    val nowMilliSec = Instant.fromEpochMilliseconds(this)
     val datetimeInUtc: LocalDateTime = nowMilliSec.toLocalDateTime(TimeZone.currentSystemDefault())
     return "Date: ${datetimeInUtc.year}" +
-                ".${datetimeInUtc.monthNumber}" +
-                ".${datetimeInUtc.dayOfMonth}" +
-                ".${datetimeInUtc.hour}" +
-                ":${datetimeInUtc.minute}"
+            ".${datetimeInUtc.monthNumber}" +
+            ".${datetimeInUtc.dayOfMonth}" +
+            ".${datetimeInUtc.hour}" +
+            ":${datetimeInUtc.minute}"
 }
 
 /**

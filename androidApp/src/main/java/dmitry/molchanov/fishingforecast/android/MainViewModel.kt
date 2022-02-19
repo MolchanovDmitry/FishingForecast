@@ -5,6 +5,9 @@ import androidx.lifecycle.viewModelScope
 import dmitry.molchanov.fishingforecast.model.ForecastSetting
 import dmitry.molchanov.fishingforecast.model.MapPoint
 import dmitry.molchanov.fishingforecast.model.Profile
+import dmitry.molchanov.fishingforecast.model.WeatherData
+import dmitry.molchanov.fishingforecast.repository.WeatherDataRepository
+import dmitry.molchanov.fishingforecast.repository.YandexWeatherRepository
 import dmitry.molchanov.fishingforecast.usecase.*
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.*
@@ -16,11 +19,14 @@ class MainViewModel(
     getCurrentProfileUseCase: GetCurrentProfileUseCase,
     private val saveProfileUseCase: SaveProfileUseCase,
     private val saveMapPointUseCase: SaveMapPointUseCase,
+    private val getSavedWeatherData: GetSavedWeatherDataUseCase,
     private val deleteProfileUseCase: Lazy<DeleteProfileUseCase>,
     private val selectProfileUseCase: Lazy<SelectProfileUseCase>,
     private val deleteForecastSettings: Lazy<DeleteForecastSettingUseCase>,
     private val getForecastSettingMarks: GetForecastSettingMarksUseCase,
     private val saveForecastSettingMarkUseCase: Lazy<SaveForecastSettingMarkUseCase>,
+    private val yandexWeatherRepository: YandexWeatherRepository,
+    private val weatherDataRepository: WeatherDataRepository
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(MainViewState())
@@ -29,7 +35,6 @@ class MainViewModel(
     private var allMapPoints: List<MapPoint> = emptyList()
 
     init {
-
         getCurrentProfileUseCase.execute()
             .onEach { profile ->
                 _state.update { mainViewState ->
@@ -64,6 +69,13 @@ class MainViewModel(
                 }
             }
             .launchIn(viewModelScope)
+
+        viewModelScope.launch {
+            weatherDataRepository.fetchWeatherData()
+                .collect { weatherData ->
+                    _state.update { it.copy(weatherData = weatherData) }
+                }
+        }
     }
 
     fun onEvent(event: Event) {
@@ -74,6 +86,20 @@ class MainViewModel(
             is SelectProfile -> selectProfile(event.name)
             is DeleteForecastSetting -> deleteForecastSetting(event)
             is SaveForecastSettingMark -> saveForecastSettingMark(event)
+            FetchWeatherData -> fetchWeatherData()
+        }
+    }
+
+    private fun fetchWeatherData() {
+        viewModelScope.launch {
+            state.value.mapPoints.forEach { mapPoint ->
+                yandexWeatherRepository.getYandexWeatherDate(mapPoint)
+                    .onFailure { it.printStackTrace() }
+                    .getOrNull()
+                    ?.let { weatherData ->
+                        weatherDataRepository.saveWeatherData(weatherData)
+                    }
+            }
         }
     }
 
@@ -141,12 +167,14 @@ data class MainViewState(
     val currentProfile: Profile = Profile("", isCommon = true),
     val mapPoints: List<MapPoint> = emptyList(),
     val profiles: List<Profile> = emptyList(),
-    val forecastSettings: List<ForecastSetting> = emptyList()
+    val forecastSettings: List<ForecastSetting> = emptyList(),
+    val weatherData: List<WeatherData> = emptyList()
 )
 
 
 sealed class Event
 
+object FetchWeatherData : Event()
 class CreateProfile(val name: Profile) : Event()
 class SelectProfile(val name: Profile) : Event()
 class DeleteProfile(val name: Profile) : Event()

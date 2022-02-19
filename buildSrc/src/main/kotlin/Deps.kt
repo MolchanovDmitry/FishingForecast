@@ -75,6 +75,10 @@ object Deps {
     private const val koin_version = "3.1.4"
     const val koin_core = "io.insert-koin:koin-core:$koin_version"
     const val koin_android = "io.insert-koin:koin-android:$koin_version"
+    const val koin_compose =  "io.insert-koin:koin-androidx-compose:$koin_version"
+
+    // Graphics
+    const val plot = "com.github.madrapps:plot:0.1.1"
 
 
     // Unit test

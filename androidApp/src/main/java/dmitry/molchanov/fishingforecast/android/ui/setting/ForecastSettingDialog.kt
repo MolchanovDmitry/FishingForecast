@@ -10,10 +10,12 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import dmitry.molchanov.fishingforecast.android.mapper.toString
 import dmitry.molchanov.fishingforecast.android.ui.DropDown
 import dmitry.molchanov.fishingforecast.model.*
 
@@ -41,7 +43,9 @@ fun ForecastSettingDialog(
                 DropDown(
                     modifier = Modifier.fillMaxWidth(),
                     label = "some label",
-                    suggestions = notSelectedItemToMarks.map { it.forecastSettingsItem.name },
+                    suggestions = notSelectedItemToMarks.map {
+                        it.forecastSettingsItem.toString(LocalContext.current)
+                    },
                     defaultSelectedIndex = 0,
                     onSelectIndex = { index ->
                         activeForecastSettingsItem =
@@ -141,7 +145,7 @@ private fun RowScope.SettingItem(title: String, value: Float? = null, onChange: 
         })
 }
 
-private fun MutableList<ForecastMark>.replaceOrAdd(forecastMark: ForecastMark){
+private fun MutableList<ForecastMark>.replaceOrAdd(forecastMark: ForecastMark) {
     firstOrNull { it::class == forecastMark::class }
         ?.let(::remove)
     add(forecastMark)

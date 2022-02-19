@@ -1,4 +1,4 @@
-package dmitry.molchanov.data.yandexapi
+package dmitry.molchanov.data.yandexapi.entity
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -16,7 +16,7 @@ data class Forecast (
     @SerialName("sunset")
     val sunset: String? = null,
     @SerialName("moon_code")
-    val moonCode: Int? = null,
+    val dmoonCode: Int? = null,
     @SerialName("moon_text")
     val moonText: String? = null,
     @SerialName("parts")

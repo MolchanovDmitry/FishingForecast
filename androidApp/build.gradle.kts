@@ -21,6 +21,7 @@ android {
         versionName = "1.0"
 
         manifestPlaceholders["googleMapApiKey"] = googleMapApiKey
+        buildConfigField("String", "API_KEY", properties.getProperty("yandex.weather.api.key"))
     }
     buildTypes {
         getByName("release") {
@@ -68,7 +69,9 @@ dependencies {
         Deps.compose_view_model,
         Deps.compose_navigation,
 
+        Deps.plot,
         Deps.koin_core,
         Deps.koin_android,
+        Deps.koin_compose
     ).forEach(::implementation)
 }

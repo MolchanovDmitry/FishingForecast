@@ -8,4 +8,6 @@ interface MapPointRepository {
     fun fetchMapPoints(): Flow<List<MapPoint>>
 
     suspend fun saveMapPoint(mapPoint: MapPoint)
+
+    suspend fun getMapPoint(id: String): MapPoint?
 }

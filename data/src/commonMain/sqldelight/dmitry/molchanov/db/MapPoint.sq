@@ -1,9 +1,9 @@
 CREATE TABLE MapPoint(
+    id TEXT NOT NULL PRIMARY KEY,
     name TEXT NOT NULL,
     profileName TEXT,
     latitude REAL NOT NULL,
     longitude REAL NOT NULL,
-    PRIMARY KEY (profileName, latitude, longitude),
     FOREIGN KEY(profileName) REFERENCES Profile(name)
 );
 
@@ -11,6 +11,11 @@ selectAll:
 SELECT *
 FROM MapPoint;
 
+select:
+SELECT *
+FROM MapPoint
+WHERE id = ?;
+
 insert:
-INSERT INTO MapPoint(name, profileName, latitude, longitude)
+INSERT INTO MapPoint(id, name, profileName, latitude, longitude)
 VALUES ?;

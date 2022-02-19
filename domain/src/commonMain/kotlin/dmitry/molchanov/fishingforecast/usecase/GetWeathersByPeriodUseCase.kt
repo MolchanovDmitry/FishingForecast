@@ -2,8 +2,9 @@ package dmitry.molchanov.fishingforecast.usecase
 
 import dmitry.molchanov.fishingforecast.model.MapPoint
 import dmitry.molchanov.fishingforecast.model.WeatherData
-import dmitry.molchanov.fishingforecast.utils.UnixTime
+import dmitry.molchanov.fishingforecast.utils.TimeMs
 import dmitry.molchanov.fishingforecast.utils.ioDispatcher
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
 
 /**
@@ -18,7 +19,7 @@ class GetWeathersByPeriodUseCase(
      * @param from начиная с какой даты смотреть.
      * @param to до какой даты смотреть.
      */
-    suspend fun execute(mapPoint: MapPoint, from: UnixTime, to: UnixTime): List<WeatherData> =
+    suspend fun execute(mapPoint: MapPoint, from: TimeMs, to: TimeMs): Flow<List<WeatherData>> =
         withContext(ioDispatcher) {
             getSavedWeatherDataUseCase.execute(mapPoint, from, to)
         }

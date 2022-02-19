@@ -89,14 +89,14 @@ class GetForecastUseCase {
         weatherData: List<WeatherData>
     ): List<Float> =
         when (forecastSettingsItem) {
-            PRESSURE_MM -> weatherData.map { it.pressure.mm }
-            PRESSURE_PA -> weatherData.map { it.pressure.pa }
-            WIND_SPEED -> weatherData.map { it.wind.speed }
-            TEMPERATURE_MIN -> weatherData.map { it.temperature.min }
-            TEMPERATURE_AVG -> weatherData.map { it.temperature.avg }
-            TEMPERATURE_MAX -> weatherData.map { it.temperature.max }
-            TEMPERATURE_WATER -> weatherData.map { it.temperatureWater }
-            HUMIDITY -> weatherData.map { it.humidity }
+            PRESSURE_MM -> weatherData.mapNotNull { it.pressure?.mm }
+            PRESSURE_PA -> weatherData.mapNotNull { it.pressure?.pa }
+            WIND_SPEED -> weatherData.mapNotNull { it.wind?.speed }
+            TEMPERATURE_MIN -> weatherData.mapNotNull { it.temperature?.min }
+            TEMPERATURE_AVG -> weatherData.mapNotNull { it.temperature?.avg }
+            TEMPERATURE_MAX -> weatherData.mapNotNull { it.temperature?.max }
+            TEMPERATURE_WATER -> weatherData.mapNotNull { it.temperature?.water }
+            HUMIDITY -> weatherData.mapNotNull { it.humidity }
             else -> error("Недопустимый элемент наблюдения $forecastSettingsItem")
         }
 }
