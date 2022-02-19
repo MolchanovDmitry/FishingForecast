@@ -23,7 +23,7 @@ import dmitry.molchanov.fishingforecast.model.MinValueForecastMark
 fun GraphItem(
     title: String = "Какой-то показатель",
     dataPoints: List<DataPoint> = defaultDataPoints,
-    forecastMars: List<ForecastMark> = defaultForecastMarks
+    forecastMars: List<ForecastMark>? = defaultForecastMarks
 ) {
     //TODO
     if (dataPoints.isEmpty()) return
@@ -93,10 +93,10 @@ fun GraphItem(
 /** Получить линию максимально допустимых значений */
 private fun getMaxBorderPoints(
     dataPoints: List<DataPoint>,
-    forecastMars: List<ForecastMark>
+    forecastMars: List<ForecastMark>?
 ): List<DataPoint>? {
     val maxValue =
-        (forecastMars.firstOrNull { it is MaxValueForecastMark } as? MaxValueForecastMark)
+        (forecastMars?.firstOrNull { it is MaxValueForecastMark } as? MaxValueForecastMark)
             ?.value
             ?: return null
     val startX = dataPoints.minOfOrNull { it.x } ?: return null
@@ -110,10 +110,10 @@ private fun getMaxBorderPoints(
 /** Получить линию минимально допустимых значений */
 private fun getMinBorderPoints(
     dataPoints: List<DataPoint>,
-    forecastMars: List<ForecastMark>
+    forecastMars: List<ForecastMark>?
 ): List<DataPoint>? {
     val minValue =
-        (forecastMars.firstOrNull { it is MinValueForecastMark } as? MinValueForecastMark)
+        (forecastMars?.firstOrNull { it is MinValueForecastMark } as? MinValueForecastMark)
             ?.value
             ?: return null
     val startX = dataPoints.minOfOrNull { it.x } ?: return null
@@ -129,11 +129,11 @@ private fun getMinBorderPoints(
  */
 private fun getDeltaBorderPoints(
     dataPoints: List<DataPoint>,
-    forecastMars: List<ForecastMark>,
+    forecastMars: List<ForecastMark>?,
     minY: Float
 ): Pair<List<DataPoint>, List<DataPoint>>? {
     val deltaValue =
-        (forecastMars.firstOrNull { it is DeltaForecastMark } as? DeltaForecastMark)
+        (forecastMars?.firstOrNull { it is DeltaForecastMark } as? DeltaForecastMark)
             ?.value
             ?: return null
     val startX = dataPoints.minOfOrNull { it.x } ?: return null

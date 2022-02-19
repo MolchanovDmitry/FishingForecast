@@ -73,7 +73,6 @@ class MainViewModel(
         viewModelScope.launch {
             weatherDataRepository.fetchWeatherData()
                 .collect { weatherData ->
-                    println("1488 weather data = $weatherData")
                     _state.update { it.copy(weatherData = weatherData) }
                 }
         }
@@ -94,13 +93,11 @@ class MainViewModel(
     private fun fetchWeatherData() {
         viewModelScope.launch {
             state.value.mapPoints.forEach { mapPoint ->
-                // TODO
                 yandexWeatherRepository.getYandexWeatherDate(mapPoint)
                     .onFailure { it.printStackTrace() }
                     .getOrNull()
                     ?.let { weatherData ->
                         weatherDataRepository.saveWeatherData(weatherData)
-                        _state.update { it.copy(weatherData = weatherData) }
                     }
             }
         }

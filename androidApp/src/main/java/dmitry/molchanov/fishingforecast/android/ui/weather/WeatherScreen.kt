@@ -9,11 +9,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import com.madrapps.plot.line.DataPoint
 import dmitry.molchanov.fishingforecast.android.R
+import dmitry.molchanov.fishingforecast.model.ForecastSetting
 import dmitry.molchanov.fishingforecast.model.WeatherData
 import dmitry.molchanov.fishingforecast.utils.getDayCount
 
 @Composable
-fun WeatherScreen(weatherData: List<WeatherData>) {
+fun WeatherScreen(weatherData: List<WeatherData>, forecastSettings: List<ForecastSetting>) {
     val scrollState = rememberScrollState()
     Column(
         modifier = Modifier

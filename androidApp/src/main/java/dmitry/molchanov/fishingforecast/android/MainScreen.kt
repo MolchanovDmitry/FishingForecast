@@ -67,7 +67,7 @@ fun MainScreen(vm: MainViewModel) {
                 val selectedWeatherData = vm.state.value.weatherData.filter { weatherData ->
                     weatherData.mapPoint.id == pointId
                 }
-                WeatherScreen(selectedWeatherData)
+                WeatherScreen(selectedWeatherData, vm.state.value.forecastSettings)
             }
         }
     }
