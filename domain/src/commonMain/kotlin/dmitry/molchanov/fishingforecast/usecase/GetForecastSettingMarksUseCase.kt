@@ -14,5 +14,5 @@ import kotlinx.coroutines.flow.flowOn
 class GetForecastSettingMarksUseCase(private val repository: ForecastSettingsRepository) {
 
     fun execute(profile: Profile): Flow<List<ForecastSetting>> =
-        repository.fetchForecastSettings(profile).flowOn(ioDispatcher)
+        repository.fetchForecastSettingsFlow(profile).flowOn(ioDispatcher)
 }

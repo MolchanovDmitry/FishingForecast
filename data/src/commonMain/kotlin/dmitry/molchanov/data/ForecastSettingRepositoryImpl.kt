@@ -14,9 +14,12 @@ class ForecastSettingRepositoryImpl(
 
 ) : ForecastSettingsRepository {
 
-    override fun fetchForecastSettings(profile: Profile): Flow<List<ForecastSetting>> =
+    override fun fetchForecastSettingsFlow(profile: Profile): Flow<List<ForecastSetting>> =
         forecastSettingQueries.selectAll().asFlow().mapToList()
             .map { it.toDomainForecastSetting(profile) }
+
+    override suspend fun fetchForecastSettings(profile: Profile): List<ForecastSetting> =
+        forecastSettingQueries.selectAll().executeAsList().toDomainForecastSetting(profile)
 
     override suspend fun deleteForecastSetting(profile: Profile, forecastSetting: ForecastSetting) {
         forecastSettingQueries.delete(

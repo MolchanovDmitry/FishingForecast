@@ -6,7 +6,9 @@ import kotlinx.coroutines.flow.Flow
 
 interface ForecastSettingsRepository {
 
-    fun fetchForecastSettings(profile: Profile): Flow<List<ForecastSetting>>
+    fun fetchForecastSettingsFlow(profile: Profile): Flow<List<ForecastSetting>>
+
+    suspend fun fetchForecastSettings(profile: Profile): List<ForecastSetting>
 
     suspend fun deleteForecastSetting(profile: Profile, forecastSetting: ForecastSetting)
 

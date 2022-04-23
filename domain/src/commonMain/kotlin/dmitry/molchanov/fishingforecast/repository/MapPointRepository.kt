@@ -5,7 +5,9 @@ import kotlinx.coroutines.flow.Flow
 
 interface MapPointRepository {
 
-    fun fetchMapPoints(): Flow<List<MapPoint>>
+    fun fetchMapPointsFlow(): Flow<List<MapPoint>>
+
+    suspend fun fetchMapPoints(): List<MapPoint>
 
     suspend fun saveMapPoint(mapPoint: MapPoint)
 

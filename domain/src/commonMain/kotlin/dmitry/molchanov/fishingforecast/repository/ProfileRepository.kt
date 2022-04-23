@@ -7,6 +7,8 @@ interface ProfileRepository {
 
     fun getProfilesFlow(): Flow<List<Profile>>
 
+    suspend fun getProfiles(): List<Profile>
+
     val currentProfileFlow: Flow<Profile>
 
     suspend fun createProfile(profile: Profile)

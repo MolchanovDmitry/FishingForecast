@@ -15,13 +15,17 @@ import dmitry.molchanov.db.Profile as DataProfile
 
 class ProfileRepositoryImpl(
     private val profileQueries: ProfileQueries,
-    private val appSettings: ObservableSettings
+    private val appSettings: ObservableSettings // TODO вынести в репозиторий
 ) : ProfileRepository {
 
     override fun getProfilesFlow(): Flow<List<Profile>> =
         profileQueries.selectAll().asFlow().mapToList().map {
             it.map { dataProfile -> dataProfile.toDomainProfile() }
         }
+
+    override suspend fun getProfiles(): List<Profile> {
+        return profileQueries.selectAll().executeAsList().map { it.toDomainProfile() }
+    }
 
     override val currentProfileFlow: Flow<Profile> =
         appSettings.toFlowSettings().getStringFlow(PROFILE_FLOW).map {

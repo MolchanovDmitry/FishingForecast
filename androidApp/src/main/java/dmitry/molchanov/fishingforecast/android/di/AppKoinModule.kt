@@ -2,6 +2,7 @@ package dmitry.molchanov.fishingforecast.android.di
 
 import dmitry.molchanov.fishingforecast.android.BuildConfig
 import dmitry.molchanov.fishingforecast.android.MainViewModel
+import dmitry.molchanov.fishingforecast.android.notifier.WeatherNotifierPresenter
 import dmitry.molchanov.fishingforecast.android.ui.weather.WeatherDebugViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
@@ -10,6 +11,15 @@ val appKoinModule = module {
 
     factory<String> {
         BuildConfig.API_KEY
+    }
+
+    factory<WeatherNotifierPresenter> {
+        // TODO вынести в отдельный модуль.
+        WeatherNotifierPresenter(
+            getCurrentWeatherDataUseCase = get(),
+            getMapPointsUseCase = get(),
+            saveWeatherDataUseCase = get(),
+        )
     }
 
     viewModel<WeatherDebugViewModel> {

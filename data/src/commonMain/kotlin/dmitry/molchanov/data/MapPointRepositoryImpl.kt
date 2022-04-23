@@ -11,11 +11,15 @@ import dmitry.molchanov.fishingforecast.model.MapPoint as DomainMapPoint
 
 class MapPointRepositoryImpl(private val mapPointQueries: MapPointQueries) : MapPointRepository {
 
-    override fun fetchMapPoints(): Flow<List<DomainMapPoint>> {
+    override fun fetchMapPointsFlow(): Flow<List<DomainMapPoint>> {
         return mapPointQueries.selectAll()
             .asFlow()
             .mapToList()
             .map(::mapDataMapPointsToDomain)
+    }
+
+    override suspend fun fetchMapPoints(): List<DomainMapPoint> {
+        return mapPointQueries.selectAll().executeAsList().map (::getDomainMapPoint)
     }
 
     override suspend fun saveMapPoint(mapPoint: DomainMapPoint) {

@@ -13,7 +13,10 @@ import kotlinx.coroutines.withContext
 class GetProfileForecastSettingsUseCase(
     private val forecastSettingsRepository: ForecastSettingsRepository
 ) {
-    suspend fun execute(profile: Profile): Flow<List<ForecastSetting>> =
+     fun executeFlow(profile: Profile): Flow<List<ForecastSetting>> =
+            forecastSettingsRepository.fetchForecastSettingsFlow(profile)
+
+    suspend fun execute(profile: Profile): List<ForecastSetting> =
         withContext(ioDispatcher) {
             forecastSettingsRepository.fetchForecastSettings(profile)
         }

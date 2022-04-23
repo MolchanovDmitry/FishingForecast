@@ -14,6 +14,7 @@ class App : Application() {
 
     override fun onCreate() {
         super.onCreate()
+
         startKoin {
             androidLogger(if (BuildConfig.DEBUG) Level.ERROR else Level.NONE)
             androidContext(this@App)

@@ -40,6 +40,7 @@ class MainActivity : AppCompatActivity() {
                     getString(R.string.reminders_notification_channel_name),
                     NotificationManager.IMPORTANCE_LOW
                 )
+                channel.setSound(null, null)
                 ContextCompat.getSystemService(this, NotificationManager::class.java)
                     ?.createNotificationChannel(channel)
             }

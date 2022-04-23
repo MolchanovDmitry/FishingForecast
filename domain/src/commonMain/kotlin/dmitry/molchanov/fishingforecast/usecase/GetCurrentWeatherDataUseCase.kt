@@ -9,7 +9,9 @@ import kotlinx.coroutines.withContext
 /**
  * Получить сохраненное значение погоды по точке на карте.
  */
-class GetCurrentWeatherDataUseCase (private val yandexWeatherRepository: YandexWeatherRepository) {
+class GetCurrentWeatherDataUseCase(
+    private val yandexWeatherRepository: YandexWeatherRepository
+) {
 
     suspend fun execute(mapPoint: MapPoint): List<WeatherData>? = withContext(ioDispatcher) {
         yandexWeatherRepository.getYandexWeatherDate(mapPoint).getOrNull()

@@ -11,7 +11,6 @@ import dmitry.molchanov.fishingforecast.repository.YandexWeatherRepository
 import dmitry.molchanov.fishingforecast.usecase.*
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.launch
 
 class MainViewModel(
     getProfilesUseCase: GetProfilesUseCase,
@@ -51,12 +50,12 @@ class MainViewModel(
             }
             .launchIn(viewModelScope)
 
-        getProfilesUseCase.execute()
+        getProfilesUseCase.executeFlow()
             .onEach { profiles ->
                 _state.update { it.copy(profiles = profiles) }
             }.launchIn(viewModelScope)
 
-        getMapPointsUseCase.execute()
+        getMapPointsUseCase.executeFlow()
             .onEach { mapPoints ->
                 this.allMapPoints = mapPoints
                 _state.update { mainViewState ->
