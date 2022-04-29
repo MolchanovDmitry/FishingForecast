@@ -47,7 +47,7 @@ object Deps {
     const val maps_v3 = "com.google.maps.android:maps-v3-ktx:2.2.0"
 
     /* Compose */
-    const val compose_version = "1.0.5"
+    const val compose_version = "1.1.1"
 
     const val compose_activity = "androidx.activity:activity-compose:1.3.1"
     const val compose_ui = "androidx.compose.ui:ui:$compose_version"
