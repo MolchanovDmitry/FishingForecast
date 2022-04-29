@@ -1,13 +1,8 @@
 package dmitry.molchanov.fishingforecast.android
 
-import android.app.NotificationChannel
-import android.app.NotificationManager
-import android.content.Context
-import android.os.Build
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : AppCompatActivity() {
@@ -19,25 +14,6 @@ class MainActivity : AppCompatActivity() {
         setContent {
             MainScreen(vm)
         }
-
-        createNotificationsChannels()
     }
 
-    private fun createNotificationsChannels() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channelId = getString(R.string.reminders_notification_channel_id)
-            val notificationManager =
-                getSystemService(Context.NOTIFICATION_SERVICE) as? NotificationManager
-            if (notificationManager?.getNotificationChannel(channelId) == null) {
-                val channel = NotificationChannel(
-                    channelId,
-                    getString(R.string.reminders_notification_channel_name),
-                    NotificationManager.IMPORTANCE_LOW
-                )
-                channel.setSound(null, null)
-                ContextCompat.getSystemService(this, NotificationManager::class.java)
-                    ?.createNotificationChannel(channel)
-            }
-        }
-    }
 }
