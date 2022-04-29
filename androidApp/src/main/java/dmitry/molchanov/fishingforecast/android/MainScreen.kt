@@ -16,6 +16,8 @@ import dmitry.molchanov.fishingforecast.android.ui.profile.ProfileScreen
 import dmitry.molchanov.fishingforecast.android.ui.setting.ForecastSettingsList
 import dmitry.molchanov.fishingforecast.android.ui.weather.WeatherDebugScreen
 import dmitry.molchanov.fishingforecast.android.ui.weather.WeatherScreen
+import dmitry.molchanov.fishingforecast.model.MapPoint
+import dmitry.molchanov.fishingforecast.model.toMapPoint
 
 @Composable
 fun MainScreen(vm: MainViewModel) {
@@ -59,15 +61,13 @@ fun MainScreen(vm: MainViewModel) {
             }
             composable(Screen.WeatherList.label) {
                 WeatherDebugScreen(vm) {
-                    navController.navigate(Screen.Weather.route(pointId = it.id,))
+                    navController.navigate(Screen.Weather.route(mapPoint = it))
                 }
             }
             composable(Screen.Weather.label) {
-                val pointId = it.arguments?.getString("pointId")
-                val selectedWeatherData = vm.state.value.weatherData.filter { weatherData ->
-                    weatherData.mapPoint.id == pointId
-                }
-                WeatherScreen(selectedWeatherData, vm.state.value.forecastSettings)
+                val mapPoint = it.arguments?.getString("mapPoint")?.toMapPoint()
+                    ?: return@composable
+                WeatherScreen(mapPoint, vm.state.value.forecastSettings)
             }
         }
     }

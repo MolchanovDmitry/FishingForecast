@@ -4,22 +4,33 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import com.madrapps.plot.line.DataPoint
 import dmitry.molchanov.fishingforecast.android.R
+import dmitry.molchanov.fishingforecast.android.WeatherStatisticViewModel
 import dmitry.molchanov.fishingforecast.model.ForecastSetting
+import dmitry.molchanov.fishingforecast.model.MapPoint
 import dmitry.molchanov.fishingforecast.model.WeatherData
 import dmitry.molchanov.fishingforecast.utils.getDayCount
+import org.koin.androidx.compose.viewModel
+import org.koin.core.parameter.parametersOf
 
 @Composable
-fun WeatherScreen(weatherData: List<WeatherData>, forecastSettings: List<ForecastSetting>) {
-    val scrollState = rememberScrollState()
+fun WeatherScreen(
+    mapPointId: MapPoint,
+    forecastSettings: List<ForecastSetting>
+) {
+    val weatherViewModel by viewModel<WeatherStatisticViewModel> { parametersOf(mapPointId) }
+    val state = weatherViewModel.stateFlow.collectAsState()
+    val weatherData = state.value.weatherData
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .verticalScroll(scrollState)
+            .verticalScroll(rememberScrollState())
     ) {
         weatherData.mapNotNull {
             it.temperature?.avg?.let(it::getDataPointByValue)

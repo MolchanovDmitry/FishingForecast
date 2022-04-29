@@ -70,12 +70,10 @@ class MainViewModel(
             }
             .launchIn(viewModelScope)
 
-        viewModelScope.launch {
-            weatherDataRepository.fetchWeatherData()
-                .collect { weatherData ->
-                    _state.update { it.copy(weatherData = weatherData) }
-                }
-        }
+        weatherDataRepository.fetchWeatherData()
+            .onEach { weatherData ->
+                _state.update { it.copy(weatherData = weatherData) }
+            }.launchIn(viewModelScope)
     }
 
     fun onEvent(event: Event) {

@@ -19,7 +19,7 @@ class YandexWeatherNetworkDataSourceImpl(
         )
         return result.getOrNull()
             ?.toDomainWeatherData(mapPoint)
-            ?.let { Result.success(it) }
+            ?.let { weatherData -> Result.success(weatherData) }
             ?: Result.failure(result.exceptionOrNull() ?: Throwable())
     }
 
