@@ -10,7 +10,7 @@ class BootReceiver : BroadcastReceiver() {
     * */
     override fun onReceive(context: Context, intent: Intent) {
         if (intent.action == "android.intent.action.BOOT_COMPLETED") {
-            WeatherNotifierService.start(context)
+            // TODO реализовать обработка перезапуска устройства.
         }
     }
 }

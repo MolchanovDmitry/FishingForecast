@@ -8,7 +8,6 @@ import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import dmitry.molchanov.fishingforecast.android.notifier.WeatherNotifierService
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : AppCompatActivity() {
@@ -22,11 +21,6 @@ class MainActivity : AppCompatActivity() {
         }
 
         createNotificationsChannels()
-        runNotifierService()
-    }
-
-    private fun runNotifierService() {
-        WeatherNotifierService.start(context = this)
     }
 
     private fun createNotificationsChannels() {

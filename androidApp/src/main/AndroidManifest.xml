@@ -28,11 +28,6 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="${googleMapApiKey}" />
 
-        <service
-            android:foregroundServiceType="dataSync"
-            android:name=".notifier.WeatherNotifierService"
-            android:exported="false" />
-
         <receiver
             android:name=".notifier.BootReceiver"
             android:enabled="true"

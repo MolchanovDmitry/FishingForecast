@@ -1,42 +1,41 @@
 package dmitry.molchanov.fishingforecast.android
 
-import android.util.Log
+import android.app.Notification
+import androidx.core.app.NotificationCompat
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
+import dmitry.molchanov.fishingforecast.android.notifier.WeatherNotifierPresenter
+import kotlinx.coroutines.*
+import org.koin.android.ext.android.inject
 
-class MyFirebaseMessagingService : FirebaseMessagingService(){
+const val NOTIFICATION_ID = 1
+
+class MyFirebaseMessagingService : FirebaseMessagingService() {
+
+    private val presenter by inject<WeatherNotifierPresenter>()
+    private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
 
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
-        // ...
-
-        // TODO(developer): Handle FCM messages here.
-        // Not getting messages here? See why this may be: https://goo.gl/39bRNJ
-        Log.d(TAG, "From: ${remoteMessage.from}")
-
-        // Check if message contains a data payload.
-        if (remoteMessage.data.isNotEmpty()) {
-            Log.d(TAG, "Message data payload: ${remoteMessage.data}")
-
-            if (/* Check if data needs to be processed by long running job */ true) {
-                // For long-running tasks (10 seconds or more) use WorkManager.
-                //scheduleJob()
-            } else {
-                // Handle message within 10 seconds
-                //handleNow()
-            }
-        }
-
-        // Check if message contains a notification payload.
-        remoteMessage.notification?.let {
-            Log.d(TAG, "Message Notification Body: ${it.body}")
-        }
-
-        // Also if you intend on generating your own notifications as a result of a received FCM
-        // message, here is where that should be initiated. See sendNotification method below.
+        setNotification()
+        checkWeather()
     }
 
-    companion object{
-        const val TAG = "1488"
+    private fun checkWeather() = scope.launch {
+        presenter.getForecast()
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        scope.cancel()
+    }
+
+    private fun setNotification() {
+        val notification: Notification =
+            NotificationCompat.Builder(this, getString(R.string.reminders_notification_channel_id))
+                .setContentTitle(getText(R.string.notification_title))
+                .setContentText(getText(R.string.notification_title))
+                .setSmallIcon(R.drawable.common_google_signin_btn_icon_dark)
+                .build()
+        startForeground(NOTIFICATION_ID, notification)
+    }
 }
