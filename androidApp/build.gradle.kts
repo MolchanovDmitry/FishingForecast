@@ -2,6 +2,7 @@ import java.util.*
 
 plugins {
     id("com.android.application")
+    id("com.google.gms.google-services")
     kotlin("android")
     kotlin("kapt")
 }
@@ -45,6 +46,9 @@ android {
 }
 
 dependencies {
+    implementation(platform("com.google.firebase:firebase-bom:29.3.1"))
+    implementation("com.google.firebase:firebase-analytics-ktx")
+    implementation("com.google.firebase:firebase-messaging-ktx:23.0.3")
     listOf(
         project(":data"),
         project(":domain"),

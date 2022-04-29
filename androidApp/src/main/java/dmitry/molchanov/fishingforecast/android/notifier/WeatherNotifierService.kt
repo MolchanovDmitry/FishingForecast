@@ -4,8 +4,8 @@ import android.app.Notification
 import android.app.Service
 import android.content.Context
 import android.content.Intent
-import android.os.*
-import androidx.compose.runtime.getValue
+import android.os.Build
+import android.os.IBinder
 import androidx.core.app.NotificationCompat
 import dmitry.molchanov.fishingforecast.android.R
 import dmitry.molchanov.fishingforecast.utils.ONE_SEC
@@ -19,8 +19,7 @@ const val NOTIFICATION_ID = 1
 class WeatherNotifierService : Service() {
 
     private val presenter by inject<WeatherNotifierPresenter>()
-    private val handlerThread by lazy{ HandlerThread("Service").apply { start() }  }
-    private val handler by lazy { Handler(handlerThread.looper) }
+    private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
 
     override fun onBind(intent: Intent?): IBinder? = null
 
@@ -33,15 +32,12 @@ class WeatherNotifierService : Service() {
 
     private fun startNotifierJob(time: Long?) {
         val firstTime = System.currentTimeMillis()
-        handler.post{
-            runBlocking {
-                presenter.getForecast()
-            }
-        }
-        count += 1
-        val delay = ONE_SEC * 60 * 60
-        setNotification(count, time, System.currentTimeMillis() + delay)
-        handler.postDelayed(ONE_SEC * 60 * 60) {
+        scope.launch {
+            presenter.getForecast()
+            count += 1
+            val delay = ONE_SEC * 60 * 60
+            setNotification(count, time, System.currentTimeMillis() + delay)
+            delay(ONE_SEC * 60 * 60)
             val last = System.currentTimeMillis()
             val totalTime = last - firstTime
             startNotifierJob(totalTime)
@@ -50,7 +46,7 @@ class WeatherNotifierService : Service() {
 
     override fun onDestroy() {
         super.onDestroy()
-        handler.removeCallbacksAndMessages(null)
+        scope.cancel()
     }
 
     private fun setNotification(count: Int = 0, time: Long?, nextTimeCheck: Long?) {

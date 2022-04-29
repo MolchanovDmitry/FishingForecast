@@ -11,6 +11,7 @@ import dmitry.molchanov.fishingforecast.repository.YandexWeatherRepository
 import dmitry.molchanov.fishingforecast.usecase.*
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.launch
 
 class MainViewModel(
     getProfilesUseCase: GetProfilesUseCase,

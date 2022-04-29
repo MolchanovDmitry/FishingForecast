@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "907940148176",
+    "project_id": "fishingforecast-ba489",
+    "storage_bucket": "fishingforecast-ba489.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:907940148176:android:bc20dc1331cb5f99567fd5",
+        "android_client_info": {
+          "package_name": "dmitry.molchanov.fishingforecast.android"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "907940148176-vc7bq014m1v4udrp1f3r7bvi8mm79k4o.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyArKeZPBeJCUAZjttLavabUfoXqLfgkc9k"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "907940148176-vc7bq014m1v4udrp1f3r7bvi8mm79k4o.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
