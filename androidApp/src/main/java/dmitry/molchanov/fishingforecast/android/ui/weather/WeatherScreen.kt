@@ -12,9 +12,7 @@ import androidx.compose.ui.res.stringResource
 import com.madrapps.plot.line.DataPoint
 import dmitry.molchanov.fishingforecast.android.R
 import dmitry.molchanov.fishingforecast.android.WeatherStatisticViewModel
-import dmitry.molchanov.fishingforecast.model.ForecastSetting
-import dmitry.molchanov.fishingforecast.model.MapPoint
-import dmitry.molchanov.fishingforecast.model.WeatherData
+import dmitry.molchanov.fishingforecast.model.*
 import dmitry.molchanov.fishingforecast.utils.getDayCount
 import org.koin.androidx.compose.viewModel
 import org.koin.core.parameter.parametersOf
@@ -27,11 +25,20 @@ fun WeatherScreen(
     val weatherViewModel by viewModel<WeatherStatisticViewModel> { parametersOf(mapPointId) }
     val state = weatherViewModel.stateFlow.collectAsState()
     val weatherData = state.value.weatherData
+    val forecasts = state.value.forecasts
+    var positiveCount = 0
+    forecasts.forEach { forecast ->
+        if (forecast.isGood) positiveCount += 1
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
     ) {
+
+        Text(text = "Общая оценка = $positiveCount из ${forecasts.size}")
+
         weatherData.mapNotNull {
             it.temperature?.avg?.let(it::getDataPointByValue)
         }.ifEmpty { null }
@@ -41,6 +48,7 @@ fun WeatherScreen(
                     dataPoints = avgTemperature
                 )
             }
+        forecasts.GetItemForecast(ForecastSettingsItem.TEMPERATURE_AVG)
 
         weatherData.mapNotNull {
             it.temperature?.water?.let(it::getDataPointByValue)
@@ -51,6 +59,7 @@ fun WeatherScreen(
                     dataPoints = waterTemperature
                 )
             }
+        forecasts.GetItemForecast(ForecastSettingsItem.TEMPERATURE_WATER)
 
         weatherData.mapNotNull {
             it.pressure?.mm?.let(it::getDataPointByValue)
@@ -58,6 +67,7 @@ fun WeatherScreen(
             ?.let { pressure ->
                 GraphItem(title = stringResource(R.string.pressure_mm), dataPoints = pressure)
             }
+        forecasts.GetItemForecast(ForecastSettingsItem.PRESSURE_MM)
 
         weatherData.mapNotNull {
             it.humidity?.let(it::getDataPointByValue)
@@ -65,9 +75,19 @@ fun WeatherScreen(
             ?.let { humidity ->
                 GraphItem(title = stringResource(R.string.humidity), dataPoints = humidity)
             }
+        forecasts.GetItemForecast(ForecastSettingsItem.HUMIDITY)
     }
 }
 
 /** Получить точку дата - значение. */
 fun WeatherData.getDataPointByValue(value: Float): DataPoint =
     DataPoint(date.getDayCount().toFloat(), value)
+
+@Composable
+private fun List<Forecast>.GetItemForecast(forecastSettingsItem: ForecastSettingsItem) {
+    firstOrNull { forecast ->
+        forecast.forecastSettingsItem == forecastSettingsItem
+    }?.let { forecast ->
+        Text(text = "Оценка: ${forecast.isGood}")
+    }
+}
