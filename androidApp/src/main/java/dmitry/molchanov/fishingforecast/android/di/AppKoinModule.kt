@@ -50,6 +50,7 @@ val appKoinModule = module {
         WeatherStatisticViewModel(
             mapPoint = parameters.get<MapPoint>(),
             getProfilesUseCase = get(),
+            getForecastUseCase = get(),
             weatherDataRepository = get(),
             getForecastSettingMarksUseCase = get()
         )

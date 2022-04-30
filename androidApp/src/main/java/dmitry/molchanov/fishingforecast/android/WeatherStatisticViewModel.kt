@@ -5,18 +5,21 @@ import androidx.lifecycle.viewModelScope
 import dmitry.molchanov.fishingforecast.model.*
 import dmitry.molchanov.fishingforecast.repository.WeatherDataRepository
 import dmitry.molchanov.fishingforecast.usecase.GetForecastSettingMarksUseCase
+import dmitry.molchanov.fishingforecast.usecase.GetForecastUseCase
 import dmitry.molchanov.fishingforecast.usecase.GetProfilesUseCase
 import dmitry.molchanov.fishingforecast.utils.ONE_SEC
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
 data class WeatherStatisticViewState(
-    val weatherData: List<WeatherData> = emptyList()
+    val weatherData: List<WeatherData> = emptyList(),
+    val forecasts: List<Forecast> = emptyList()
 )
 
 class WeatherStatisticViewModel(
     private val mapPoint: MapPoint,
     getProfilesUseCase: GetProfilesUseCase,
+    private val getForecastUseCase: GetForecastUseCase,
     private val weatherDataRepository: WeatherDataRepository,
     private val getForecastSettingMarksUseCase: GetForecastSettingMarksUseCase
 ) : ViewModel() {
@@ -29,16 +32,21 @@ class WeatherStatisticViewModel(
             getProfilesUseCase.execute()
                 .firstOrNull { (it.isCommon && mapPoint.profileName == null) || (it.name == mapPoint.profileName) }
                 ?.let { profile ->
-                    val period = getObservationPeriod(profile)
+                    val forecastSettings = getForecastSettings(profile)
+                    val period = getObservationPeriod(forecastSettings)
                         ?: error("Не найден период прогнозирования для профиля")
-                    observeWeather(period)
+                    observeWeather(period, forecastSettings)
                 }
                 ?: error("Нет совпадения по профилю.")
         }
     }
 
-    private suspend fun getObservationPeriod(profile: Profile): Period? {
-        getForecastSettingMarksUseCase.execute(profile)
+    private suspend fun getForecastSettings(profile: Profile): List<ForecastSetting> {
+        return getForecastSettingMarksUseCase.execute(profile)
+    }
+
+    private fun getObservationPeriod(forecastSettings: List<ForecastSetting>): Period? {
+        forecastSettings
             .firstOrNull { it.forecastSettingsItem == ForecastSettingsItem.OBSERVATION_PERIOD }
             ?.let { forecastSetting ->
                 forecastSetting.forecastMarks
@@ -54,13 +62,17 @@ class WeatherStatisticViewModel(
         return null
     }
 
-    private fun observeWeather(period: Period) {
+    private fun observeWeather(period: Period, forecastSettings: List<ForecastSetting>) {
         weatherDataRepository.fetchWeatherData(
             mapPoint = mapPoint,
             from = period.from,
             to = period.to
         ).onEach { weatherData ->
-            state.update { it.copy(weatherData = weatherData) }
+            state.update {
+                val forecasts = getForecastUseCase.execute(weatherData, forecastSettings)
+                it.copy(weatherData = weatherData, forecasts = forecasts)
+            }
+
         }.launchIn(viewModelScope)
     }
 
