@@ -70,7 +70,7 @@ class MainViewModel(
             }
             .launchIn(viewModelScope)
 
-        weatherDataRepository.fetchWeatherData()
+        weatherDataRepository.fetchAllWeatherData()
             .onEach { weatherData ->
                 _state.update { it.copy(weatherData = weatherData) }
             }.launchIn(viewModelScope)
@@ -114,7 +114,7 @@ class MainViewModel(
 
     private fun updateForecastSettings(profile: Profile) {
         updateForecastJob?.cancel()
-        updateForecastJob = getForecastSettingMarks.execute(profile)
+        updateForecastJob = getForecastSettingMarks.executeFlow(profile)
             .onEach { forecastSettings ->
                 _state.update { it.copy(forecastSettings = forecastSettings) }
             }

@@ -6,6 +6,7 @@ import dmitry.molchanov.fishingforecast.repository.ForecastSettingsRepository
 import dmitry.molchanov.fishingforecast.utils.ioDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.withContext
 
 /**
  * Получить парочку элемент прогнозирования  - значение.
@@ -13,6 +14,10 @@ import kotlinx.coroutines.flow.flowOn
  */
 class GetForecastSettingMarksUseCase(private val repository: ForecastSettingsRepository) {
 
-    fun execute(profile: Profile): Flow<List<ForecastSetting>> =
+    suspend fun execute(profile: Profile): List<ForecastSetting> = withContext(ioDispatcher) {
+        repository.fetchForecastSettings(profile)
+    }
+
+    fun executeFlow(profile: Profile): Flow<List<ForecastSetting>> =
         repository.fetchForecastSettingsFlow(profile).flowOn(ioDispatcher)
 }

@@ -22,6 +22,6 @@ class GetSavedWeatherDataTest {
         val from = nowUnixTime
         val to = nowUnixTime + 777
         getSavedWeatherDataUseCase.execute(mapPoint, from, to)
-        verify(repository).fetchWeatherData(mapPoint, from, to)
+        verify(repository).fetchAllWeatherData(mapPoint, from, to)
     }
 }

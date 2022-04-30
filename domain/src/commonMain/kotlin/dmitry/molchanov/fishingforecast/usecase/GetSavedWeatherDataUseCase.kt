@@ -15,6 +15,6 @@ class GetSavedWeatherDataUseCase(private val weatherDataRepository: WeatherDataR
 
     suspend fun execute(mapPoint: MapPoint, from: TimeMs, to: TimeMs): Flow<List<WeatherData>> =
         withContext(ioDispatcher) {
-            weatherDataRepository.fetchWeatherData(/*mapPoint, from, to*/)
+            weatherDataRepository.fetchAllWeatherData(/*mapPoint, from, to*/)
         }
 }

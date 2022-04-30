@@ -7,10 +7,12 @@ import kotlinx.coroutines.flow.Flow
 
 interface WeatherDataRepository {
 
+    fun fetchAllWeatherData(): Flow<List<WeatherData>>
+
     fun fetchWeatherData(
-        /*mapPoint: MapPoint,
+        mapPoint: MapPoint,
         from: TimeMs,
-        to: TimeMs*/
+        to: TimeMs
     ): Flow<List<WeatherData>>
 
     suspend fun saveWeatherData(weatherData: List<WeatherData>)
