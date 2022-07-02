@@ -9,17 +9,6 @@ version = "1.0"
 
 kotlin {
     android()
-    ios()
-
-    cocoapods {
-        summary = "Some description for the Shared Module"
-        homepage = "Link to the Shared Module homepage"
-        ios.deploymentTarget = "14.1"
-        podfile = project.file("../iosApp/Podfile")
-        framework {
-            baseName = "domain"
-        }
-    }
 
     sourceSets {
         val commonMain by getting {
@@ -48,8 +37,6 @@ kotlin {
                 implementation(Deps.coroutine_test)
             }
         }
-        val iosMain by getting
-        val iosTest by getting
     }
 }
 

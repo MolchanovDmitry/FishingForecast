@@ -18,21 +18,6 @@ sqldelight {
 
 kotlin {
     android()
-    ios {
-        binaries.framework {
-            baseName = "domain"
-        }
-    }
-
-    cocoapods {
-        summary = "Some description for the Shared Module"
-        homepage = "Link to the Shared Module homepage"
-        ios.deploymentTarget = "14.1"
-        framework {
-            baseName = "data"
-        }
-    }
-
     sourceSets {
         val sqlDelightVersion = "1.5.3"
         val settingsVersion = "0.8.1"
@@ -74,12 +59,6 @@ kotlin {
                 implementation("junit:junit:4.13.2")
             }
         }
-        val iosMain by getting {
-            dependencies {
-                implementation("com.squareup.sqldelight:native-driver:$sqlDelightVersion")
-            }
-        }
-        val iosTest by getting
     }
 }
 

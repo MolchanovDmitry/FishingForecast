@@ -7,12 +7,14 @@ plugins {
     kotlin("kapt")
 }
 
-val properties = Properties()
-val q: File = rootProject.file("local.properties")
-properties.load(q.inputStream())
-val googleMapApiKey = properties.getProperty("google.map.key")
-
 android {
+
+    val properties = Properties()
+    val q: File = rootProject.file("local.properties")
+    properties.load(q.inputStream())
+    val googleMapApiKey = properties.getProperty("google.map.key")
+    val yandexWeatherApiKey = properties.getProperty("yandex.weather.api.key")
+
     compileSdk = 31
     defaultConfig {
         applicationId = "dmitry.molchanov.fishingforecast.android"
@@ -22,7 +24,7 @@ android {
         versionName = "1.0"
 
         manifestPlaceholders["googleMapApiKey"] = googleMapApiKey
-        buildConfigField("String", "API_KEY", properties.getProperty("yandex.weather.api.key"))
+        buildConfigField("String", "API_KEY", yandexWeatherApiKey)
     }
     buildTypes {
         getByName("release") {
