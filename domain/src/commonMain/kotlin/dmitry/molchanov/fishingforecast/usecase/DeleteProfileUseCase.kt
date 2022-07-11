@@ -10,7 +10,14 @@ import kotlinx.coroutines.withContext
  */
 class DeleteProfileUseCase(private val profileRepository: ProfileRepository) {
 
-    suspend fun execute(profile: Profile) = withContext(ioDispatcher) {
-        profileRepository.deleteProfile(profile)
+    suspend fun execute(profile: Profile): Result<Unit> = withContext(ioDispatcher) {
+        if (!profile.isCommon) {
+            profileRepository.deleteProfile(profile)
+            Result.success(Unit)
+        } else {
+            Result.failure(MainProfileDeleteException)
+        }
     }
+
+    object MainProfileDeleteException : Exception("Can't delete a common profile")
 }

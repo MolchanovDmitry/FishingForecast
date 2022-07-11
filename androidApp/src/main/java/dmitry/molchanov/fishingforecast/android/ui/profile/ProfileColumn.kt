@@ -64,12 +64,14 @@ fun ProfileColumn(
                         .weight(1F)
                         .padding(8.dp)
                 )
-                Icon(
-                    imageVector = Icons.Filled.Delete,
-                    contentDescription = null,
-                    tint = MaterialTheme.colors.primary,
-                    modifier = Modifier.clickable { deleteOption(profile) }
-                )
+                if (!profile.isCommon) {
+                    Icon(
+                        imageVector = Icons.Filled.Delete,
+                        contentDescription = null,
+                        tint = MaterialTheme.colors.primary,
+                        modifier = Modifier.clickable { deleteOption(profile) }
+                    )
+                }
             }
             Divider(
                 color = Color.LightGray,

@@ -151,7 +151,6 @@ class MainViewModel(
         viewModelScope.launch {
             deleteProfileUseCase.value.execute(name)
         }
-
     }
 
     private fun createProfile(name: Profile) {
