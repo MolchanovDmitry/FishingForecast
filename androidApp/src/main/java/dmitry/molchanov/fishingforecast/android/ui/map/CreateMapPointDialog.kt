@@ -85,5 +85,7 @@ fun CreateMapPointDialog(
                 }
             }
         )
+    } else {
+        profileEdit = ""
     }
 }
