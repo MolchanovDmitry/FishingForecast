@@ -26,6 +26,8 @@ class WeatherStatisticViewModel(
 
     private val state = MutableStateFlow(WeatherStatisticViewState())
     var stateFlow = state.asStateFlow()
+    private val message = MutableSharedFlow<String>()
+    var messageFlow = message.asSharedFlow()
 
     init {
         viewModelScope.launch {
@@ -33,11 +35,11 @@ class WeatherStatisticViewModel(
                 .firstOrNull { (it.isCommon && mapPoint.profileName == null) || (it.name == mapPoint.profileName) }
                 ?.let { profile ->
                     val forecastSettings = getForecastSettings(profile)
-                    val period = getObservationPeriod(forecastSettings)
-                        ?: error("Не найден период прогнозирования для профиля")
-                    observeWeather(period, forecastSettings)
+                    getObservationPeriod(forecastSettings)
+                        ?.let { period -> observeWeather(period, forecastSettings) }
+                        ?: message.emit("Не найден период прогнозирования для профиля")
                 }
-                ?: error("Нет совпадения по профилю.")
+                ?: message.emit("Не найден период прогнозирования для профиля")
         }
     }
 

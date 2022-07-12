@@ -19,12 +19,15 @@ import androidx.compose.ui.unit.sp
 import dmitry.molchanov.fishingforecast.android.FetchWeatherData
 import dmitry.molchanov.fishingforecast.android.MainViewModel
 import dmitry.molchanov.fishingforecast.model.MapPoint
+import dmitry.molchanov.fishingforecast.utils.string
 
 @Composable
 fun WeatherDebugScreen(vm: MainViewModel, onMapPointSelected: (MapPoint) -> Unit) {
     val state = vm.state.collectAsState()
+    val lastDate = state.value.weatherData.maxOfOrNull { it.date }
 
     Column(modifier = Modifier.fillMaxSize()) {
+        Text("Дата последнего запроса: ${lastDate?.string() ?: "не запрашивались"}")
         Button(modifier = Modifier.fillMaxWidth(), onClick = { vm.onEvent(FetchWeatherData) }) {
             Text("Получить данные")
         }
