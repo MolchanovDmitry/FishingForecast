@@ -21,6 +21,10 @@ fun CreateProfileDialog(
 ) {
     var profileEdit by remember { mutableStateOf("") }
     var checkText by remember { mutableStateOf("Пустой профиль") }
+    fun release() {
+        profileEdit = ""
+        checkText = "Пустой профиль"
+    }
 
     if (openDialog.value) {
         AlertDialog(
@@ -65,7 +69,10 @@ fun CreateProfileDialog(
                         fontSize = 18.sp,
                         modifier = Modifier
                             .padding(8.dp)
-                            .clickable { openDialog.value = false }
+                            .clickable {
+                                openDialog.value = false
+                                release()
+                            }
                     )
                     Text(
                         "Сохранить",
@@ -77,6 +84,7 @@ fun CreateProfileDialog(
                                 if (checkText.isEmpty()) {
                                     openDialog.value = false
                                     profileTyped(Profile(profileEdit, isCommon = false))
+                                    release()
                                 }
                             }
                     )
