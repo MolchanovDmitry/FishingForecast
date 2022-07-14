@@ -13,10 +13,10 @@ import dmitry.molchanov.fishingforecast.android.ui.NavItem
 import dmitry.molchanov.fishingforecast.android.ui.Screen
 import dmitry.molchanov.fishingforecast.android.ui.map.MapScreen
 import dmitry.molchanov.fishingforecast.android.ui.profile.ProfileScreen
+import dmitry.molchanov.fishingforecast.android.ui.result.ResultScreen
 import dmitry.molchanov.fishingforecast.android.ui.setting.ForecastSettingsList
 import dmitry.molchanov.fishingforecast.android.ui.weather.WeatherDebugScreen
 import dmitry.molchanov.fishingforecast.android.ui.weather.WeatherScreen
-import dmitry.molchanov.fishingforecast.model.MapPoint
 import dmitry.molchanov.fishingforecast.model.toMapPoint
 
 @Composable
@@ -68,6 +68,9 @@ fun MainScreen(vm: MainViewModel) {
                 val mapPoint = it.arguments?.getString("mapPoint")?.toMapPoint()
                     ?: return@composable
                 WeatherScreen(mapPoint, vm.state.value.forecastSettings)
+            }
+            composable(Screen.Results.label){
+                ResultScreen()
             }
         }
     }
