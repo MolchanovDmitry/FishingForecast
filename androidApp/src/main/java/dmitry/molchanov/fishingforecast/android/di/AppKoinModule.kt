@@ -31,7 +31,7 @@ val appKoinModule = module {
     }
 
     viewModel<MapViewModel> {
-        MapViewModel(get(), get(), get(), get(), get())
+        MapViewModel(get(), get(), get(), get(), inject())
     }
 
     viewModel<ProfileViewModel> {
@@ -66,6 +66,6 @@ val appKoinModule = module {
     }
 
     viewModel<ResultViewModel> {
-        ResultViewModel(get(), get(), get(), get())
+        ResultViewModel(inject(), inject(), inject(), inject())
     }
 }

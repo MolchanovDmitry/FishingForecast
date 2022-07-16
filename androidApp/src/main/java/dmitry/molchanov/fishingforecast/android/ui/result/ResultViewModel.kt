@@ -15,16 +15,16 @@ import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
 class ResultViewModel(
-    private val getProfilesUseCase: GetProfilesUseCase,
-    private val getMapPointsUseCase: GetMapPointsUseCase,
-    private val commonProfileFetcher: CommonProfileFetcher,
-    private val getSavedWeatherDataUseCase: GetSavedWeatherDataUseCase
+    private val getProfilesUseCase: Lazy<GetProfilesUseCase>,
+    private val getMapPointsUseCase: Lazy<GetMapPointsUseCase>,
+    private val commonProfileFetcher: Lazy<CommonProfileFetcher>,
+    private val getSavedWeatherDataUseCase: Lazy<GetSavedWeatherDataUseCase>
 ) : ViewModel() {
 
     private val _messageFlow = MutableSharedFlow<ResultEvent>(replay = 1)
     val messageFlow = _messageFlow.asSharedFlow()
 
-    private val _stateFlow = MutableStateFlow(ResultScreenState(selectedProfile = commonProfileFetcher.get()))
+    private val _stateFlow = MutableStateFlow(ResultScreenState(selectedProfile = commonProfileFetcher.value.get()))
     val stateFlow = _stateFlow.asStateFlow()
 
     init {
@@ -76,7 +76,8 @@ class ResultViewModel(
         _stateFlow.value.selectedMapPoint?.let { mapPoint ->
             viewModelScope.launch {
                 val weatherData =
-                    getSavedWeatherDataUseCase.execute(mapPoint, from = date - (5 * ONE_DAY), to = date + ONE_DAY - 1)
+                    getSavedWeatherDataUseCase.value
+                        .execute(mapPoint, from = date - (5 * ONE_DAY), to = date + ONE_DAY - 1)
                 println(weatherData)
             }
         }
@@ -92,7 +93,7 @@ class ResultViewModel(
 
     private fun updateMapPoints() {
         viewModelScope.launch {
-            val mapPoints = getMapPointsUseCase.execute()
+            val mapPoints = getMapPointsUseCase.value.execute()
             _stateFlow.update { it.copy(mapPoints = mapPoints, selectedMapPoint = mapPoints.firstOrNull()) }
 
         }
@@ -100,7 +101,7 @@ class ResultViewModel(
 
     private fun updateProfiles() {
         viewModelScope.launch {
-            val profiles = getProfilesUseCase.execute() + commonProfileFetcher.get()
+            val profiles = getProfilesUseCase.value.execute() + commonProfileFetcher.value.get()
             _stateFlow.update { it.copy(profiles = profiles) }
         }
     }

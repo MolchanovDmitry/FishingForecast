@@ -16,8 +16,8 @@ class MapViewModel(
     getProfilesUseCase: GetProfilesUseCase,
     getMapPointsUseCase: GetMapPointsUseCase,
     getCurrentProfileUseCase: GetCurrentProfileUseCase,
-    private val saveMapPointUseCase: SaveMapPointUseCase,
-    private val commonProfileFetcher: CommonProfileFetcher
+    commonProfileFetcher: CommonProfileFetcher,
+    private val saveMapPointUseCase: Lazy<SaveMapPointUseCase>,
 ) : ViewModel() {
 
     private val stateFlow = MutableStateFlow(MapViewState())
@@ -79,7 +79,7 @@ class MapViewModel(
 
     private fun saveMapPoint(action: SavePoint) {
         viewModelScope.launch {
-            saveMapPointUseCase.execute(
+            saveMapPointUseCase.value.execute(
                 pointName = action.title,
                 profile = action.profile,
                 latitude = action.latitude,
