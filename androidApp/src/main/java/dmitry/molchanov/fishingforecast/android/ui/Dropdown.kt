@@ -26,12 +26,12 @@ fun DropDown(
 ) {
     val expanded = remember { mutableStateOf(false) }
     val textFieldSize = remember { mutableStateOf(Size.Zero) }
-    var selectIndex by remember { mutableStateOf(0)}
+    var selectIndex by remember { mutableStateOf(0) }
     val icon = if (expanded.value) Icons.Filled.ArrowDropUp else Icons.Filled.ArrowDropDown
 
     Column(modifier = modifier) {
         OutlinedTextField(
-            value = suggestions[selectIndex],
+            value = suggestions.getOrNull(selectIndex) ?: "",
             label = { Text(label) },
             onValueChange = { },
             modifier = Modifier.onGloballyPositioned { coordinates ->

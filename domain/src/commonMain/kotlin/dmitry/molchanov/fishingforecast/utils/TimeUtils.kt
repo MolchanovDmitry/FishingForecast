@@ -47,18 +47,19 @@ fun TimeMs.getDayCount(): Int {
  * Получить время округленное значением [dayPart].
  */
 private fun TimeMs.getTimeRoundedByDayPart(dayPart: DayPart): TimeMs {
+    val timeZone = TimeZone.currentSystemDefault()
     val nowMilliSec = Instant.fromEpochMilliseconds(this)
-    val datetimeInUtc: LocalDateTime = nowMilliSec.toLocalDateTime(TimeZone.currentSystemDefault())
+    val datetimeInUtc: LocalDateTime = nowMilliSec.toLocalDateTime(timeZone)
     val roundedTime = LocalDateTime(
         year = datetimeInUtc.year,
         monthNumber = datetimeInUtc.monthNumber,
         dayOfMonth = datetimeInUtc.dayOfMonth,
-        dayPart.hour,
+        hour = dayPart.hour,
         0,
         0,
         0
     )
-    return roundedTime.toInstant(TimeZone.UTC).toEpochMilliseconds()
+    return roundedTime.toInstant(timeZone).toEpochMilliseconds()
 }
 
 /**

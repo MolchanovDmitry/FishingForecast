@@ -25,7 +25,7 @@ fun AddResultDialog(
         .filter { it.profileName == selectedProfile.name || (selectedProfile.isCommon && it.profileName == null) }
     val profileNames = remember { resultState.value.profiles.map { it.name } }
     val dateLabels = remember {
-        val simpleDateFormat = SimpleDateFormat("dd MMMM yyyy, HH:mm:ss", Locale.getDefault())
+        val simpleDateFormat = SimpleDateFormat("dd MMMM yyyy", Locale.getDefault())
         resultState.value.dates.map(simpleDateFormat::format)
     }
     var commentText by remember { mutableStateOf("") }
