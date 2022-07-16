@@ -20,13 +20,12 @@ class MapViewModel(
     private val commonProfileFetcher: CommonProfileFetcher
 ) : ViewModel() {
 
-    private val stateFlow = MutableStateFlow(MapState())
+    private val stateFlow = MutableStateFlow(MapViewState())
     val state = stateFlow.asStateFlow()
 
     private var allMapPoints: List<MapPoint> = emptyList()
 
     init {
-
         getCurrentProfileUseCase.execute()
             .onEach { profile ->
                 stateFlow.update {
@@ -90,7 +89,7 @@ class MapViewModel(
     }
 }
 
-data class MapState(
+data class MapViewState(
     val currentProfile: Profile = Profile("", isCommon = true),
     val mapPoints: List<MapPoint> = emptyList(),
     val profiles: List<Profile> = emptyList(),

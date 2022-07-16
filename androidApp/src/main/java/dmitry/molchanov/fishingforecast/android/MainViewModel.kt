@@ -17,10 +17,7 @@ class MainViewModel(
 
     getMapPointsUseCase: GetMapPointsUseCase,
     getCurrentProfileUseCase: GetCurrentProfileUseCase,
-    private val saveProfileUseCase: SaveProfileUseCase,
     private val getSavedWeatherData: GetSavedWeatherDataUseCase,
-    private val deleteProfileUseCase: Lazy<DeleteProfileUseCase>,
-    private val selectProfileUseCase: Lazy<SelectProfileUseCase>,
     private val deleteForecastSettings: Lazy<DeleteForecastSettingUseCase>,
     private val getForecastSettingMarks: GetForecastSettingMarksUseCase,
     private val saveForecastSettingMarkUseCase: Lazy<SaveForecastSettingMarkUseCase>,
@@ -72,9 +69,6 @@ class MainViewModel(
 
     fun onEvent(event: Event) {
         when (event) {
-            is CreateProfile -> createProfile(event.name)
-            is DeleteProfile -> deleteProfile(event.name)
-            is SelectProfile -> selectProfile(event.name)
             is DeleteForecastSetting -> deleteForecastSetting(event)
             is SaveForecastSettingMark -> saveForecastSettingMark(event)
             FetchWeatherData -> fetchWeatherData()
@@ -122,26 +116,6 @@ class MainViewModel(
             )
         }
     }
-
-
-
-    private fun selectProfile(name: Profile) {
-        viewModelScope.launch {
-            selectProfileUseCase.value.execute(name)
-        }
-    }
-
-    private fun deleteProfile(name: Profile) {
-        viewModelScope.launch {
-            deleteProfileUseCase.value.execute(name)
-        }
-    }
-
-    private fun createProfile(name: Profile) {
-        viewModelScope.launch {
-            saveProfileUseCase.execute(name)
-        }
-    }
 }
 
 data class MainViewState(
@@ -156,9 +130,6 @@ data class MainViewState(
 sealed class Event
 
 object FetchWeatherData : Event()
-class CreateProfile(val name: Profile) : Event()
-class SelectProfile(val name: Profile) : Event()
-class DeleteProfile(val name: Profile) : Event()
 class DeleteForecastSetting(val forecastSetting: ForecastSetting) : Event()
 
 data class SaveForecastSettingMark(

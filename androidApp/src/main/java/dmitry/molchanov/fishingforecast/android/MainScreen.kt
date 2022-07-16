@@ -55,7 +55,7 @@ fun MainScreen(vm: MainViewModel) {
                 MapScreen()
             }
             composable(Screen.Profile.label) {
-                ProfileScreen(vm)
+                ProfileScreen()
             }
             composable(Screen.ForecastSettings.label) {
                 ForecastSettingsList(vm)

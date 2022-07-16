@@ -39,7 +39,7 @@ fun MapScreen() {
 }
 
 @Composable
-fun MapView(state: State<MapState>, vm: MapViewModel) {
+fun MapView(state: State<MapViewState>, vm: MapViewModel) {
     val mapView = rememberMapViewWithLifecycle()
     val coroutineScope = rememberCoroutineScope()
     var map by remember { mutableStateOf<GoogleMap?>(null) }
