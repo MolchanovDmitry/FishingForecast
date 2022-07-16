@@ -36,7 +36,7 @@ fun ResultScreen() {
         )
     }
     if (state.value.shouldShowDialog) {
-        AddResultDialog {
+        AddResultDialog(vm) {
             vm.onAction(CloseAddResultDialog())
         }
     }
