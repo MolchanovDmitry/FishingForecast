@@ -1,27 +1,29 @@
 package dmitry.molchanov.fishingforecast.android.ui
 
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.List
-import androidx.compose.material.icons.filled.Map
-import androidx.compose.material.icons.filled.People
-import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.*
 import androidx.compose.ui.graphics.vector.ImageVector
 import dmitry.molchanov.fishingforecast.model.MapPoint
 import dmitry.molchanov.fishingforecast.model.string
 
 enum class NavItem(val label: String, val icon: ImageVector, val destination: Screen) {
-    MAP(label = "Map", icon = Icons.Filled.Map, destination = Screen.Map),
-    PROFILE(label = "Profile", icon = Icons.Default.People, destination = Screen.Profile),
+    MAP(label = "Карта", icon = Icons.Filled.Map, destination = Screen.Map),
+    PROFILE(label = "Профиль", icon = Icons.Default.People, destination = Screen.Profile),
     FORECAST_SETTINGS(
-        label = "Forecast settings",
+        label = "Настройки",
         icon = Icons.Default.Settings,
         destination = Screen.ForecastSettings
     ),
     WEATHER_LIST(
-        label = "Weather list",
+        label = "Список",
         icon = Icons.Default.List,
         destination = Screen.WeatherList
     ),
+    RESULTS(
+        label = "Результаты",
+        icon = Icons.Default.ThumbUp,
+        destination = Screen.Results
+    )
 }
 
 sealed class Screen(val label: String) {
@@ -32,4 +34,5 @@ sealed class Screen(val label: String) {
     object Weather : Screen(label = "Weather?mapPoint={mapPoint}") {
         fun route(mapPoint: MapPoint) = "Weather?mapPoint=${mapPoint.string()}"
     }
+    object Results : Screen(label = "Results")
 }

@@ -3,6 +3,7 @@ package dmitry.molchanov.fishingforecast.android
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
@@ -13,10 +14,10 @@ import dmitry.molchanov.fishingforecast.android.ui.NavItem
 import dmitry.molchanov.fishingforecast.android.ui.Screen
 import dmitry.molchanov.fishingforecast.android.ui.map.MapScreen
 import dmitry.molchanov.fishingforecast.android.ui.profile.ProfileScreen
+import dmitry.molchanov.fishingforecast.android.ui.result.ResultScreen
 import dmitry.molchanov.fishingforecast.android.ui.setting.ForecastSettingsList
 import dmitry.molchanov.fishingforecast.android.ui.weather.WeatherDebugScreen
 import dmitry.molchanov.fishingforecast.android.ui.weather.WeatherScreen
-import dmitry.molchanov.fishingforecast.model.MapPoint
 import dmitry.molchanov.fishingforecast.model.toMapPoint
 
 @Composable
@@ -67,7 +68,10 @@ fun MainScreen(vm: MainViewModel) {
             composable(Screen.Weather.label) {
                 val mapPoint = it.arguments?.getString("mapPoint")?.toMapPoint()
                     ?: return@composable
-                WeatherScreen(mapPoint, vm.state.value.forecastSettings)
+                WeatherScreen(mapPoint, vm.state.collectAsState().value.forecastSettings)
+            }
+            composable(Screen.Results.label){
+                ResultScreen()
             }
         }
     }

@@ -65,7 +65,7 @@ private fun TimeMs.getTimeRoundedByDayPart(dayPart: DayPart): TimeMs {
 fun TimeMs.string(): String {
     val nowMilliSec = Instant.fromEpochMilliseconds(this)
     val datetimeInUtc: LocalDateTime = nowMilliSec.toLocalDateTime(TimeZone.currentSystemDefault())
-    return "Date: ${datetimeInUtc.year}" +
+    return " ${datetimeInUtc.year}" +
             ".${datetimeInUtc.monthNumber}" +
             ".${datetimeInUtc.dayOfMonth}" +
             ".${datetimeInUtc.hour}" +

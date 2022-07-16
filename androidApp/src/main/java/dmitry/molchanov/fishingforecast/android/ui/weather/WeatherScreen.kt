@@ -8,6 +8,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import com.madrapps.plot.line.DataPoint
 import dmitry.molchanov.fishingforecast.android.R
@@ -26,7 +27,15 @@ fun WeatherScreen(
     val state = weatherViewModel.stateFlow.collectAsState()
     val weatherData = state.value.weatherData
     val forecasts = state.value.forecasts
+    val context = LocalContext.current
     var positiveCount = 0
+
+    //LaunchedEffect(key1 = Unit) {
+        /*weatherViewModel.messageFlow
+            .onEach { message -> Toast.makeText(context, message, Toast.LENGTH_SHORT).show() }
+            .launchIn(this)*/
+    //}
+
     forecasts.forEach { forecast ->
         if (forecast.isGood) positiveCount += 1
     }

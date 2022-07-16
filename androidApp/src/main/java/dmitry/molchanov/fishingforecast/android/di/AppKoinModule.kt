@@ -4,6 +4,7 @@ import dmitry.molchanov.fishingforecast.android.BuildConfig
 import dmitry.molchanov.fishingforecast.android.MainViewModel
 import dmitry.molchanov.fishingforecast.android.WeatherStatisticViewModel
 import dmitry.molchanov.fishingforecast.android.notifier.WeatherNotifierPresenter
+import dmitry.molchanov.fishingforecast.android.ui.result.ResultViewModel
 import dmitry.molchanov.fishingforecast.android.ui.weather.WeatherDebugViewModel
 import dmitry.molchanov.fishingforecast.model.MapPoint
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -54,5 +55,9 @@ val appKoinModule = module {
             weatherDataRepository = get(),
             getForecastSettingMarksUseCase = get()
         )
+    }
+
+    viewModel<ResultViewModel> {
+        ResultViewModel(get())
     }
 }
