@@ -1,8 +1,7 @@
 package dmitry.molchanov.fishingforecast.android.ui.result
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.AlertDialog
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -19,29 +18,38 @@ fun AddResultDialog(
         modifier = Modifier.fillMaxWidth(),
         onDismissRequest = { dismiss() },
         text = {
-            Text("Some stub text")
+            Column {
+                Text("Введите данные для сохранения")
+            }
         },
         buttons = {
-            Text(
-                "Отменить",
-                color = MaterialTheme.colors.primary,
-                fontSize = 18.sp,
+            Row(
                 modifier = Modifier
-                    .padding(8.dp)
-                    .clickable {
-                        dismiss()
-                    }
-            )
-            Text(
-                "Сохранить",
-                color = MaterialTheme.colors.primary,
-                fontSize = 18.sp,
-                modifier = Modifier
-                    .padding(8.dp)
-                    .clickable {
-                        dismiss()
-                    }
-            )
+                    .padding(all = 8.dp)
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.End
+            ) {
+                Text(
+                    "Отменить",
+                    color = MaterialTheme.colors.primary,
+                    fontSize = 18.sp,
+                    modifier = Modifier
+                        .padding(8.dp)
+                        .clickable {
+                            dismiss()
+                        }
+                )
+                Text(
+                    "Сохранить",
+                    color = MaterialTheme.colors.primary,
+                    fontSize = 18.sp,
+                    modifier = Modifier
+                        .padding(8.dp)
+                        .clickable {
+                            dismiss()
+                        }
+                )
+            }
         }
     )
 }
