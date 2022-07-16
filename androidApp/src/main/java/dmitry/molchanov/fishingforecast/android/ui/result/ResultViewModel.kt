@@ -7,6 +7,9 @@ import dmitry.molchanov.fishingforecast.model.MapPoint
 import dmitry.molchanov.fishingforecast.model.Profile
 import dmitry.molchanov.fishingforecast.usecase.GetMapPointsUseCase
 import dmitry.molchanov.fishingforecast.usecase.GetProfilesUseCase
+import dmitry.molchanov.fishingforecast.utils.ONE_DAY
+import dmitry.molchanov.fishingforecast.utils.TimeMs
+import dmitry.molchanov.fishingforecast.utils.nightTime
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -22,8 +25,25 @@ class ResultViewModel(
     val stateFlow = _stateFlow.asStateFlow()
 
     init {
+        updateDates()
         updateProfiles()
         updateMapPoints()
+    }
+
+    private fun updateDates() {
+        val currentDate: TimeMs = System.currentTimeMillis()
+        val nightTime = currentDate.nightTime
+        _stateFlow.update {
+            it.copy(
+                dates = listOf(
+                    nightTime,
+                    nightTime - ONE_DAY,
+                    nightTime - ONE_DAY - ONE_DAY,
+                    nightTime - ONE_DAY - ONE_DAY - ONE_DAY,
+                    nightTime - ONE_DAY - ONE_DAY - ONE_DAY - ONE_DAY,
+                )
+            )
+        }
     }
 
     fun onAction(action: ResultAction) = when (action) {
@@ -68,6 +88,7 @@ class ResultViewModel(
 data class ResultScreenState(
     val selectedProfile: Profile,
     val selectedMapPoint: MapPoint? = null,
+    val dates: List<TimeMs> = emptyList(),
     val shouldShowDialog: Boolean = false,
     val profiles: List<Profile> = emptyList(),
     val mapPoints: List<MapPoint> = emptyList(),

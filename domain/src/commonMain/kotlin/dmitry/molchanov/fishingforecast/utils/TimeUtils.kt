@@ -8,8 +8,10 @@ const val SEC_IN_DAY = 24 * 60 * 60
 
 const val ONE_SEC = 1_000L
 
-val nowUnixTime: TimeMs
-    get() = Clock.System.now().epochSeconds
+const val ONE_DAY = SEC_IN_DAY * ONE_SEC
+
+/*val nowUnixTime: TimeMs
+    get() = Clock.System.now().toEpochMilliseconds()*/
 
 val TimeMs.nightTime: TimeMs
     get() = getTimeRoundedByDayPart(DayPart.NIGHT)
@@ -56,7 +58,7 @@ private fun TimeMs.getTimeRoundedByDayPart(dayPart: DayPart): TimeMs {
         0,
         0
     )
-    return roundedTime.toInstant(TimeZone.UTC).epochSeconds
+    return roundedTime.toInstant(TimeZone.UTC).toEpochMilliseconds()
 }
 
 /**

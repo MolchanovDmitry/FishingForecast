@@ -1,5 +1,6 @@
 package dmitry.molchanov.fishingforecast.android.ui.result
 
+import android.icu.text.SimpleDateFormat
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.AlertDialog
@@ -11,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import dmitry.molchanov.fishingforecast.android.ui.DropDown
+import java.util.*
 
 @Composable
 fun AddResultDialog(
@@ -22,6 +24,10 @@ fun AddResultDialog(
     val mapPointsBySelectedProfile = resultState.value.mapPoints
         .filter { it.profileName == selectedProfile.name || (selectedProfile.isCommon && it.profileName == null) }
     val profileNames = remember { resultState.value.profiles.map { it.name } }
+    val dateLabels = remember {
+        val simpleDateFormat = SimpleDateFormat("dd MMMM yyyy, HH:mm:ss", Locale.getDefault())
+        resultState.value.dates.map(simpleDateFormat::format)
+    }
     var commentText by remember { mutableStateOf("") }
     AlertDialog(
         modifier = Modifier.fillMaxWidth(),
@@ -51,6 +57,13 @@ fun AddResultDialog(
                             ?.let(vm::onAction)
                     }
                 )
+                DropDown(
+                    modifier = Modifier.fillMaxWidth(),
+                    label = "Выберите дату",
+                    suggestions = dateLabels,
+                    defaultSelectedIndex = 0,
+                    onSelectIndex = {}
+                )
                 TextField(
                     modifier = Modifier.fillMaxWidth(),
                     value = commentText,
@@ -73,9 +86,7 @@ fun AddResultDialog(
                     fontSize = 18.sp,
                     modifier = Modifier
                         .padding(8.dp)
-                        .clickable {
-                            dismiss()
-                        }
+                        .clickable { dismiss() }
                 )
                 Text(
                     "Сохранить",
@@ -83,9 +94,7 @@ fun AddResultDialog(
                     fontSize = 18.sp,
                     modifier = Modifier
                         .padding(8.dp)
-                        .clickable {
-                            dismiss()
-                        }
+                        .clickable { dismiss() }
                 )
             }
         }
