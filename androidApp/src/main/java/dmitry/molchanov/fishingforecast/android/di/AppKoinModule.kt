@@ -61,6 +61,6 @@ val appKoinModule = module {
     }
 
     viewModel<ResultViewModel> {
-        ResultViewModel(get(), get(), get())
+        ResultViewModel(get(), get(), get(), get())
     }
 }

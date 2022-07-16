@@ -31,7 +31,7 @@ fun AddResultDialog(
     var commentText by remember { mutableStateOf("") }
     AlertDialog(
         modifier = Modifier.fillMaxWidth(),
-        onDismissRequest = { CloseAddResultDialog() },
+        onDismissRequest = { vm.onAction(CloseAddResultDialog()) },
         text = {
             Column {
                 Text("Введите данные для сохранения")
@@ -50,7 +50,9 @@ fun AddResultDialog(
                     modifier = Modifier.fillMaxWidth(),
                     label = "Выберите точку",
                     suggestions = mapPointsBySelectedProfile.map { it.name },
-                    defaultSelectedIndex = 0,
+                    defaultSelectedIndex = resultState.value.selectedMapPoint
+                        ?.let(mapPointsBySelectedProfile::indexOf)
+                        ?: 0,
                     onSelectIndex = { mapPointIndex ->
                         mapPointsBySelectedProfile.getOrNull(mapPointIndex)
                             ?.let(::MapPointSelected)
@@ -61,7 +63,7 @@ fun AddResultDialog(
                     modifier = Modifier.fillMaxWidth(),
                     label = "Выберите дату",
                     suggestions = dateLabels,
-                    defaultSelectedIndex = 0,
+                    defaultSelectedIndex = resultState.value.dates.indexOf(resultState.value.selectedDate),
                     onSelectIndex = { dateIndex ->
                         resultState.value.dates.getOrNull(dateIndex)
                             ?.let(::DateSelected)
@@ -90,7 +92,7 @@ fun AddResultDialog(
                     fontSize = 18.sp,
                     modifier = Modifier
                         .padding(8.dp)
-                        .clickable { CloseAddResultDialog() }
+                        .clickable { vm.onAction(CloseAddResultDialog()) }
                 )
                 Text(
                     "Сохранить",

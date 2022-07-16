@@ -91,7 +91,8 @@ class ResultViewModel(
     private fun updateMapPoints() {
         viewModelScope.launch {
             val mapPoints = getMapPointsUseCase.execute()
-            _stateFlow.update { it.copy(mapPoints = mapPoints) }
+            _stateFlow.update { it.copy(mapPoints = mapPoints, selectedMapPoint = mapPoints.firstOrNull()) }
+
         }
     }
 
