@@ -2,6 +2,7 @@ package dmitry.molchanov.fishingforecast.android
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dmitry.molchanov.fishingforecast.android.mapper.CommonProfileFetcher
 import dmitry.molchanov.fishingforecast.model.ForecastSetting
 import dmitry.molchanov.fishingforecast.model.MapPoint
 import dmitry.molchanov.fishingforecast.model.Profile
@@ -26,7 +27,8 @@ class MainViewModel(
     private val getForecastSettingMarks: GetForecastSettingMarksUseCase,
     private val saveForecastSettingMarkUseCase: Lazy<SaveForecastSettingMarkUseCase>,
     private val yandexWeatherRepository: YandexWeatherRepository,
-    private val weatherDataRepository: WeatherDataRepository
+    private val weatherDataRepository: WeatherDataRepository,
+    private val commonProfileFetcher: CommonProfileFetcher
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(MainViewState())
@@ -53,7 +55,7 @@ class MainViewModel(
 
         getProfilesUseCase.executeFlow()
             .onEach { profiles ->
-                _state.update { it.copy(profiles = profiles) }
+                _state.update { it.copy(profiles = profiles + commonProfileFetcher.get()) }
             }.launchIn(viewModelScope)
 
         getMapPointsUseCase.executeFlow()

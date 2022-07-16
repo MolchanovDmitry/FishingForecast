@@ -35,9 +35,7 @@ fun ResultScreen() {
                 .align(Alignment.BottomEnd)
                 .size(90.dp)
                 .padding(16.dp)
-                .clickable {
-                    vm.onAction(AddResultClickAction())
-                }
+                .clickable { vm.onAction(AddResultClickAction()) }
         )
     }
     if (state.value.shouldShowDialog) {
@@ -53,7 +51,6 @@ fun ResultScreen() {
                 }.let { message ->
                     Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
                 }
-
             }
             .launchIn(this)
     }

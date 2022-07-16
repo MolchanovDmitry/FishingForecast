@@ -75,7 +75,9 @@ class ResultViewModel(
         _stateFlow.update { it.copy(selectedDate = date) }
         _stateFlow.value.selectedMapPoint?.let { mapPoint ->
             viewModelScope.launch {
-                val weatherData = getSavedWeatherDataUseCase.execute(mapPoint, date, date + ONE_DAY - 1)
+                val weatherData =
+                    getSavedWeatherDataUseCase.execute(mapPoint, from = date - (5 * ONE_DAY), to = date + ONE_DAY - 1)
+                println(weatherData)
             }
         }
     }
