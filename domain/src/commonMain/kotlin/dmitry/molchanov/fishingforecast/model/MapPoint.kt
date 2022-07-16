@@ -1,7 +1,9 @@
 package dmitry.molchanov.fishingforecast.model
 
-import kotlinx.serialization.*
-import kotlinx.serialization.json.*
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 
 /**
  * Точка на карте.
@@ -14,6 +16,9 @@ data class MapPoint(
     val latitude: Double,
     val longitude: Double
 )
+
+val MapPoint.isCommonProfile: Boolean
+    get() = profileName == null
 
 fun MapPoint.string() = Json.encodeToString(this)
 

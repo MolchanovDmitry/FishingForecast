@@ -3,8 +3,6 @@ CREATE TABLE Profile(
     isCommon INTEGER AS Boolean NOT NULL DEFAULT 0
 );
 
-INSERT INTO Profile VALUES ("", 1);
-
 selectAll:
 SELECT *
 FROM Profile;

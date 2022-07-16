@@ -12,17 +12,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import dmitry.molchanov.fishingforecast.android.ui.DropDown
+import dmitry.molchanov.fishingforecast.model.isCommonProfile
 import java.util.*
 
 @Composable
 fun AddResultDialog(
-    vm: ResultViewModel,
-    dismiss: () -> Unit
+    vm: ResultViewModel
 ) {
     val resultState = vm.stateFlow.collectAsState()
     val selectedProfile = resultState.value.selectedProfile
     val mapPointsBySelectedProfile = resultState.value.mapPoints
-        .filter { it.profileName == selectedProfile.name || (selectedProfile.isCommon && it.profileName == null) }
+        .filter { it.profileName == selectedProfile.name || (selectedProfile.isCommon && it.isCommonProfile) }
     val profileNames = remember { resultState.value.profiles.map { it.name } }
     val dateLabels = remember {
         val simpleDateFormat = SimpleDateFormat("dd MMMM yyyy", Locale.getDefault())
@@ -31,7 +31,7 @@ fun AddResultDialog(
     var commentText by remember { mutableStateOf("") }
     AlertDialog(
         modifier = Modifier.fillMaxWidth(),
-        onDismissRequest = { dismiss() },
+        onDismissRequest = { CloseAddResultDialog() },
         text = {
             Column {
                 Text("Введите данные для сохранения")
@@ -62,13 +62,17 @@ fun AddResultDialog(
                     label = "Выберите дату",
                     suggestions = dateLabels,
                     defaultSelectedIndex = 0,
-                    onSelectIndex = {}
+                    onSelectIndex = { dateIndex ->
+                        resultState.value.dates.getOrNull(dateIndex)
+                            ?.let(::DateSelected)
+                            ?.let(vm::onAction)
+                    }
                 )
                 TextField(
                     modifier = Modifier.fillMaxWidth(),
                     value = commentText,
                     onValueChange = { commentText = it },
-                    label = { Text("Ваш комментарий") }
+                    label = { Text("Оставьте комментарий") }
                 )
             }
 
@@ -86,7 +90,7 @@ fun AddResultDialog(
                     fontSize = 18.sp,
                     modifier = Modifier
                         .padding(8.dp)
-                        .clickable { dismiss() }
+                        .clickable { CloseAddResultDialog() }
                 )
                 Text(
                     "Сохранить",
@@ -94,7 +98,7 @@ fun AddResultDialog(
                     fontSize = 18.sp,
                     modifier = Modifier
                         .padding(8.dp)
-                        .clickable { dismiss() }
+                        .clickable { vm.onAction(CreateResult()) }
                 )
             }
         }
