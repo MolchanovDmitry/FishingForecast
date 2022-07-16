@@ -3,6 +3,7 @@ package dmitry.molchanov.fishingforecast.android.di
 import dmitry.molchanov.fishingforecast.android.BuildConfig
 import dmitry.molchanov.fishingforecast.android.MainViewModel
 import dmitry.molchanov.fishingforecast.android.WeatherStatisticViewModel
+import dmitry.molchanov.fishingforecast.android.mapper.CommonProfileFetcher
 import dmitry.molchanov.fishingforecast.android.notifier.WeatherNotifierPresenter
 import dmitry.molchanov.fishingforecast.android.ui.result.ResultViewModel
 import dmitry.molchanov.fishingforecast.android.ui.weather.WeatherDebugViewModel
@@ -15,6 +16,8 @@ val appKoinModule = module {
     factory<String> {
         BuildConfig.API_KEY
     }
+
+    factory<CommonProfileFetcher> { CommonProfileFetcher(get()) }
 
     factory<WeatherNotifierPresenter> {
         // TODO вынести в отдельный модуль.
@@ -58,6 +61,6 @@ val appKoinModule = module {
     }
 
     viewModel<ResultViewModel> {
-        ResultViewModel(get())
+        ResultViewModel(get(), get(), get())
     }
 }

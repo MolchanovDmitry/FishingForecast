@@ -2,7 +2,10 @@ package dmitry.molchanov.fishingforecast.android.ui.result
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dmitry.molchanov.fishingforecast.android.mapper.CommonProfileFetcher
+import dmitry.molchanov.fishingforecast.model.MapPoint
 import dmitry.molchanov.fishingforecast.model.Profile
+import dmitry.molchanov.fishingforecast.usecase.GetMapPointsUseCase
 import dmitry.molchanov.fishingforecast.usecase.GetProfilesUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -11,13 +14,16 @@ import kotlinx.coroutines.launch
 
 class ResultViewModel(
     private val getProfilesUseCase: GetProfilesUseCase,
+    private val getMapPointsUseCase: GetMapPointsUseCase,
+    private val commonProfileFetcher: CommonProfileFetcher
 ) : ViewModel() {
 
-    private val _stateFlow = MutableStateFlow(ResultScreenState())
+    private val _stateFlow = MutableStateFlow(ResultScreenState(selectedProfile = commonProfileFetcher.get()))
     val stateFlow = _stateFlow.asStateFlow()
 
     init {
         updateProfiles()
+        updateMapPoints()
     }
 
     fun onAction(action: ResultAction) = when (action) {
@@ -27,12 +33,18 @@ class ResultViewModel(
     }
 
     private fun fetchMapPoints() {
+        viewModelScope.launch {
+            //val mapPoints =
+        }
+    }
+
+    private fun updateMapPoints() {
         //TODO("Not yet implemented")
     }
 
     private fun updateProfiles() {
         viewModelScope.launch {
-            val profiles = getProfilesUseCase.execute()
+            val profiles = getProfilesUseCase.execute() + commonProfileFetcher.get()
             _stateFlow.update { it.copy(profiles = profiles) }
         }
     }
@@ -48,8 +60,10 @@ class ResultViewModel(
 }
 
 data class ResultScreenState(
+    val selectedProfile: Profile,
+    val shouldShowDialog: Boolean = false,
     val profiles: List<Profile> = emptyList(),
-    val shouldShowDialog: Boolean = false
+    val mapPoints: List<MapPoint> = emptyList(),
 )
 
 sealed class ResultAction
