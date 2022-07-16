@@ -52,7 +52,7 @@ fun MainScreen(vm: MainViewModel) {
             modifier = Modifier.padding(innerPadding)
         ) {
             composable(Screen.Map.label) {
-                MapScreen(vm)
+                MapScreen()
             }
             composable(Screen.Profile.label) {
                 ProfileScreen(vm)

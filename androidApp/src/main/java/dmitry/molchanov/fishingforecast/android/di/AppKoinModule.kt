@@ -5,6 +5,7 @@ import dmitry.molchanov.fishingforecast.android.MainViewModel
 import dmitry.molchanov.fishingforecast.android.WeatherStatisticViewModel
 import dmitry.molchanov.fishingforecast.android.mapper.CommonProfileFetcher
 import dmitry.molchanov.fishingforecast.android.notifier.WeatherNotifierPresenter
+import dmitry.molchanov.fishingforecast.android.ui.map.MapViewModel
 import dmitry.molchanov.fishingforecast.android.ui.result.ResultViewModel
 import dmitry.molchanov.fishingforecast.android.ui.weather.WeatherDebugViewModel
 import dmitry.molchanov.fishingforecast.model.MapPoint
@@ -28,15 +29,17 @@ val appKoinModule = module {
         )
     }
 
+    viewModel<MapViewModel> {
+        MapViewModel(get(), get(), get(), get(), get())
+    }
+
     viewModel<WeatherDebugViewModel> {
         WeatherDebugViewModel()
     }
 
     viewModel<MainViewModel> {
         MainViewModel(
-            saveMapPointUseCase = get(),
             getMapPointsUseCase = get(),
-            getProfilesUseCase = get(),
             saveProfileUseCase = get(),
             deleteProfileUseCase = inject(),
             selectProfileUseCase = inject(),
@@ -47,7 +50,6 @@ val appKoinModule = module {
             getSavedWeatherData = get(),
             yandexWeatherRepository = get(),
             weatherDataRepository = get(),
-            commonProfileFetcher = get()
         )
     }
 

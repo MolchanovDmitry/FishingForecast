@@ -2,7 +2,6 @@ package dmitry.molchanov.fishingforecast.android
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import dmitry.molchanov.fishingforecast.android.mapper.CommonProfileFetcher
 import dmitry.molchanov.fishingforecast.model.ForecastSetting
 import dmitry.molchanov.fishingforecast.model.MapPoint
 import dmitry.molchanov.fishingforecast.model.Profile
@@ -15,11 +14,10 @@ import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
 class MainViewModel(
-    getProfilesUseCase: GetProfilesUseCase,
+
     getMapPointsUseCase: GetMapPointsUseCase,
     getCurrentProfileUseCase: GetCurrentProfileUseCase,
     private val saveProfileUseCase: SaveProfileUseCase,
-    private val saveMapPointUseCase: SaveMapPointUseCase,
     private val getSavedWeatherData: GetSavedWeatherDataUseCase,
     private val deleteProfileUseCase: Lazy<DeleteProfileUseCase>,
     private val selectProfileUseCase: Lazy<SelectProfileUseCase>,
@@ -28,7 +26,6 @@ class MainViewModel(
     private val saveForecastSettingMarkUseCase: Lazy<SaveForecastSettingMarkUseCase>,
     private val yandexWeatherRepository: YandexWeatherRepository,
     private val weatherDataRepository: WeatherDataRepository,
-    private val commonProfileFetcher: CommonProfileFetcher
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(MainViewState())
@@ -53,11 +50,6 @@ class MainViewModel(
             }
             .launchIn(viewModelScope)
 
-        getProfilesUseCase.executeFlow()
-            .onEach { profiles ->
-                _state.update { it.copy(profiles = profiles + commonProfileFetcher.get()) }
-            }.launchIn(viewModelScope)
-
         getMapPointsUseCase.executeFlow()
             .onEach { mapPoints ->
                 this.allMapPoints = mapPoints
@@ -80,7 +72,6 @@ class MainViewModel(
 
     fun onEvent(event: Event) {
         when (event) {
-            is SavePoint -> saveMapPoint(event)
             is CreateProfile -> createProfile(event.name)
             is DeleteProfile -> deleteProfile(event.name)
             is SelectProfile -> selectProfile(event.name)
@@ -132,16 +123,7 @@ class MainViewModel(
         }
     }
 
-    private fun saveMapPoint(event: SavePoint) {
-        viewModelScope.launch {
-            saveMapPointUseCase.execute(
-                pointName = event.title,
-                profile = event.profile,
-                latitude = event.latitude,
-                longitude = event.longitude,
-            )
-        }
-    }
+
 
     private fun selectProfile(name: Profile) {
         viewModelScope.launch {
@@ -178,13 +160,6 @@ class CreateProfile(val name: Profile) : Event()
 class SelectProfile(val name: Profile) : Event()
 class DeleteProfile(val name: Profile) : Event()
 class DeleteForecastSetting(val forecastSetting: ForecastSetting) : Event()
-
-data class SavePoint(
-    val title: String,
-    val profile: Profile,
-    val latitude: Double,
-    val longitude: Double
-) : Event()
 
 data class SaveForecastSettingMark(
     val forecastSetting: ForecastSetting

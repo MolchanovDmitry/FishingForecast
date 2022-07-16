@@ -19,15 +19,14 @@ import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.maps.android.ktx.awaitMap
-import dmitry.molchanov.fishingforecast.android.MainViewModel
-import dmitry.molchanov.fishingforecast.android.MainViewState
 import dmitry.molchanov.fishingforecast.android.R
-import dmitry.molchanov.fishingforecast.android.SavePoint
 import kotlinx.coroutines.launch
+import org.koin.androidx.compose.viewModel
 
 
 @Composable
-fun MapScreen(vm: MainViewModel) {
+fun MapScreen() {
+    val vm by viewModel<MapViewModel>()
     val state = vm.state.collectAsState()
 
     Column(
@@ -40,7 +39,7 @@ fun MapScreen(vm: MainViewModel) {
 }
 
 @Composable
-fun MapView(state: State<MainViewState>, vm: MainViewModel) {
+fun MapView(state: State<MapState>, vm: MapViewModel) {
     val mapView = rememberMapViewWithLifecycle()
     val coroutineScope = rememberCoroutineScope()
     var map by remember { mutableStateOf<GoogleMap?>(null) }
@@ -76,7 +75,7 @@ fun MapView(state: State<MainViewState>, vm: MainViewModel) {
         openDialog = isOpedDialog,
         profiles = state.value.profiles,
         createMapPoint = { title, profile ->
-            vm.onEvent(
+            vm.onAction(
                 SavePoint(
                     title = title,
                     profile = profile,
