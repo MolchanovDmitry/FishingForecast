@@ -29,17 +29,23 @@ class ResultViewModel(
     fun onAction(action: ResultAction) = when (action) {
         is AddResultClickAction -> showAddDialog()
         is CloseAddResultDialog -> closeAddResultDialog()
-        is ProfileSelected -> fetchMapPoints()
+        is ProfileSelected -> updateSelectedProfile(action.profile)
+        is MapPointSelected -> updateSelectedMapPoint(action.mapPoint)
     }
 
-    private fun fetchMapPoints() {
-        viewModelScope.launch {
-            //val mapPoints =
-        }
+    private fun updateSelectedProfile(profile: Profile) {
+        _stateFlow.update { it.copy(selectedProfile = profile) }
+    }
+
+    private fun updateSelectedMapPoint(mapPoint: MapPoint) {
+        _stateFlow.update { it.copy(selectedMapPoint = mapPoint) }
     }
 
     private fun updateMapPoints() {
-        //TODO("Not yet implemented")
+        viewModelScope.launch {
+            val mapPoints = getMapPointsUseCase.execute()
+            _stateFlow.update { it.copy(mapPoints = mapPoints) }
+        }
     }
 
     private fun updateProfiles() {
@@ -61,6 +67,7 @@ class ResultViewModel(
 
 data class ResultScreenState(
     val selectedProfile: Profile,
+    val selectedMapPoint: MapPoint? = null,
     val shouldShowDialog: Boolean = false,
     val profiles: List<Profile> = emptyList(),
     val mapPoints: List<MapPoint> = emptyList(),
@@ -69,5 +76,5 @@ data class ResultScreenState(
 sealed class ResultAction
 class AddResultClickAction : ResultAction()
 class CloseAddResultDialog : ResultAction()
-
-class ProfileSelected(profile: Profile) : ResultAction()
+class ProfileSelected(val profile: Profile) : ResultAction()
+class MapPointSelected(val mapPoint: MapPoint) : ResultAction()

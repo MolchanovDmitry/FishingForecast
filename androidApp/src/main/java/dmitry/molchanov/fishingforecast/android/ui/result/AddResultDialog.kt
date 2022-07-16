@@ -19,6 +19,9 @@ fun AddResultDialog(
     dismiss: () -> Unit
 ) {
     val resultState = vm.stateFlow.collectAsState()
+    val selectedProfile = resultState.value.selectedProfile
+    val mapPointsBySelectedProfile = resultState.value.mapPoints
+        .filter { it.profileName == selectedProfile.name || (selectedProfile.isCommon && it.profileName == null) }
     val profileNames = remember { resultState.value.profiles.map { it.name } }
     AlertDialog(
         modifier = Modifier.fillMaxWidth(),
@@ -30,10 +33,21 @@ fun AddResultDialog(
                     modifier = Modifier.fillMaxWidth(),
                     label = "Выберите профиль",
                     suggestions = profileNames,
-                    defaultSelectedIndex = 0,
+                    defaultSelectedIndex = profileNames.indexOf(selectedProfile.name),
                     onSelectIndex = { profileIndex ->
                         resultState.value.profiles.getOrNull(profileIndex)
                             ?.let(::ProfileSelected)
+                            ?.let(vm::onAction)
+                    }
+                )
+                DropDown(
+                    modifier = Modifier.fillMaxWidth(),
+                    label = "Выберите точку",
+                    suggestions = mapPointsBySelectedProfile.map { it.name },
+                    defaultSelectedIndex = 0,
+                    onSelectIndex = { mapPointIndex ->
+                        mapPointsBySelectedProfile.getOrNull(mapPointIndex)
+                            ?.let(::MapPointSelected)
                             ?.let(vm::onAction)
                     }
                 )
