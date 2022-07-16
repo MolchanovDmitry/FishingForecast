@@ -5,9 +5,8 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.AlertDialog
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.remember
+import androidx.compose.material.TextField
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -23,6 +22,7 @@ fun AddResultDialog(
     val mapPointsBySelectedProfile = resultState.value.mapPoints
         .filter { it.profileName == selectedProfile.name || (selectedProfile.isCommon && it.profileName == null) }
     val profileNames = remember { resultState.value.profiles.map { it.name } }
+    var commentText by remember { mutableStateOf("") }
     AlertDialog(
         modifier = Modifier.fillMaxWidth(),
         onDismissRequest = { dismiss() },
@@ -50,6 +50,12 @@ fun AddResultDialog(
                             ?.let(::MapPointSelected)
                             ?.let(vm::onAction)
                     }
+                )
+                TextField(
+                    modifier = Modifier.fillMaxWidth(),
+                    value = commentText,
+                    onValueChange = { commentText = it },
+                    label = { Text("Ваш комментарий") }
                 )
             }
 
