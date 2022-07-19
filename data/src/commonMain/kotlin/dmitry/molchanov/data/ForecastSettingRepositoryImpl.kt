@@ -45,7 +45,7 @@ class ForecastSettingRepositoryImpl(
         forecastSettingQueries.insert(
             DataForecastSetting(
                 forecastSettingItemLabel = forecastSetting.forecastSettingsItem.name,
-                profileName = (profile as? SimpleProfile)?.name ?: "",
+                profileName = profile?.name,
                 minValue = minValue,
                 maxValue = maxValue,
                 delta = deltaValue,
