@@ -11,6 +11,6 @@ class DeleteForecastSettingUseCase(private val repository: ForecastSettingsRepos
 
     suspend fun execute(profile: Profile, forecastSetting: ForecastSetting) =
         withContext(ioDispatcher) {
-            repository.deleteForecastSetting(profile as SimpleProfile, forecastSetting)
+            repository.deleteForecastSetting(profile as? SimpleProfile, forecastSetting)
         }
 }
