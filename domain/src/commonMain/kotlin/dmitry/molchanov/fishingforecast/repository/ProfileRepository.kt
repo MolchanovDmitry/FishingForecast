@@ -1,19 +1,18 @@
 package dmitry.molchanov.fishingforecast.repository
 
-import dmitry.molchanov.fishingforecast.model.Profile
 import kotlinx.coroutines.flow.Flow
 
 interface ProfileRepository {
 
-    fun getProfilesFlow(): Flow<List<Profile>>
+    val currentProfileNameFlow: Flow<String?>
 
-    suspend fun getProfiles(): List<Profile>
+    val profilesNamesFlow: Flow<List<String>>
 
-    val currentProfileFlow: Flow<Profile>
+    suspend fun getProfilesNames(): List<String>
 
-    suspend fun createProfile(profile: Profile)
+    suspend fun createProfile(profileName: String)
 
-    suspend fun setCurrentProfile(profile: Profile)
+    suspend fun setCurrentProfileName(profileName: String?)
 
-    suspend fun deleteProfile(profile: Profile)
+    suspend fun deleteProfile(profileName: String)
 }

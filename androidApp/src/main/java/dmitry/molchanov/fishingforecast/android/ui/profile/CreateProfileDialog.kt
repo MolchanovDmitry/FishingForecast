@@ -12,12 +12,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import dmitry.molchanov.fishingforecast.model.Profile
+import dmitry.molchanov.fishingforecast.model.SimpleProfile
 
 @Composable
 fun CreateProfileDialog(
     openDialog: MutableState<Boolean>,
     profiles: List<Profile>,
-    profileTyped: (Profile) -> Unit
+    profileTyped: (SimpleProfile) -> Unit
 ) {
     var profileEdit by remember { mutableStateOf("") }
     var checkText by remember { mutableStateOf("Пустой профиль") }
@@ -83,7 +84,7 @@ fun CreateProfileDialog(
                             .clickable {
                                 if (checkText.isEmpty()) {
                                     openDialog.value = false
-                                    profileTyped(Profile(profileEdit, isCommon = false))
+                                    profileTyped(SimpleProfile(profileEdit))
                                     release()
                                 }
                             }

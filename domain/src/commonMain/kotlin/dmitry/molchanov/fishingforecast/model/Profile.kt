@@ -1,10 +1,5 @@
 package dmitry.molchanov.fishingforecast.model
 
-/**
- * Профиль прогнозирования.
- * Например, профиль конкретного человека, времени года или типы рыбалки
- */
-data class Profile(
-    val name: String,
-    val isCommon: Boolean,
-)
+sealed class Profile(open val name: String)
+data class SimpleProfile(override val name: String) : Profile(name)
+data class CommonProfile(override val name: String) : Profile(name)

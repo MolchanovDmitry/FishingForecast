@@ -2,9 +2,11 @@ package dmitry.molchanov.fishingforecast.android.ui.map
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import dmitry.molchanov.fishingforecast.android.mapper.CommonProfileFetcher
+import dmitry.molchanov.fishingforecast.android.mapper.CommonProfileFetcherImpl
+import dmitry.molchanov.fishingforecast.model.CommonProfile
 import dmitry.molchanov.fishingforecast.model.MapPoint
 import dmitry.molchanov.fishingforecast.model.Profile
+import dmitry.molchanov.fishingforecast.model.SimpleProfile
 import dmitry.molchanov.fishingforecast.usecase.GetCurrentProfileUseCase
 import dmitry.molchanov.fishingforecast.usecase.GetMapPointsUseCase
 import dmitry.molchanov.fishingforecast.usecase.GetProfilesUseCase
@@ -16,22 +18,23 @@ class MapViewModel(
     getProfilesUseCase: GetProfilesUseCase,
     getMapPointsUseCase: GetMapPointsUseCase,
     getCurrentProfileUseCase: GetCurrentProfileUseCase,
-    commonProfileFetcher: CommonProfileFetcher,
+    commonProfileFetcher: CommonProfileFetcherImpl,
     private val saveMapPointUseCase: Lazy<SaveMapPointUseCase>,
 ) : ViewModel() {
 
-    private val stateFlow = MutableStateFlow(MapViewState())
+    private val stateFlow = MutableStateFlow(MapViewState(currentProfile = commonProfileFetcher.instance))
     val state = stateFlow.asStateFlow()
 
     private var allMapPoints: List<MapPoint> = emptyList()
 
     init {
+        // TODO запрашивать по профилю
         getCurrentProfileUseCase.execute()
             .onEach { profile ->
                 stateFlow.update {
                     it.copy(
                         currentProfile = profile,
-                        mapPoints = if (profile.isCommon) {
+                        mapPoints = if (profile is CommonProfile) {
                             allMapPoints
                         } else {
                             allMapPoints.filter { it.profileName == profile.name }
@@ -41,12 +44,13 @@ class MapViewModel(
             }
             .launchIn(viewModelScope)
 
+        // TODO запрашивать по профилю
         getMapPointsUseCase.executeFlow()
             .onEach { mapPoints ->
                 this.allMapPoints = mapPoints
                 stateFlow.update {
                     it.copy(mapPoints =
-                    if (state.value.currentProfile.isCommon) {
+                    if (state.value.currentProfile is CommonProfile) {
                         mapPoints
                     } else {
                         mapPoints.filter { it.profileName == state.value.currentProfile.name }
@@ -55,14 +59,16 @@ class MapViewModel(
             }
             .launchIn(viewModelScope)
 
+        // TODO запрашивать по профилю
         getProfilesUseCase.executeFlow().onEach { profiles ->
-            stateFlow.update { it.copy(profiles = profiles + commonProfileFetcher.get()) }
+            stateFlow.update { it.copy(profiles = profiles) }
         }.launchIn(viewModelScope)
 
+        // TODO запрашивать по профилю
         getMapPointsUseCase.executeFlow().onEach { mapPoints ->
             //this.allMapPoints = mapPoints
             stateFlow.update {
-                it.copy(mapPoints = if (state.value.currentProfile.isCommon) {
+                it.copy(mapPoints = if (state.value.currentProfile is CommonProfile) {
                     mapPoints
                 } else {
                     mapPoints.filter { it.profileName == state.value.currentProfile.name }
@@ -81,7 +87,7 @@ class MapViewModel(
         viewModelScope.launch {
             saveMapPointUseCase.value.execute(
                 pointName = action.title,
-                profile = action.profile,
+                profile = action.profile as? SimpleProfile,
                 latitude = action.latitude,
                 longitude = action.longitude,
             )
@@ -90,7 +96,7 @@ class MapViewModel(
 }
 
 data class MapViewState(
-    val currentProfile: Profile = Profile("", isCommon = true),
+    val currentProfile: Profile,
     val mapPoints: List<MapPoint> = emptyList(),
     val profiles: List<Profile> = emptyList(),
 )

@@ -14,21 +14,21 @@ class ForecastSettingRepositoryImpl(
 
 ) : ForecastSettingsRepository {
 
-    override fun fetchForecastSettingsFlow(profile: Profile): Flow<List<ForecastSetting>> =
+    override fun fetchForecastSettingsFlow(profile: SimpleProfile?): Flow<List<ForecastSetting>> =
         forecastSettingQueries.selectAll().asFlow().mapToList()
             .map { it.toDomainForecastSetting(profile) }
 
-    override suspend fun fetchForecastSettings(profile: Profile): List<ForecastSetting> =
+    override suspend fun fetchForecastSettings(profile: SimpleProfile?): List<ForecastSetting> =
         forecastSettingQueries.selectAll().executeAsList().toDomainForecastSetting(profile)
 
-    override suspend fun deleteForecastSetting(profile: Profile, forecastSetting: ForecastSetting) {
+    override suspend fun deleteForecastSetting(profile: SimpleProfile?, forecastSetting: ForecastSetting) {
         forecastSettingQueries.delete(
-            profileName = profile.name,
+            profileName = profile?.name,
             forecastSettingItemLabel = forecastSetting.forecastSettingsItem.name,
         )
     }
 
-    override suspend fun saveForecastSettings(profile: Profile?, forecastSetting: ForecastSetting) {
+    override suspend fun saveForecastSettings(profile: SimpleProfile?, forecastSetting: ForecastSetting) {
         var minValue: Double? = null
         var maxValue: Double? = null
         var deltaValue: Double? = null
@@ -45,7 +45,7 @@ class ForecastSettingRepositoryImpl(
         forecastSettingQueries.insert(
             DataForecastSetting(
                 forecastSettingItemLabel = forecastSetting.forecastSettingsItem.name,
-                profileName = profile?.name ?: "",
+                profileName = (profile as? SimpleProfile)?.name ?: "",
                 minValue = minValue,
                 maxValue = maxValue,
                 delta = deltaValue,
@@ -54,9 +54,9 @@ class ForecastSettingRepositoryImpl(
         )
     }
 
-    private fun List<DataForecastSetting>.toDomainForecastSetting(profile: Profile) =
+    private fun List<DataForecastSetting>.toDomainForecastSetting(profile: SimpleProfile?) =
         mapNotNull {
-            if (it.profileName != profile.name) return@mapNotNull null
+            if (it.profileName != profile?.name) return@mapNotNull null
             val forecastMarks = mutableListOf<ForecastMark>()
             it.delta?.toFloat()?.let(::DeltaForecastMark)?.let(forecastMarks::add)
             it.minValue?.toFloat()?.let(::MinValueForecastMark)?.let(forecastMarks::add)

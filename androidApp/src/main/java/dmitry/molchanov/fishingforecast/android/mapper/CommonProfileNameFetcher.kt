@@ -2,14 +2,15 @@ package dmitry.molchanov.fishingforecast.android.mapper
 
 import android.content.Context
 import dmitry.molchanov.fishingforecast.android.R
-import dmitry.molchanov.fishingforecast.model.Profile
+import dmitry.molchanov.fishingforecast.mapper.CommonProfileFetcher
+import dmitry.molchanov.fishingforecast.model.CommonProfile
 
 /**
  * Получатель общего профиля
  */
-class CommonProfileFetcher(context: Context) {
+class CommonProfileFetcherImpl(context: Context): CommonProfileFetcher {
 
-    val name: String = context.resources.getString(R.string.common_profile)
+    private val name: String = context.resources.getString(R.string.common_profile)
 
-    fun get(): Profile = Profile(name, isCommon = true)
+    override val instance: CommonProfile = CommonProfile(name)
 }

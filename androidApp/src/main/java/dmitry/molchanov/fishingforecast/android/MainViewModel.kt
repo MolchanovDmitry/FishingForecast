@@ -2,10 +2,8 @@ package dmitry.molchanov.fishingforecast.android
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import dmitry.molchanov.fishingforecast.model.ForecastSetting
-import dmitry.molchanov.fishingforecast.model.MapPoint
-import dmitry.molchanov.fishingforecast.model.Profile
-import dmitry.molchanov.fishingforecast.model.WeatherData
+import dmitry.molchanov.fishingforecast.mapper.CommonProfileFetcher
+import dmitry.molchanov.fishingforecast.model.*
 import dmitry.molchanov.fishingforecast.repository.WeatherDataRepository
 import dmitry.molchanov.fishingforecast.repository.YandexWeatherRepository
 import dmitry.molchanov.fishingforecast.usecase.*
@@ -14,8 +12,8 @@ import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
 class MainViewModel(
-
     getMapPointsUseCase: GetMapPointsUseCase,
+    commonProfileFetcher: CommonProfileFetcher,
     getCurrentProfileUseCase: GetCurrentProfileUseCase,
     private val getSavedWeatherData: GetSavedWeatherDataUseCase,
     private val deleteForecastSettings: Lazy<DeleteForecastSettingUseCase>,
@@ -25,7 +23,7 @@ class MainViewModel(
     private val weatherDataRepository: WeatherDataRepository,
 ) : ViewModel() {
 
-    private val _state = MutableStateFlow(MainViewState())
+    private val _state = MutableStateFlow(MainViewState(currentProfile = commonProfileFetcher.instance))
     val state: StateFlow<MainViewState> = _state.asStateFlow()
 
     private var allMapPoints: List<MapPoint> = emptyList()
@@ -36,7 +34,7 @@ class MainViewModel(
                 _state.update { mainViewState ->
                     mainViewState.copy(
                         currentProfile = profile,
-                        mapPoints = if (profile.isCommon) {
+                        mapPoints = if (profile is CommonProfile) {
                             allMapPoints
                         } else {
                             allMapPoints.filter { it.profileName == profile.name }
@@ -52,7 +50,7 @@ class MainViewModel(
                 this.allMapPoints = mapPoints
                 _state.update { mainViewState ->
                     mainViewState.copy(mapPoints =
-                    if (state.value.currentProfile.isCommon) {
+                    if (state.value.currentProfile is CommonProfile) {
                         mapPoints
                     } else {
                         mapPoints.filter { it.profileName == state.value.currentProfile.name }
@@ -111,7 +109,7 @@ class MainViewModel(
     private fun saveForecastSettingMark(event: SaveForecastSettingMark) {
         viewModelScope.launch {
             saveForecastSettingMarkUseCase.value.execute(
-                profile = state.value.currentProfile,
+                profile = state.value.currentProfile as? SimpleProfile,
                 forecastSetting = event.forecastSetting
             )
         }
@@ -119,7 +117,7 @@ class MainViewModel(
 }
 
 data class MainViewState(
-    val currentProfile: Profile = Profile("", isCommon = true),
+    val currentProfile: Profile,
     val mapPoints: List<MapPoint> = emptyList(),
     val profiles: List<Profile> = emptyList(),
     val forecastSettings: List<ForecastSetting> = emptyList(),

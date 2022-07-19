@@ -2,47 +2,48 @@ package dmitry.molchanov.fishingforecast.android.ui.profile
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import dmitry.molchanov.fishingforecast.android.mapper.CommonProfileFetcher
+import dmitry.molchanov.fishingforecast.android.mapper.CommonProfileFetcherImpl
 import dmitry.molchanov.fishingforecast.model.Profile
+import dmitry.molchanov.fishingforecast.model.SimpleProfile
 import dmitry.molchanov.fishingforecast.usecase.*
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
 class ProfileViewModel(
-    getProfilesUseCase: GetProfilesUseCase,
-    commonProfileFetcher: CommonProfileFetcher,
-    getCurrentProfileUseCase: GetCurrentProfileUseCase,
+    getProfilesNamesUseCase: GetProfilesUseCase,
+    commonProfileFetcher: CommonProfileFetcherImpl,
+    getCurrentProfileNameUseCase: GetCurrentProfileUseCase,
     private val saveProfileUseCase: Lazy<SaveProfileUseCase>,
     private val deleteProfileUseCase: Lazy<DeleteProfileUseCase>,
     private val selectProfileUseCase: Lazy<SelectProfileUseCase>,
 
     ) : ViewModel() {
 
-    private val stateFlow = MutableStateFlow(ProfileViewState())
+    private val stateFlow = MutableStateFlow(ProfileViewState(currentProfile = commonProfileFetcher.instance))
     val state = stateFlow.asStateFlow()
 
     init {
-        getProfilesUseCase.executeFlow().onEach { profiles ->
-            stateFlow.update { it.copy(profiles = profiles + commonProfileFetcher.get()) }
-        }.launchIn(viewModelScope)
-        getCurrentProfileUseCase.execute()
-            .onEach { profile ->
-                stateFlow.update { it.copy(currentProfile = profile) }
+        getProfilesNamesUseCase.executeFlow().onEach { profiles->
+            stateFlow.update {
+                it.copy(profiles = profiles)
             }
-            .launchIn(viewModelScope)
+        }.launchIn(viewModelScope)
+        getCurrentProfileNameUseCase.execute().onEach { profile ->
+            stateFlow.update { it.copy(currentProfile = profile) }
+        }.launchIn(viewModelScope)
     }
 
     fun onAction(action: ProfileAction) {
         when (action) {
-            is CreateProfile -> createProfile(action.name)
-            is DeleteProfile -> deleteProfile(action.name)
-            is SelectProfile -> selectProfile(action.name)
+            is CreateProfile -> createProfile(action.profile)
+            is DeleteProfile -> deleteProfile(action.profile)
+            is SelectProfile -> selectProfile(action.profile)
         }
     }
 
-    private fun selectProfile(name: Profile) {
+    private fun selectProfile(profile: Profile) {
         viewModelScope.launch {
-            selectProfileUseCase.value.execute(name)
+            selectProfileUseCase.value.execute(profile)
         }
     }
 
@@ -52,20 +53,22 @@ class ProfileViewModel(
         }
     }
 
-    private fun createProfile(name: Profile) {
+    private fun createProfile(profile: Profile) {
         viewModelScope.launch {
-            saveProfileUseCase.value.execute(name)
+            (profile as? SimpleProfile)?.let { simpleProfile ->
+                saveProfileUseCase.value.execute(simpleProfile)
+            }
         }
     }
 }
 
 data class ProfileViewState(
-    val currentProfile: Profile = Profile("", isCommon = true),
+    val currentProfile: Profile,
     val profiles: List<Profile> = emptyList(),
 )
 
 sealed class ProfileAction
 
-class CreateProfile(val name: Profile) : ProfileAction()
-class SelectProfile(val name: Profile) : ProfileAction()
-class DeleteProfile(val name: Profile) : ProfileAction()
+class CreateProfile(val profile: Profile) : ProfileAction()
+class SelectProfile(val profile: Profile) : ProfileAction()
+class DeleteProfile(val profile: Profile) : ProfileAction()

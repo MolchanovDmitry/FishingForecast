@@ -3,12 +3,13 @@ package dmitry.molchanov.fishingforecast.android.di
 import dmitry.molchanov.fishingforecast.android.BuildConfig
 import dmitry.molchanov.fishingforecast.android.MainViewModel
 import dmitry.molchanov.fishingforecast.android.WeatherStatisticViewModel
-import dmitry.molchanov.fishingforecast.android.mapper.CommonProfileFetcher
+import dmitry.molchanov.fishingforecast.android.mapper.CommonProfileFetcherImpl
 import dmitry.molchanov.fishingforecast.android.notifier.WeatherNotifierPresenter
 import dmitry.molchanov.fishingforecast.android.ui.map.MapViewModel
 import dmitry.molchanov.fishingforecast.android.ui.profile.ProfileViewModel
 import dmitry.molchanov.fishingforecast.android.ui.result.ResultViewModel
 import dmitry.molchanov.fishingforecast.android.ui.weather.WeatherDebugViewModel
+import dmitry.molchanov.fishingforecast.mapper.CommonProfileFetcher
 import dmitry.molchanov.fishingforecast.model.MapPoint
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
@@ -19,7 +20,7 @@ val appKoinModule = module {
         BuildConfig.API_KEY
     }
 
-    factory<CommonProfileFetcher> { CommonProfileFetcher(get()) }
+    factory<CommonProfileFetcherImpl> { CommonProfileFetcherImpl(get()) }
 
     factory<WeatherNotifierPresenter> {
         // TODO вынести в отдельный модуль.
@@ -28,6 +29,10 @@ val appKoinModule = module {
             getMapPointsUseCase = get(),
             saveWeatherDataUseCase = get(),
         )
+    }
+
+    factory<CommonProfileFetcher> {
+        CommonProfileFetcherImpl(get())
     }
 
     viewModel<MapViewModel> {
@@ -52,6 +57,7 @@ val appKoinModule = module {
             getSavedWeatherData = get(),
             yandexWeatherRepository = get(),
             weatherDataRepository = get(),
+            commonProfileFetcher = get()
         )
     }
 

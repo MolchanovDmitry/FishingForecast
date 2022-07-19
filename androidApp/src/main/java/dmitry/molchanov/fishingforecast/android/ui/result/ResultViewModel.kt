@@ -2,7 +2,7 @@ package dmitry.molchanov.fishingforecast.android.ui.result
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import dmitry.molchanov.fishingforecast.android.mapper.CommonProfileFetcher
+import dmitry.molchanov.fishingforecast.android.mapper.CommonProfileFetcherImpl
 import dmitry.molchanov.fishingforecast.model.MapPoint
 import dmitry.molchanov.fishingforecast.model.Profile
 import dmitry.molchanov.fishingforecast.usecase.GetMapPointsUseCase
@@ -17,14 +17,14 @@ import kotlinx.coroutines.launch
 class ResultViewModel(
     private val getProfilesUseCase: Lazy<GetProfilesUseCase>,
     private val getMapPointsUseCase: Lazy<GetMapPointsUseCase>,
-    private val commonProfileFetcher: Lazy<CommonProfileFetcher>,
+    private val commonProfileFetcher: Lazy<CommonProfileFetcherImpl>,
     private val getSavedWeatherDataUseCase: Lazy<GetSavedWeatherDataUseCase>
 ) : ViewModel() {
 
     private val _messageFlow = MutableSharedFlow<ResultEvent>(replay = 1)
     val messageFlow = _messageFlow.asSharedFlow()
 
-    private val _stateFlow = MutableStateFlow(ResultScreenState(selectedProfile = commonProfileFetcher.value.get()))
+    private val _stateFlow = MutableStateFlow(ResultScreenState(selectedProfile = commonProfileFetcher.value.instance))
     val stateFlow = _stateFlow.asStateFlow()
 
     init {
@@ -101,7 +101,7 @@ class ResultViewModel(
 
     private fun updateProfiles() {
         viewModelScope.launch {
-            val profiles = getProfilesUseCase.value.execute() + commonProfileFetcher.value.get()
+            val profiles = getProfilesUseCase.value.execute() + commonProfileFetcher.value.instance
             _stateFlow.update { it.copy(profiles = profiles) }
         }
     }

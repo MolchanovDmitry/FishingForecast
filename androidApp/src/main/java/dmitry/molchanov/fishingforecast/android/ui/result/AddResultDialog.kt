@@ -12,17 +12,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import dmitry.molchanov.fishingforecast.android.ui.DropDown
-import dmitry.molchanov.fishingforecast.model.isCommonProfile
 import java.util.*
 
 @Composable
-fun AddResultDialog(
-    vm: ResultViewModel
-) {
+fun AddResultDialog(vm: ResultViewModel) {
     val resultState = vm.stateFlow.collectAsState()
     val selectedProfile = resultState.value.selectedProfile
     val mapPointsBySelectedProfile = resultState.value.mapPoints
-        .filter { it.profileName == selectedProfile.name || (selectedProfile.isCommon && it.isCommonProfile) }
+        .filter { it.profileName == selectedProfile.name }
     val profileNames = remember { resultState.value.profiles.map { it.name } }
     val dateLabels = remember {
         val simpleDateFormat = SimpleDateFormat("dd MMMM yyyy", Locale.getDefault())

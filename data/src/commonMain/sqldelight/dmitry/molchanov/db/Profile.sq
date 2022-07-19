@@ -1,6 +1,5 @@
 CREATE TABLE Profile(
-    name TEXT NOT NULL PRIMARY KEY,
-    isCommon INTEGER AS Boolean NOT NULL DEFAULT 0
+    name TEXT NOT NULL PRIMARY KEY
 );
 
 selectAll:
@@ -8,7 +7,7 @@ SELECT *
 FROM Profile;
 
 insert:
-INSERT INTO Profile(name, isCommon)
+INSERT INTO Profile(name)
 VALUES ?;
 
 delete:

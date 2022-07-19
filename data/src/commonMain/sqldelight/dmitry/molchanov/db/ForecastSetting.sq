@@ -1,7 +1,7 @@
 -- Нормализовать в будущем.
 CREATE TABLE ForecastSetting(
     forecastSettingItemLabel TEXT NOT NULL,
-    profileName TEXT NOT NULL,
+    profileName TEXT,
     minValue REAL,
     maxValue REAL,
     delta REAL,

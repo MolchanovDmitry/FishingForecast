@@ -1,5 +1,6 @@
 package dmitry.molchanov.fishingforecast.di
 
+import dmitry.molchanov.fishingforecast.mapper.ProfileMapper
 import dmitry.molchanov.fishingforecast.usecase.*
 import org.koin.dsl.module
 
@@ -26,7 +27,7 @@ val domainKoinModule = module {
     }
 
     factory<GetProfilesUseCase> {
-        GetProfilesUseCase(profileRepository = get())
+        GetProfilesUseCase(profileRepository = get(), commonProfileFetcher = get(), profileMapper = get())
     }
 
     factory<GetSavedWeatherDataUseCase> {
@@ -53,8 +54,12 @@ val domainKoinModule = module {
         SelectProfileUseCase(profileRepository = get())
     }
 
+    factory<ProfileMapper> {
+        ProfileMapper(commonProfileFetcher = get())
+    }
+
     factory<GetCurrentProfileUseCase> {
-        GetCurrentProfileUseCase(profileRepository = get())
+        GetCurrentProfileUseCase(profileRepository = get(), profileMapper = get())
     }
 
     factory<GetForecastSettingMarksUseCase> {
