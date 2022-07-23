@@ -65,7 +65,7 @@ class WeatherStatisticViewModel(
     }
 
     private fun observeWeather(period: Period, forecastSettings: List<ForecastSetting>) {
-        weatherDataRepository.fetchWeatherData(
+        weatherDataRepository.fetchWeatherDataFlow(
             mapPoint = mapPoint,
             from = period.from,
             to = period.to

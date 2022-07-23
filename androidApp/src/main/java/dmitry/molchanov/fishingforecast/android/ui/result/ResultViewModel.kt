@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import dmitry.molchanov.fishingforecast.android.mapper.CommonProfileFetcherImpl
 import dmitry.molchanov.fishingforecast.model.MapPoint
 import dmitry.molchanov.fishingforecast.model.Profile
+import dmitry.molchanov.fishingforecast.model.WeatherData
 import dmitry.molchanov.fishingforecast.usecase.GetMapPointsUseCase
 import dmitry.molchanov.fishingforecast.usecase.GetProfilesUseCase
 import dmitry.molchanov.fishingforecast.usecase.GetSavedWeatherDataUseCase
@@ -65,22 +66,21 @@ class ResultViewModel(
     }
 
     private fun tryCreateResult() {
-        val selectedMap = _stateFlow.value.selectedMapPoint ?: run {
+        val selectedMapPoint = _stateFlow.value.selectedMapPoint ?: run {
             _messageFlow.tryEmit(NullMapPoint())
             return
         }
+        val date = _stateFlow.value.selectedDate
+        viewModelScope.launch {
+            val weatherData: List<WeatherData> =
+                getSavedWeatherDataUseCase.value
+                    .execute(selectedMapPoint, from = date - (5 * ONE_DAY), to = date + ONE_DAY - 1)
+        }
+
     }
 
     private fun updateSelectedDate(date: TimeMs) {
         _stateFlow.update { it.copy(selectedDate = date) }
-        _stateFlow.value.selectedMapPoint?.let { mapPoint ->
-            viewModelScope.launch {
-                val weatherData =
-                    getSavedWeatherDataUseCase.value
-                        .execute(mapPoint, from = date - (5 * ONE_DAY), to = date + ONE_DAY - 1)
-                println(weatherData)
-            }
-        }
     }
 
     private fun updateSelectedProfile(profile: Profile) {

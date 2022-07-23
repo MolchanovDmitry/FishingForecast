@@ -11,8 +11,6 @@ import dmitry.molchanov.fishingforecast.repository.MapPointRepository
 import dmitry.molchanov.fishingforecast.repository.WeatherDataRepository
 import dmitry.molchanov.fishingforecast.utils.TimeMs
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.filter
-import kotlinx.coroutines.flow.flatMap
 import kotlinx.coroutines.flow.map
 import dmitry.molchanov.db.WeatherData as DataWeatherData
 import dmitry.molchanov.fishingforecast.model.WeatherData as DomainWeatherData
@@ -31,12 +29,12 @@ class WeatherDataRepositoryImpl(
             }
     }
 
-    override fun fetchWeatherData(
+    override fun fetchWeatherDataFlow(
         mapPoint: MapPoint,
         from: TimeMs,
         to: TimeMs
-    ): Flow<List<dmitry.molchanov.fishingforecast.model.WeatherData>> {
-        return weatherDataQueries.selectAll()
+    ): Flow<List<DomainWeatherData>> {
+        return weatherDataQueries.selectAll()// TODO запрашивать по параметрам
             .asFlow()
             .mapToList()
             .map { weatherData ->
@@ -51,6 +49,21 @@ class WeatherDataRepositoryImpl(
         weatherData
             .map(::getDataWeatherData)
             .forEach(weatherDataQueries::insert)
+    }
+
+    override suspend fun fetchWeatherData(
+        mapPoint: MapPoint,
+        from: TimeMs,
+        to: TimeMs
+    ): List<DomainWeatherData> {
+        return weatherDataQueries.selectAll()// TODO запрашивать по параметрам
+            .executeAsList()
+            .filter {
+                it.mapPointId == mapPoint.id && it.date <= to && it.date >= from
+            }
+            .mapNotNull { weatherData ->
+                getDomainWeatherData(weatherData)
+            }
     }
 
     private fun getDataWeatherData(domainWeatherData: DomainWeatherData): DataWeatherData =

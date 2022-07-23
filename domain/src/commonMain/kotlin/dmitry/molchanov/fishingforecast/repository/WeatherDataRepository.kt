@@ -9,11 +9,12 @@ interface WeatherDataRepository {
 
     fun fetchAllWeatherData(): Flow<List<WeatherData>>
 
-    fun fetchWeatherData(
+    fun fetchWeatherDataFlow(
         mapPoint: MapPoint,
         from: TimeMs,
         to: TimeMs
     ): Flow<List<WeatherData>>
 
     suspend fun saveWeatherData(weatherData: List<WeatherData>)
+    suspend fun fetchWeatherData(mapPoint: MapPoint, from: TimeMs, to: TimeMs): List<WeatherData>
 }

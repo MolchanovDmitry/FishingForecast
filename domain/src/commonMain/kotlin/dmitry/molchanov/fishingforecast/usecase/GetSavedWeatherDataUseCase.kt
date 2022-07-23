@@ -13,7 +13,12 @@ import kotlinx.coroutines.withContext
  */
 class GetSavedWeatherDataUseCase(private val weatherDataRepository: WeatherDataRepository) {
 
-    suspend fun execute(mapPoint: MapPoint, from: TimeMs, to: TimeMs): Flow<List<WeatherData>> =
+    suspend fun executeFlow(mapPoint: MapPoint, from: TimeMs, to: TimeMs): Flow<List<WeatherData>> =
+        withContext(ioDispatcher) {
+            weatherDataRepository.fetchWeatherDataFlow(mapPoint, from, to)
+        }
+
+    suspend fun execute(mapPoint: MapPoint, from: TimeMs, to: TimeMs): List<WeatherData> =
         withContext(ioDispatcher) {
             weatherDataRepository.fetchWeatherData(mapPoint, from, to)
         }
