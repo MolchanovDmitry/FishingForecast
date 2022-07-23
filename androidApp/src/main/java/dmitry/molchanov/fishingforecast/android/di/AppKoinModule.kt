@@ -54,10 +54,10 @@ val appKoinModule = module {
             getForecastSettingMarks = get(),
             deleteForecastSettings = inject(),
             saveForecastSettingMarkUseCase = inject(),
-            getSavedWeatherData = get(),
             yandexWeatherRepository = get(),
             weatherDataRepository = get(),
-            commonProfileFetcher = get()
+            commonProfileFetcher = get(),
+            saveWeatherDataUseCase = get()
         )
     }
 
@@ -72,6 +72,13 @@ val appKoinModule = module {
     }
 
     viewModel<ResultViewModel> {
-        ResultViewModel(inject(), inject(), inject(), inject())
+        ResultViewModel(
+            getResultUseCase = get(),
+            saveResultUseCase = inject(),
+            getProfilesUseCase = inject(),
+            getMapPointsUseCase = inject(),
+            commonProfileFetcher = inject(),
+            getSavedWeatherDataUseCase = inject(),
+        )
     }
 }

@@ -10,7 +10,7 @@ import kotlinx.serialization.json.Json
  */
 @Serializable
 data class MapPoint(
-    val id: String,
+    val id: Long,
     val name: String,
     val profile: Profile,
     val latitude: Double,

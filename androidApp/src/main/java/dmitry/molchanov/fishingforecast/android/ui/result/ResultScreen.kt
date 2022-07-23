@@ -2,12 +2,12 @@ package dmitry.molchanov.fishingforecast.android.ui.result
 
 import android.widget.Toast
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.Composable
@@ -25,7 +25,16 @@ import org.koin.androidx.compose.viewModel
 fun ResultScreen() {
     val vm by viewModel<ResultViewModel>()
     val state = vm.stateFlow.collectAsState()
+    val results = state.value.results
     Box(modifier = Modifier.fillMaxSize()) {
+
+        LazyColumn(modifier = Modifier.fillMaxSize()) {
+            items(items = results) { result ->
+                Row(modifier = Modifier.fillMaxWidth()) {
+                    Text(text = result.name)
+                }
+            }
+        }
 
         Icon(
             imageVector = Icons.Filled.Add,

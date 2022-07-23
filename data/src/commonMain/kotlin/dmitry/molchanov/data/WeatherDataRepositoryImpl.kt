@@ -3,10 +3,7 @@ package dmitry.molchanov.data
 import com.squareup.sqldelight.runtime.coroutines.asFlow
 import com.squareup.sqldelight.runtime.coroutines.mapToList
 import dmitry.molchanov.db.WeatherDataQueries
-import dmitry.molchanov.fishingforecast.model.MapPoint
-import dmitry.molchanov.fishingforecast.model.Pressure
-import dmitry.molchanov.fishingforecast.model.Temperature
-import dmitry.molchanov.fishingforecast.model.Wind
+import dmitry.molchanov.fishingforecast.model.*
 import dmitry.molchanov.fishingforecast.repository.MapPointRepository
 import dmitry.molchanov.fishingforecast.repository.WeatherDataRepository
 import dmitry.molchanov.fishingforecast.utils.TimeMs
@@ -45,10 +42,22 @@ class WeatherDataRepositoryImpl(
             }
     }
 
-    override suspend fun saveWeatherData(weatherData: List<DomainWeatherData>) {
+    override suspend fun saveWeatherData(weatherData: List<RawWeatherData>) {
         weatherData
-            .map(::getDataWeatherData)
-            .forEach(weatherDataQueries::insert)
+            .forEach { weatherDataItem ->
+                weatherDataQueries.insert(
+                    mapPointId = weatherDataItem.mapPoint.id,
+                    date = weatherDataItem.date,
+                    tempAvg = weatherDataItem.temperature?.avg?.toDouble(),
+                    tempWater = weatherDataItem.temperature?.water?.toDouble(),
+                    windSpeed = weatherDataItem.wind?.speed?.toDouble(),
+                    windGust = weatherDataItem.wind?.gust?.toDouble(),
+                    windDir = weatherDataItem.wind?.dir,
+                    pressureMm = weatherDataItem.pressure?.mm?.toDouble(),
+                    pressurePa = weatherDataItem.pressure?.pa?.toDouble(),
+                    humidity = weatherDataItem.humidity?.toDouble()
+                )
+            }
     }
 
     override suspend fun fetchWeatherData(
@@ -66,23 +75,10 @@ class WeatherDataRepositoryImpl(
             }
     }
 
-    private fun getDataWeatherData(domainWeatherData: DomainWeatherData): DataWeatherData =
-        DataWeatherData(
-            mapPointId = domainWeatherData.mapPoint.id,
-            date = domainWeatherData.date,
-            tempAvg = domainWeatherData.temperature?.avg?.toDouble(),
-            tempWater = domainWeatherData.temperature?.water?.toDouble(),
-            windSpeed = domainWeatherData.wind?.speed?.toDouble(),
-            windGust = domainWeatherData.wind?.gust?.toDouble(),
-            windDir = domainWeatherData.wind?.dir,
-            pressureMm = domainWeatherData.pressure?.mm?.toDouble(),
-            pressurePa = domainWeatherData.pressure?.pa?.toDouble(),
-            humidity = domainWeatherData.humidity?.toDouble()
-        )
-
     private suspend fun getDomainWeatherData(dataWeatherData: DataWeatherData): DomainWeatherData? {
         val mapPoint = mapPointRepository.getMapPoint(dataWeatherData.mapPointId) ?: return null
         return DomainWeatherData(
+            id = dataWeatherData.id,
             date = dataWeatherData.date,
             mapPoint = mapPoint,
             pressure = Pressure(

@@ -15,7 +15,7 @@ class MainViewModel(
     getMapPointsUseCase: GetMapPointsUseCase,
     commonProfileFetcher: CommonProfileFetcher,
     getCurrentProfileUseCase: GetCurrentProfileUseCase,
-    private val getSavedWeatherData: GetSavedWeatherDataUseCase,
+    private val saveWeatherDataUseCase: SaveWeatherDataUseCase,
     private val deleteForecastSettings: Lazy<DeleteForecastSettingUseCase>,
     private val getForecastSettingMarks: GetForecastSettingMarksUseCase,
     private val saveForecastSettingMarkUseCase: Lazy<SaveForecastSettingMarkUseCase>,
@@ -76,12 +76,7 @@ class MainViewModel(
     private fun fetchWeatherData() {
         viewModelScope.launch {
             state.value.mapPoints.forEach { mapPoint ->
-                yandexWeatherRepository.getYandexWeatherDate(mapPoint)
-                    .onFailure { it.printStackTrace() }
-                    .getOrNull()
-                    ?.let { weatherData ->
-                        weatherDataRepository.saveWeatherData(weatherData)
-                    }
+                saveWeatherDataUseCase.execute(mapPoint)
             }
         }
     }

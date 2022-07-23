@@ -1,16 +1,31 @@
--- CREATE TABLE Result (
---     id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
---     profileName TEXT,
---     mapPointId INTEGER NOT NULL,
---     FOREIGN KEY(mapPointId) REFERENCES MapPoint(id)
--- );
+CREATE TABLE Result (
+    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    profileName TEXT,
+    mapPointId INTEGER NOT NULL,
+    UNIQUE (profileName, mapPointId),
+    FOREIGN KEY(profileName) REFERENCES Profile(name),
+    FOREIGN KEY(mapPointId) REFERENCES MapPoint(id)
+)
+;
 
--- Убираем отношение многие ко многим
--- CREATE TABLE ResultToWeatherData(
---     resultId INTEGER NOT NULL,
---     mapPointId INTEGER NOT NULL,
---     weatherData INTEGER  NOT NULL,
---     FOREIGN KEY(resultId) REFERENCES Result(id),
---     FOREIGN KEY(mapPointId) REFERENCES WeatherData(mapPointId),
---     FOREIGN KEY(weatherData) REFERENCES WeatherData(date)
--- );
+selectAll:
+SELECT *
+FROM Result
+;
+
+selectById:
+SELECT *
+FROM Result
+WHERE id = ?
+;
+
+insert:
+INSERT OR REPLACE INTO Result(name, profileName, mapPointId)
+VALUES (?,?,?)
+;
+
+lastInsertResultId:
+SELECT last_insert_rowid()
+;
+

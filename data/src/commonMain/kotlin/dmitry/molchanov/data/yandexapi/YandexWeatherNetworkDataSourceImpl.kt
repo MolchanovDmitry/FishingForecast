@@ -5,12 +5,13 @@ import dmitry.molchanov.data.yandexapi.entity.WeatherResponseRoot
 import dmitry.molchanov.fishingforecast.model.*
 import dmitry.molchanov.fishingforecast.repository.YandexWeatherRepository
 import dmitry.molchanov.fishingforecast.utils.ONE_SEC
+import kotlin.Result
 
 class YandexWeatherNetworkDataSourceImpl(
     private val apiKey: String,
 ): YandexWeatherRepository {
 
-    override suspend fun getYandexWeatherDate(mapPoint: MapPoint): Result<List<WeatherData>> {
+    override suspend fun getYandexWeatherDate(mapPoint: MapPoint): Result<List<RawWeatherData>> {
         val result = NetworkClient.loadData<WeatherResponseRoot>(
             headers = mapOf("X-Yandex-API-Key" to apiKey),
             url = "https://api.weather.yandex.ru/v2/informers?\n" +
@@ -23,8 +24,8 @@ class YandexWeatherNetworkDataSourceImpl(
             ?: Result.failure(result.exceptionOrNull() ?: Throwable())
     }
 
-    private fun WeatherResponseRoot.toDomainWeatherData(mapPoint: MapPoint): List<WeatherData> {
-        val factData = WeatherData(
+    private fun WeatherResponseRoot.toDomainWeatherData(mapPoint: MapPoint): List<RawWeatherData> {
+        val factData = RawWeatherData(
             date = now * ONE_SEC,
             mapPoint = mapPoint,
             pressure = Pressure(

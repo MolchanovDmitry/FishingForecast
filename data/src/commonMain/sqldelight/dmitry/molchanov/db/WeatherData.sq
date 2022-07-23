@@ -1,5 +1,6 @@
 CREATE TABLE WeatherData(
-    mapPointId TEXT NOT NULL,
+    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    mapPointId INTEGER NOT NULL,
     date INTEGER NOT NULL,
     tempAvg REAL,
     tempWater REAL,
@@ -9,7 +10,7 @@ CREATE TABLE WeatherData(
     pressureMm REAL,
     pressurePa REAL,
     humidity REAL,
-    PRIMARY KEY (mapPointId, date),
+    UNIQUE (mapPointId, date),
     FOREIGN KEY(mapPointId) REFERENCES MapPoint(id)
 );
 
@@ -20,4 +21,4 @@ FROM WeatherData;
 insert:
 INSERT OR REPLACE INTO WeatherData(mapPointId, date, tempAvg, tempWater, windSpeed, windGust, windDir,
 pressureMm, pressurePa, humidity)
-VALUES ?;
+VALUES (?,?,?,?,?,?,?,?,?,?);

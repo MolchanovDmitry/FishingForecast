@@ -9,7 +9,18 @@ package dmitry.molchanov.fishingforecast.model
  * @property wind ветер
  * @property humidity влажность
  */
-class WeatherData(
+data class WeatherData(
+    val id: Long,
+    val date: Long,
+    val mapPoint: MapPoint,
+    val pressure: Pressure? = null,
+    val temperature: Temperature? = null,
+    val wind: Wind? = null,
+    val humidity: Float? = null
+
+)
+
+data class RawWeatherData(
     val date: Long,
     val mapPoint: MapPoint,
     val pressure: Pressure? = null,
