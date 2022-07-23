@@ -10,7 +10,7 @@ import org.koin.dsl.module
 val dataCommonKoinModule = module {
 
     single<MapPointRepository> {
-        MapPointRepositoryImpl(mapPointQueries = get())
+        MapPointRepositoryImpl(mapPointQueries = get(), profileMapper = get())
     }
 
     single<ProfileRepository> {

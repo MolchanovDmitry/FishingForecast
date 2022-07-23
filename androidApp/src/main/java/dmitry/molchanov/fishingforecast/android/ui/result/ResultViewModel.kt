@@ -75,6 +75,8 @@ class ResultViewModel(
             val weatherData: List<WeatherData> =
                 getSavedWeatherDataUseCase.value
                     .execute(selectedMapPoint, from = date - (5 * ONE_DAY), to = date + ONE_DAY - 1)
+            val a = 1
+            val b = a + 1
         }
 
     }
@@ -101,7 +103,7 @@ class ResultViewModel(
 
     private fun updateProfiles() {
         viewModelScope.launch {
-            val profiles = getProfilesUseCase.value.execute() + commonProfileFetcher.value.instance
+            val profiles = getProfilesUseCase.value.execute()
             _stateFlow.update { it.copy(profiles = profiles) }
         }
     }

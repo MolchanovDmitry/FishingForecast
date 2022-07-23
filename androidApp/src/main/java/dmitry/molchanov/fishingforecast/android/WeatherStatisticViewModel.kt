@@ -32,7 +32,7 @@ class WeatherStatisticViewModel(
     init {
         viewModelScope.launch {
             getProfilesUseCase.execute()
-                .firstOrNull { (it is CommonProfile && mapPoint.profileName == null) || (it.name == mapPoint.profileName) }
+                .firstOrNull { profile -> profile == mapPoint.profile }
                 ?.let { profile ->
                     val forecastSettings = getForecastSettings(profile)
                     getObservationPeriod(forecastSettings)

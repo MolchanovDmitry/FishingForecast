@@ -12,14 +12,10 @@ import kotlinx.serialization.json.Json
 data class MapPoint(
     val id: String,
     val name: String,
-    val profileName: String?,
+    val profile: Profile,
     val latitude: Double,
     val longitude: Double
 )
-
-val MapPoint.isCommonProfile: Boolean
-    get() = profileName == null
-
 fun MapPoint.string() = Json.encodeToString(this)
 
 fun String.toMapPoint() = Json.decodeFromString<MapPoint>(this)

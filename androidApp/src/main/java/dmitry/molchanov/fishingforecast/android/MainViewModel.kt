@@ -37,7 +37,7 @@ class MainViewModel(
                         mapPoints = if (profile is CommonProfile) {
                             allMapPoints
                         } else {
-                            allMapPoints.filter { it.profileName == profile.name }
+                            allMapPoints.filter { it.profile == profile }
                         }
                     )
                 }
@@ -53,7 +53,7 @@ class MainViewModel(
                     if (state.value.currentProfile is CommonProfile) {
                         mapPoints
                     } else {
-                        mapPoints.filter { it.profileName == state.value.currentProfile.name }
+                        mapPoints.filter { it.profile == state.value.currentProfile }
                     })
                 }
             }

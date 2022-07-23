@@ -19,7 +19,7 @@ fun AddResultDialog(vm: ResultViewModel) {
     val resultState = vm.stateFlow.collectAsState()
     val selectedProfile = resultState.value.selectedProfile
     val mapPointsBySelectedProfile = resultState.value.mapPoints
-        .filter { it.profileName == selectedProfile.name }
+        .filter { mapPoint -> mapPoint.profile == selectedProfile }
     val profileNames = remember { resultState.value.profiles.map { it.name } }
     val dateLabels = remember {
         val simpleDateFormat = SimpleDateFormat("dd MMMM yyyy", Locale.getDefault())

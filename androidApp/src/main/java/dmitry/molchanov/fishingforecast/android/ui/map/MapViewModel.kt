@@ -6,7 +6,6 @@ import dmitry.molchanov.fishingforecast.android.mapper.CommonProfileFetcherImpl
 import dmitry.molchanov.fishingforecast.model.CommonProfile
 import dmitry.molchanov.fishingforecast.model.MapPoint
 import dmitry.molchanov.fishingforecast.model.Profile
-import dmitry.molchanov.fishingforecast.model.SimpleProfile
 import dmitry.molchanov.fishingforecast.usecase.GetCurrentProfileUseCase
 import dmitry.molchanov.fishingforecast.usecase.GetMapPointsUseCase
 import dmitry.molchanov.fishingforecast.usecase.GetProfilesUseCase
@@ -37,7 +36,7 @@ class MapViewModel(
                         mapPoints = if (profile is CommonProfile) {
                             allMapPoints
                         } else {
-                            allMapPoints.filter { it.profileName == profile.name }
+                            allMapPoints.filter { it.profile == profile }
                         }
                     )
                 }
@@ -53,7 +52,7 @@ class MapViewModel(
                     if (state.value.currentProfile is CommonProfile) {
                         mapPoints
                     } else {
-                        mapPoints.filter { it.profileName == state.value.currentProfile.name }
+                        mapPoints.filter { it.profile == state.value.currentProfile }
                     })
                 }
             }
@@ -71,7 +70,7 @@ class MapViewModel(
                 it.copy(mapPoints = if (state.value.currentProfile is CommonProfile) {
                     mapPoints
                 } else {
-                    mapPoints.filter { it.profileName == state.value.currentProfile.name }
+                    mapPoints.filter { it.profile == state.value.currentProfile }
                 })
             }
         }.launchIn(viewModelScope)
@@ -87,7 +86,7 @@ class MapViewModel(
         viewModelScope.launch {
             saveMapPointUseCase.value.execute(
                 pointName = action.title,
-                profile = action.profile as? SimpleProfile,
+                profile = action.profile,
                 latitude = action.latitude,
                 longitude = action.longitude,
             )
