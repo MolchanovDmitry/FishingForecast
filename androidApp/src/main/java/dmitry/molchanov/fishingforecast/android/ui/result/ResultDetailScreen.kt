@@ -22,11 +22,11 @@ import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.rememberCameraPositionState
 import dmitry.molchanov.fishingforecast.android.ui.preview.previewResult
-import dmitry.molchanov.fishingforecast.android.ui.preview.previewWeatherData
 import dmitry.molchanov.fishingforecast.model.Result
 import dmitry.molchanov.fishingforecast.model.WeatherData
 import dmitry.molchanov.fishingforecast.utils.getDayCount
 import org.koin.androidx.compose.viewModel
+import org.koin.core.parameter.parametersOf
 import java.util.*
 
 private val UNKNOWN = "Нет данных"
@@ -35,10 +35,11 @@ private val UNKNOWN = "Нет данных"
 @Composable
 fun ResultDetailScreen(
     result: Result = previewResult,
-    weatherData: List<WeatherData> = previewWeatherData,
+    //weatherData: List<WeatherData> = previewWeatherData,
 ) {
-    val vm by viewModel<ResultDetailViewModel>()
+    val vm by viewModel<ResultDetailViewModel> { parametersOf(result) }
     val state = vm.stateFlow.collectAsState()
+    val weatherData = state.value.weatherData
     val cameraPositionState = rememberCameraPositionState {
         val point = LatLng(result.mapPoint.latitude, result.mapPoint.longitude)
         position = CameraPosition.fromLatLngZoom(point, 12f)

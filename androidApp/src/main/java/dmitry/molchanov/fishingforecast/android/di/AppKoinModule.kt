@@ -83,7 +83,7 @@ val appKoinModule = module {
         )
     }
 
-    viewModel<ResultDetailViewModel> {
-        ResultDetailViewModel()
+    viewModel<ResultDetailViewModel> { parameters ->
+        ResultDetailViewModel(parameters.get(), get())
     }
 }

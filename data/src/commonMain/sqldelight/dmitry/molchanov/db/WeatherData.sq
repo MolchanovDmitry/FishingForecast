@@ -12,13 +12,22 @@ CREATE TABLE WeatherData(
     humidity REAL,
     UNIQUE (mapPointId, date),
     FOREIGN KEY(mapPointId) REFERENCES MapPoint(id)
-);
+)
+;
 
 selectAll:
 SELECT *
-FROM WeatherData;
+FROM WeatherData
+;
+
+selectByIds:
+SELECT *
+FROM WeatherData
+WHERE id IN ?
+;
 
 insert:
 INSERT OR REPLACE INTO WeatherData(mapPointId, date, tempAvg, tempWater, windSpeed, windGust, windDir,
 pressureMm, pressurePa, humidity)
-VALUES (?,?,?,?,?,?,?,?,?,?);
+VALUES (?,?,?,?,?,?,?,?,?,?)
+;

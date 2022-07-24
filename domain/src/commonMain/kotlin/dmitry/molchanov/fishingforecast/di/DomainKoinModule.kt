@@ -83,4 +83,11 @@ val domainKoinModule = module {
         GetMapPointByIdUseCase(mapPointRepository = get())
     }
 
+    factory<GetWeatherDataByResultUseCase> {
+        GetWeatherDataByResultUseCase(
+            resultDataRepository = get(),
+            weatherDataRepository = get()
+        )
+    }
+
 }

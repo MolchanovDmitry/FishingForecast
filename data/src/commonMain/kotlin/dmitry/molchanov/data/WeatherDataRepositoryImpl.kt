@@ -14,7 +14,7 @@ import dmitry.molchanov.fishingforecast.model.WeatherData as DomainWeatherData
 
 class WeatherDataRepositoryImpl(
     private val weatherDataQueries: WeatherDataQueries,
-    private val mapPointRepository: MapPointRepository
+    private val mapPointRepository: MapPointRepository,
 ) : WeatherDataRepository {
 
     override fun fetchAllWeatherData(): Flow<List<DomainWeatherData>> {
@@ -29,7 +29,7 @@ class WeatherDataRepositoryImpl(
     override fun fetchWeatherDataFlow(
         mapPoint: MapPoint,
         from: TimeMs,
-        to: TimeMs
+        to: TimeMs,
     ): Flow<List<DomainWeatherData>> {
         return weatherDataQueries.selectAll()// TODO запрашивать по параметрам
             .asFlow()
@@ -63,7 +63,7 @@ class WeatherDataRepositoryImpl(
     override suspend fun fetchWeatherData(
         mapPoint: MapPoint,
         from: TimeMs,
-        to: TimeMs
+        to: TimeMs,
     ): List<DomainWeatherData> {
         return weatherDataQueries.selectAll()// TODO запрашивать по параметрам
             .executeAsList()
@@ -74,6 +74,11 @@ class WeatherDataRepositoryImpl(
                 getDomainWeatherData(weatherData)
             }
     }
+
+    override suspend fun getWeatherDataByIds(ids: List<Long>) =
+        weatherDataQueries.selectByIds(ids)
+            .executeAsList()
+            .mapNotNull { weatherData -> getDomainWeatherData(weatherData) }
 
     private suspend fun getDomainWeatherData(dataWeatherData: DataWeatherData): DomainWeatherData? {
         val mapPoint = mapPointRepository.getMapPoint(dataWeatherData.mapPointId) ?: return null

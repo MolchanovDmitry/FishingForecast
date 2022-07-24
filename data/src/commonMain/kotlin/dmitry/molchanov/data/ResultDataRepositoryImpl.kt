@@ -52,9 +52,13 @@ class ResultDataRepositoryImpl(
         }
     }
 
+    override suspend fun getWeatherDataIdsByResult(result: Result): List<Long> =
+        resultToWeatherDataQueries.selectWeatherDataResultId(resultId = result.id)
+            .executeAsList()
+
     private suspend fun mapToResult(dataResults: List<DataResult>): List<Result> =
         dataResults.mapNotNull { resultItem ->
             val mapPoint = mapPointMapper.getMapPointById(resultItem.mapPointId)
-            mapPoint?.let { Result(mapPoint = mapPoint, name = resultItem.name) }
+            mapPoint?.let { Result(id = resultItem.id, mapPoint = mapPoint, name = resultItem.name) }
         }
 }

@@ -17,12 +17,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import dmitry.molchanov.fishingforecast.model.Result
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import org.koin.androidx.compose.viewModel
 
 @Composable
-fun ResultScreen() {
+fun ResultScreen(onResultClick: (Result) -> Unit) {
     val vm by viewModel<ResultViewModel>()
     val state = vm.stateFlow.collectAsState()
     val results = state.value.results
@@ -31,7 +32,9 @@ fun ResultScreen() {
         LazyColumn(modifier = Modifier.fillMaxSize()) {
             items(items = results) { result ->
                 Row(modifier = Modifier.fillMaxWidth()) {
-                    Text(text = result.name)
+                    Text(text = result.name, modifier = Modifier.clickable {
+                        onResultClick(result)
+                    })
                 }
             }
         }

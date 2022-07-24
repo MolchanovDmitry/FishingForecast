@@ -12,6 +12,7 @@ private val previewMapPoint = MapPoint(
 )
 
 val previewResult = Result(
+    id = 0,
     name = "Просто супер порыбачил",
     mapPoint = previewMapPoint
 )

@@ -3,8 +3,9 @@ package dmitry.molchanov.fishingforecast.android.ui
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.ui.graphics.vector.ImageVector
+import dmitry.molchanov.fishingforecast.mapper.string
 import dmitry.molchanov.fishingforecast.model.MapPoint
-import dmitry.molchanov.fishingforecast.model.string
+import dmitry.molchanov.fishingforecast.model.Result
 
 enum class NavItem(val label: String, val icon: ImageVector, val destination: Screen) {
     MAP(label = "Карта", icon = Icons.Filled.Map, destination = Screen.Map),
@@ -34,5 +35,9 @@ sealed class Screen(val label: String) {
     object Weather : Screen(label = "Weather?mapPoint={mapPoint}") {
         fun route(mapPoint: MapPoint) = "Weather?mapPoint=${mapPoint.string()}"
     }
+
     object Results : Screen(label = "Results")
+    object ResultDetails : Screen(label = "ResultDetail?result={result}") {
+        fun route(result: Result) = "ResultDetail?result=${result.string()}"
+    }
 }

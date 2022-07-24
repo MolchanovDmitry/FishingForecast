@@ -8,8 +8,16 @@ CREATE TABLE ResultToWeatherData(
 
 selectAll:
 SELECT *
-FROM ResultToWeatherData;
+FROM ResultToWeatherData
+;
+
+selectWeatherDataResultId:
+SELECT weatherDataId
+FROM ResultToWeatherData
+WHERE resultId = ?
+;
 
 insert:
 INSERT OR REPLACE INTO ResultToWeatherData(resultId, weatherDataId)
-VALUES ?;
+VALUES ?
+;

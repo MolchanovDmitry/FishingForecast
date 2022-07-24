@@ -18,4 +18,5 @@ interface WeatherDataRepository {
 
     suspend fun saveWeatherData(weatherData: List<RawWeatherData>)
     suspend fun fetchWeatherData(mapPoint: MapPoint, from: TimeMs, to: TimeMs): List<WeatherData>
+    suspend fun getWeatherDataByIds(ids: List<Long>): List<WeatherData>
 }
