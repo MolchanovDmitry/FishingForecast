@@ -38,7 +38,7 @@ object Deps {
     const val leak_canary = "com.squareup.leakcanary:leakcanary-android:2.7"
 
     // map
-    const val play_services_maps = "com.google.android.gms:play-services-maps:18.0.0"
+    const val play_services_maps = "com.google.android.gms:play-services-maps:18.0.2"
 
     // for custom marker
     const val maps_utils = "com.google.maps.android:android-maps-utils-v3:2.3.0"

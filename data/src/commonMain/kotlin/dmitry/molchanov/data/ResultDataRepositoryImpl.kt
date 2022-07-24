@@ -55,14 +55,6 @@ class ResultDataRepositoryImpl(
     private suspend fun mapToResult(dataResults: List<DataResult>): List<Result> =
         dataResults.mapNotNull { resultItem ->
             val mapPoint = mapPointMapper.getMapPointById(resultItem.mapPointId)
-            if (mapPoint != null) {
-                Result(
-                    mapPoint = mapPoint,
-                    name = resultItem.name,
-                    profile = profileMapper.mapProfile(resultItem.profileName),
-                )
-            } else {
-                null
-            }
+            mapPoint?.let { Result(mapPoint = mapPoint, name = resultItem.name) }
         }
 }
