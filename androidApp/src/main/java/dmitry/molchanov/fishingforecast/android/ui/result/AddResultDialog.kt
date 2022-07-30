@@ -97,7 +97,7 @@ fun AddResultDialog(vm: ResultViewModel) {
                     fontSize = 18.sp,
                     modifier = Modifier
                         .padding(8.dp)
-                        .clickable { vm.onAction(CreateResult()) }
+                        .clickable { vm.onAction(CreateResult(resultName = commentText)) }
                 )
             }
         }

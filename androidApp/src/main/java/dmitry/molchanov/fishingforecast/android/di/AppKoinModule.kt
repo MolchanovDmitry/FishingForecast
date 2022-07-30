@@ -74,12 +74,14 @@ val appKoinModule = module {
 
     viewModel<ResultViewModel> {
         ResultViewModel(
+            context = get(),
             getResultUseCase = get(),
             saveResultUseCase = inject(),
             getProfilesUseCase = inject(),
             getMapPointsUseCase = inject(),
             commonProfileFetcher = inject(),
             getSavedWeatherDataUseCase = inject(),
+            getWeatherDataByResultUseCase = inject()
         )
     }
 

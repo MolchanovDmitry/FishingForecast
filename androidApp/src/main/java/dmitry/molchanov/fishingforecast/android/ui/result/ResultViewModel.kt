@@ -1,26 +1,32 @@
 package dmitry.molchanov.fishingforecast.android.ui.result
 
+import android.content.Context
+import android.icu.text.SimpleDateFormat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dmitry.molchanov.fishingforecast.android.mapper.CommonProfileFetcherImpl
-import dmitry.molchanov.fishingforecast.model.MapPoint
-import dmitry.molchanov.fishingforecast.model.Profile
-import dmitry.molchanov.fishingforecast.model.Result
-import dmitry.molchanov.fishingforecast.model.WeatherData
+import dmitry.molchanov.fishingforecast.mapper.string
+import dmitry.molchanov.fishingforecast.model.*
 import dmitry.molchanov.fishingforecast.usecase.*
 import dmitry.molchanov.fishingforecast.utils.ONE_DAY
 import dmitry.molchanov.fishingforecast.utils.TimeMs
+import dmitry.molchanov.fishingforecast.utils.ioDispatcher
 import dmitry.molchanov.fishingforecast.utils.nightTime
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import java.io.File
+import java.util.*
+
 
 class ResultViewModel(
     getResultUseCase: GetResultsUseCase,
     commonProfileFetcher: Lazy<CommonProfileFetcherImpl>,
+    private val context: Context,
     private val saveResultUseCase: Lazy<SaveResultUseCase>,
     private val getProfilesUseCase: Lazy<GetProfilesUseCase>,
     private val getMapPointsUseCase: Lazy<GetMapPointsUseCase>,
     private val getSavedWeatherDataUseCase: Lazy<GetSavedWeatherDataUseCase>,
+    private val getWeatherDataByResultUseCase: Lazy<GetWeatherDataByResultUseCase>,
 ) : ViewModel() {
 
     private val _messageFlow = MutableSharedFlow<ResultEvent>(replay = 1)
@@ -28,6 +34,8 @@ class ResultViewModel(
 
     private val _stateFlow = MutableStateFlow(ResultScreenState(selectedProfile = commonProfileFetcher.value.instance))
     val stateFlow = _stateFlow.asStateFlow()
+
+    private var results: List<Result>? = null
 
     init {
         observeResults(getResultUseCase)
@@ -39,6 +47,7 @@ class ResultViewModel(
     private fun observeResults(getResultUseCase: GetResultsUseCase) {
         getResultUseCase.executeFlow()
             .onEach { results ->
+                this.results = results
                 _stateFlow.update { it.copy(results = results) }
             }
             .launchIn(viewModelScope)
@@ -62,20 +71,40 @@ class ResultViewModel(
     }
 
     fun onAction(action: ResultAction) = when (action) {
-        is CreateResult -> tryCreateResult()
         is AddResultClickAction -> showAddDialog()
         is CloseAddResultDialog -> closeAddResultDialog()
         is DateSelected -> updateSelectedDate(action.date)
+        is CreateResult -> tryCreateResult(action.resultName)
         is ProfileSelected -> updateSelectedProfile(action.profile)
         is MapPointSelected -> updateSelectedMapPoint(action.mapPoint)
         is ChangeDialogStatus -> updateDialogStatus(action.isVisible)
+        is ShareClick -> onShareClick()
+    }
+
+    // TODO реализовать публикацию только выбранных результатов
+    private fun onShareClick() {
+        viewModelScope.launch(ioDispatcher) {
+            results
+                ?.map { result ->
+                    val weatherData = getWeatherDataByResultUseCase.value.execute(result)
+                    SharedResult(result, weatherData)
+                }?.string()
+                ?.let { resultJson ->
+                    val dateFormat = SimpleDateFormat("yyyy-MM-dd-HH-mm-ss", Locale.getDefault())
+                    val fileNamePrefix = dateFormat.format(System.currentTimeMillis())
+                    val file = File(context.cacheDir, "$fileNamePrefix.txt")
+                    file.writeText(String(resultJson.toByteArray(), charset("UTF-8")))
+
+                    _messageFlow.tryEmit(ShareFile(file.path))
+                }
+        }
     }
 
     private fun updateDialogStatus(isVisible: Boolean) {
         _stateFlow.update { it.copy(shouldShowDialog = isVisible) }
     }
 
-    private fun tryCreateResult() {
+    private fun tryCreateResult(resultName: String) {
         val selectedMapPoint = _stateFlow.value.selectedMapPoint ?: run {
             _messageFlow.tryEmit(NullMapPoint())
             return
@@ -87,6 +116,7 @@ class ResultViewModel(
                 getSavedWeatherDataUseCase.value
                     .execute(selectedMapPoint, from = date - (5 * ONE_DAY), to = date + ONE_DAY - 1)
             saveResultUseCase.value.execute(
+                resultName = resultName,
                 weatherData = weatherData,
                 mapPoint = selectedMapPoint,
                 profile = stateFlow.value.selectedProfile,
@@ -145,6 +175,7 @@ data class ResultScreenState(
 
 sealed class ResultEvent
 class NullMapPoint : ResultEvent()
+class ShareFile(val filePath: String) : ResultEvent()
 
 sealed class ResultAction
 class AddResultClickAction : ResultAction()
@@ -152,5 +183,6 @@ class CloseAddResultDialog : ResultAction()
 class DateSelected(val date: Long) : ResultAction()
 class ProfileSelected(val profile: Profile) : ResultAction()
 class MapPointSelected(val mapPoint: MapPoint) : ResultAction()
-class CreateResult() : ResultAction()
+class CreateResult(val resultName: String) : ResultAction()
 class ChangeDialogStatus(val isVisible: Boolean) : ResultAction()
+class ShareClick : ResultAction()

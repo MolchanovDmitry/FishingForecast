@@ -79,6 +79,6 @@ dependencies {
         Deps.koin_core,
         Deps.koin_android,
         Deps.koin_compose,
-        "com.google.maps.android:maps-compose:1.0.0"
+        Deps.maps_compose,
     ).forEach(::implementation)
 }

@@ -16,7 +16,6 @@ import dmitry.molchanov.fishingforecast.repository.NullWeatherData
 import dmitry.molchanov.fishingforecast.repository.ResultDataRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import java.util.*
 import dmitry.molchanov.db.Result as DataResult
 
 class ResultDataRepositoryImpl(
@@ -35,10 +34,15 @@ class ResultDataRepositoryImpl(
 
     // TODO сделать сохранение точки не только начиная с текущего дня
     @Throws(NullWeatherData::class, NullResultId::class)
-    override suspend fun saveResult(weatherData: List<WeatherData>, profile: SimpleProfile?, mapPoint: MapPoint) {
+    override suspend fun saveResult(
+        resultName: String,
+        weatherData: List<WeatherData>,
+        profile: SimpleProfile?,
+        mapPoint: MapPoint,
+    ) {
 
         resultQueries.insert(
-            name = UUID.randomUUID().toString(),
+            name = resultName,
             profileName = profile?.name,
             mapPointId = mapPoint.id,
         )

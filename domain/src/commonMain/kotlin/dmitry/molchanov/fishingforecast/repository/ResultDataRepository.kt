@@ -8,7 +8,12 @@ import kotlinx.coroutines.flow.Flow
 
 interface ResultDataRepository {
 
-    suspend fun saveResult(weatherData: List<WeatherData>, profile: SimpleProfile?, mapPoint: MapPoint)
+    suspend fun saveResult(
+        resultName: String,
+        weatherData: List<WeatherData>,
+        profile: SimpleProfile?,
+        mapPoint: MapPoint,
+    )
 
     fun getResultsFlow(): Flow<List<Result>>
     suspend fun getWeatherDataIdsByResult(result: Result): List<Long>

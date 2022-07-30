@@ -10,10 +10,11 @@ import kotlinx.coroutines.withContext
 
 class SaveResultUseCase(private val resultDataRepository: ResultDataRepository) {
 
-    suspend fun execute(weatherData: List<WeatherData>, profile: Profile, mapPoint: MapPoint) =
+    suspend fun execute(resultName: String, weatherData: List<WeatherData>, profile: Profile, mapPoint: MapPoint) =
         withContext(ioDispatcher) {
             resultDataRepository.saveResult(
                 mapPoint = mapPoint,
+                resultName = resultName,
                 weatherData = weatherData,
                 profile = profile as? SimpleProfile,
             )
