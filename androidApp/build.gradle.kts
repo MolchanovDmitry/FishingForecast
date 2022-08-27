@@ -60,6 +60,7 @@ dependencies {
         Deps.coroutines_android,
 
         Deps.androidx_lifecycle_runtime_ktx,
+        Deps.androidx_activity_ktx,
 
         Deps.play_services_maps,
         Deps.maps_utils,

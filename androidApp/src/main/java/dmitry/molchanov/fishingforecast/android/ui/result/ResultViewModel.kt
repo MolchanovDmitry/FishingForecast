@@ -2,6 +2,7 @@ package dmitry.molchanov.fishingforecast.android.ui.result
 
 import android.content.Context
 import android.icu.text.SimpleDateFormat
+import android.os.Environment
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dmitry.molchanov.fishingforecast.android.mapper.CommonProfileFetcherImpl
@@ -15,13 +16,14 @@ import dmitry.molchanov.fishingforecast.utils.nightTime
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import java.io.File
+import java.io.FileOutputStream
 import java.util.*
 
 
 class ResultViewModel(
     getResultUseCase: GetResultsUseCase,
     commonProfileFetcher: Lazy<CommonProfileFetcherImpl>,
-    private val context: Context,
+    private val context: Context, // TODO удалить затычку.
     private val saveResultUseCase: Lazy<SaveResultUseCase>,
     private val getProfilesUseCase: Lazy<GetProfilesUseCase>,
     private val getMapPointsUseCase: Lazy<GetMapPointsUseCase>,
@@ -78,7 +80,12 @@ class ResultViewModel(
         is ProfileSelected -> updateSelectedProfile(action.profile)
         is MapPointSelected -> updateSelectedMapPoint(action.mapPoint)
         is ChangeDialogStatus -> updateDialogStatus(action.isVisible)
-        is ShareClick -> onShareClick()
+        is SaveToStorageAndShareClick -> onShareClick()
+        is ImportClick -> onImportClick()
+    }
+
+    private fun onImportClick() {
+
     }
 
     // TODO реализовать публикацию только выбранных результатов
@@ -92,12 +99,31 @@ class ResultViewModel(
                 ?.let { resultJson ->
                     val dateFormat = SimpleDateFormat("yyyy-MM-dd-HH-mm-ss", Locale.getDefault())
                     val fileNamePrefix = dateFormat.format(System.currentTimeMillis())
-                    val file = File(context.cacheDir, "$fileNamePrefix.txt")
+                    val fileName = "$fileNamePrefix.txt"
+
+                    val file = File(context.cacheDir, fileName)
                     file.writeText(String(resultJson.toByteArray(), charset("UTF-8")))
 
                     _messageFlow.tryEmit(ShareFile(file.path))
+
+                    //try {
+
+                    writeToFile(fileName = fileName, data = resultJson)
+                    /*} catch (t: Throwable) {
+                        // ignore
+                    }*/
                 }
         }
+    }
+
+    private fun writeToFile(fileName: String, data: String) {
+        val env = Environment.getExternalStoragePublicDirectory(
+            Environment.DIRECTORY_DOCUMENTS
+        )
+        val stream = FileOutputStream("$env/$fileName")
+
+        stream.write(data.toByteArray())
+
     }
 
     private fun updateDialogStatus(isVisible: Boolean) {
@@ -185,4 +211,5 @@ class ProfileSelected(val profile: Profile) : ResultAction()
 class MapPointSelected(val mapPoint: MapPoint) : ResultAction()
 class CreateResult(val resultName: String) : ResultAction()
 class ChangeDialogStatus(val isVisible: Boolean) : ResultAction()
-class ShareClick : ResultAction()
+class SaveToStorageAndShareClick : ResultAction()
+class ImportClick : ResultAction()

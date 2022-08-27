@@ -1,27 +1,25 @@
 package dmitry.molchanov.fishingforecast.android.ui.result
 
+import android.Manifest.permission.WRITE_EXTERNAL_STORAGE
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager.PERMISSION_GRANTED
 import android.net.Uri
 import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Button
 import androidx.compose.material.Text
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.ImportExport
-import androidx.compose.material.icons.filled.Share
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import dmitry.molchanov.fishingforecast.model.Result
 import kotlinx.coroutines.flow.launchIn
@@ -29,11 +27,26 @@ import kotlinx.coroutines.flow.onEach
 import org.koin.androidx.compose.viewModel
 import java.io.File
 
+
 @Composable
 fun ResultScreen(onResultClick: (Result) -> Unit) {
     val vm by viewModel<ResultViewModel>()
     val state = vm.stateFlow.collectAsState()
     val results = state.value.results
+    val context = LocalContext.current
+    var shouldOpenFile by remember { mutableStateOf(false) }
+    val launcher = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
+        println("1488 uri = ${uri}")
+    }
+    // TODO сделать красиво
+    val writePermissionLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { }
+    if (shouldOpenFile) {
+        shouldOpenFile = false
+        launcher.launch("text/*")
+    }
+
     Box(modifier = Modifier.fillMaxSize()) {
 
         LazyColumn(modifier = Modifier.fillMaxSize()) {
@@ -47,33 +60,26 @@ fun ResultScreen(onResultClick: (Result) -> Unit) {
         }
 
         Column(modifier = Modifier.align(Alignment.BottomEnd)) {
-            Icon(
-                imageVector = Icons.Filled.Add,
-                contentDescription = "Add",
-                tint = MaterialTheme.colors.primary,
-                modifier = Modifier
-                    .size(90.dp)
-                    .padding(8.dp)
-                    .clickable { vm.onAction(AddResultClickAction()) }
-            )
-            Icon(
-                imageVector = Icons.Filled.Share,
-                contentDescription = "Share",
-                tint = MaterialTheme.colors.primary,
-                modifier = Modifier
-                    .size(70.dp)
-                    .padding(8.dp)
-                    .clickable { vm.onAction(ShareClick()) }
-            )
-            Icon(
-                imageVector = Icons.Filled.ImportExport,
-                contentDescription = "Share",
-                tint = MaterialTheme.colors.primary,
-                modifier = Modifier
-                    .size(70.dp)
-                    .padding(8.dp)
-                    .clickable { vm.onAction(ShareClick()) }
-            )
+            Button(modifier = Modifier.padding(4.dp), onClick = { vm.onAction(AddResultClickAction()) }) {
+                Text("Добавить новый результат.")
+            }
+            Button(modifier = Modifier.padding(4.dp), onClick = {
+                // TODO
+                if (ContextCompat.checkSelfPermission(context, WRITE_EXTERNAL_STORAGE) != PERMISSION_GRANTED
+                ) {
+                    writePermissionLauncher.launch(WRITE_EXTERNAL_STORAGE)
+                }
+                vm.onAction(SaveToStorageAndShareClick())
+            }) {
+                Text("Поделиться результатами.")
+            }
+            Button(modifier = Modifier.padding(4.dp), onClick = {
+                vm.onAction(ImportClick())
+                //importFile()
+                shouldOpenFile = true
+            }) {
+                Text("Импортировать результаты.")
+            }
         }
 
 
@@ -82,23 +88,31 @@ fun ResultScreen(onResultClick: (Result) -> Unit) {
         AddResultDialog(vm)
     }
 
-    val context = LocalContext.current
     LaunchedEffect(key1 = Unit) {
-        vm.messageFlow
-            .onEach { event ->
-                when (event) {
-                    is NullMapPoint -> Toast.makeText(context, "Выберите точку", Toast.LENGTH_SHORT).show()
-                    is ShareFile -> shareFile(context = context, filePath = event.filePath)
-                }
+        vm.messageFlow.onEach { event ->
+            when (event) {
+                is NullMapPoint -> Toast.makeText(context, "Выберите точку", Toast.LENGTH_SHORT).show()
+                is ShareFile -> shareFile(context = context, filePath = event.filePath)
             }
-            .launchIn(this)
+        }.launchIn(this)
     }
 
 }
 
+@Composable
+fun importFile() {
+    /*val chooseFile: Intent = Intent(Intent.ACTION_GET_CONTENT)
+    chooseFile.addCategory(Intent.CATEGORY_OPENABLE)
+    chooseFile.type = "file/*"
+    val intent = Intent.createChooser(chooseFile, "Choose a file")
+    startActivityForResult(context as Activity, intent,1,null)
+    */
+    */
+}
+
 private fun shareFile(context: Context, filePath: String) {
 
-    val contentUri: Uri = FileProvider.getUriForFile(context, "com.example.app.fileprovider",   File(filePath))
+    val contentUri: Uri = FileProvider.getUriForFile(context, "com.example.app.fileprovider", File(filePath))
 
     val shareIntent = Intent()
     shareIntent.action = Intent.ACTION_SEND
