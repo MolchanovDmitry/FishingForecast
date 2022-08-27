@@ -36,7 +36,7 @@ class ResultDataRepositoryImpl(
     @Throws(NullWeatherData::class, NullResultId::class)
     override suspend fun saveResult(
         resultName: String,
-        weatherData: List<WeatherData>,
+        weatherDataIds: List<Long>,
         profile: SimpleProfile?,
         mapPoint: MapPoint,
     ) {
@@ -49,9 +49,9 @@ class ResultDataRepositoryImpl(
 
         val resultId = resultQueries.lastInsertResultId().executeAsOneOrNull() ?: throw NullResultId()
 
-        weatherData.forEach { weatherDataItem ->
+        weatherDataIds.forEach { id ->
             resultToWeatherDataQueries.insert(
-                ResultToWeatherData(resultId = resultId, weatherDataId = weatherDataItem.id)
+                ResultToWeatherData(resultId = resultId, weatherDataId = id)
             )
         }
     }

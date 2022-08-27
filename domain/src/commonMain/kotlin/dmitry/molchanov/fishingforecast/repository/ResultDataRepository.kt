@@ -10,7 +10,7 @@ interface ResultDataRepository {
 
     suspend fun saveResult(
         resultName: String,
-        weatherData: List<WeatherData>,
+        weatherDataIds: List<Long>,
         profile: SimpleProfile?,
         mapPoint: MapPoint,
     )

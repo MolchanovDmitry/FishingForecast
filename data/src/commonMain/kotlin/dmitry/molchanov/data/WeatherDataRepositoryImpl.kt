@@ -93,6 +93,15 @@ class WeatherDataRepositoryImpl(
             }
     }
 
+    override suspend fun getWeatherDataIds(weatherData: List<DomainWeatherData>): List<Long> {
+        val mapPointsIds = weatherData.map { it.mapPoint.id }
+        val dates = weatherData.map { it.date }
+        return weatherDataQueries.selectAll()
+            .executeAsList()
+            .filter { mapPointsIds.contains(it.mapPointId) && dates.contains(it.date) }
+            .map { it.id }
+    }
+
     override suspend fun getWeatherDataByIds(ids: List<Long>) =
         weatherDataQueries.selectByIds(ids)
             .executeAsList()

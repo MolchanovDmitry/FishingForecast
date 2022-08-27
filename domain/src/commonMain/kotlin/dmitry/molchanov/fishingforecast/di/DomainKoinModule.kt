@@ -72,7 +72,7 @@ val domainKoinModule = module {
     }
 
     factory<SaveResultUseCase> {
-        SaveResultUseCase(resultDataRepository = get())
+        SaveResultUseCase(resultDataRepository = get(), weatherDataRepository = get())
     }
 
     factory<GetResultsUseCase> {
