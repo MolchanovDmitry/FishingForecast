@@ -1,5 +1,6 @@
 package dmitry.molchanov.fishingforecast.android.ui.result
 
+import android.Manifest.permission.READ_EXTERNAL_STORAGE
 import android.Manifest.permission.WRITE_EXTERNAL_STORAGE
 import android.content.Context
 import android.content.Intent
@@ -35,13 +36,18 @@ fun ResultScreen(onResultClick: (Result) -> Unit) {
     val results = state.value.results
     val context = LocalContext.current
     var shouldOpenFile by remember { mutableStateOf(false) }
-    val launcher = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
-
+    val launcher = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri ->
+        context.contentResolver.openInputStream(uri)?.let(vm::importResult)
     }
     // TODO сделать красиво
     val writePermissionLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.RequestPermission()
     ) { }
+    val readPermissionLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) {
+        shouldOpenFile = true
+    }
     if (shouldOpenFile) {
         shouldOpenFile = false
         launcher.launch("text/*")
@@ -74,9 +80,12 @@ fun ResultScreen(onResultClick: (Result) -> Unit) {
                 Text("Поделиться результатами.")
             }
             Button(modifier = Modifier.padding(4.dp), onClick = {
-                vm.onAction(ImportClick())
-                //importFile()
-                shouldOpenFile = true
+                if (ContextCompat.checkSelfPermission(context, WRITE_EXTERNAL_STORAGE) != PERMISSION_GRANTED
+                ) {
+                    readPermissionLauncher.launch(READ_EXTERNAL_STORAGE)
+                } else {
+                    shouldOpenFile = true
+                }
             }) {
                 Text("Импортировать результаты.")
             }

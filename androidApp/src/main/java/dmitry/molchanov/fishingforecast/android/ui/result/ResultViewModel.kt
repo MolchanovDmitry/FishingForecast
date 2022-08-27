@@ -15,15 +15,14 @@ import dmitry.molchanov.fishingforecast.utils.ioDispatcher
 import dmitry.molchanov.fishingforecast.utils.nightTime
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
-import java.io.File
-import java.io.FileOutputStream
+import java.io.*
 import java.util.*
 
 
 class ResultViewModel(
     getResultUseCase: GetResultsUseCase,
     commonProfileFetcher: Lazy<CommonProfileFetcherImpl>,
-    private val context: Context, // TODO удалить затычку.
+    private val context: Context, // TODO удалить текущую затычку.
     private val saveResultUseCase: Lazy<SaveResultUseCase>,
     private val getProfilesUseCase: Lazy<GetProfilesUseCase>,
     private val getMapPointsUseCase: Lazy<GetMapPointsUseCase>,
@@ -81,11 +80,23 @@ class ResultViewModel(
         is MapPointSelected -> updateSelectedMapPoint(action.mapPoint)
         is ChangeDialogStatus -> updateDialogStatus(action.isVisible)
         is SaveToStorageAndShareClick -> onShareClick()
-        is ImportClick -> onImportClick()
     }
 
-    private fun onImportClick() {
+    // TODO сделать сериализацию через input stream
+    fun importResult(inputStream: InputStream) {
+        val result = convertStreamToString(inputStream)
+    }
 
+    @Throws(java.lang.Exception::class)
+    private fun convertStreamToString(inputStream: InputStream?): String? {
+        val reader = BufferedReader(InputStreamReader(inputStream))
+        val sb = StringBuilder()
+        var line: String? = null
+        while (reader.readLine().also { line = it } != null) {
+            sb.append(line).append("\n")
+        }
+        reader.close()
+        return sb.toString()
     }
 
     // TODO реализовать публикацию только выбранных результатов
@@ -116,14 +127,11 @@ class ResultViewModel(
         }
     }
 
+    //TODO актуализировать
     private fun writeToFile(fileName: String, data: String) {
-        val env = Environment.getExternalStoragePublicDirectory(
-            Environment.DIRECTORY_DOCUMENTS
-        )
+        val env = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS)
         val stream = FileOutputStream("$env/$fileName")
-
         stream.write(data.toByteArray())
-
     }
 
     private fun updateDialogStatus(isVisible: Boolean) {
@@ -212,4 +220,3 @@ class MapPointSelected(val mapPoint: MapPoint) : ResultAction()
 class CreateResult(val resultName: String) : ResultAction()
 class ChangeDialogStatus(val isVisible: Boolean) : ResultAction()
 class SaveToStorageAndShareClick : ResultAction()
-class ImportClick : ResultAction()
