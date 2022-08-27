@@ -36,7 +36,7 @@ fun ResultScreen(onResultClick: (Result) -> Unit) {
     val context = LocalContext.current
     var shouldOpenFile by remember { mutableStateOf(false) }
     val launcher = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
-        println("1488 uri = ${uri}")
+
     }
     // TODO сделать красиво
     val writePermissionLauncher = rememberLauncherForActivityResult(
