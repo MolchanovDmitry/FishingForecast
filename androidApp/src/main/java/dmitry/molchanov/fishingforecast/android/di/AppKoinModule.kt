@@ -80,6 +80,7 @@ val appKoinModule = module {
             getProfilesUseCase = inject(),
             getMapPointsUseCase = inject(),
             commonProfileFetcher = inject(),
+            importSharedResultUseCase = inject(),
             getSavedWeatherDataUseCase = inject(),
             getWeatherDataByResultUseCase = inject()
         )

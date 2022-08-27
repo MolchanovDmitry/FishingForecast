@@ -6,6 +6,7 @@ import android.os.Environment
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dmitry.molchanov.fishingforecast.android.mapper.CommonProfileFetcherImpl
+import dmitry.molchanov.fishingforecast.mapper.deserialize
 import dmitry.molchanov.fishingforecast.mapper.string
 import dmitry.molchanov.fishingforecast.model.*
 import dmitry.molchanov.fishingforecast.usecase.*
@@ -13,6 +14,7 @@ import dmitry.molchanov.fishingforecast.utils.ONE_DAY
 import dmitry.molchanov.fishingforecast.utils.TimeMs
 import dmitry.molchanov.fishingforecast.utils.ioDispatcher
 import dmitry.molchanov.fishingforecast.utils.nightTime
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import java.io.*
@@ -26,6 +28,7 @@ class ResultViewModel(
     private val saveResultUseCase: Lazy<SaveResultUseCase>,
     private val getProfilesUseCase: Lazy<GetProfilesUseCase>,
     private val getMapPointsUseCase: Lazy<GetMapPointsUseCase>,
+    private val importSharedResultUseCase: Lazy<ImportSharedResultUseCase>,
     private val getSavedWeatherDataUseCase: Lazy<GetSavedWeatherDataUseCase>,
     private val getWeatherDataByResultUseCase: Lazy<GetWeatherDataByResultUseCase>,
 ) : ViewModel() {
@@ -84,7 +87,11 @@ class ResultViewModel(
 
     // TODO сделать сериализацию через input stream
     fun importResult(inputStream: InputStream) {
-        val result = convertStreamToString(inputStream)
+        viewModelScope.launch(Dispatchers.IO) {
+            val result = convertStreamToString(inputStream) ?: TODO()
+            val sharedResults = result.deserialize<List<SharedResult>>()
+            importSharedResultUseCase.value.execute(sharedResults)
+        }
     }
 
     @Throws(java.lang.Exception::class)

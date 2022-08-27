@@ -18,6 +18,6 @@ class SaveWeatherDataUseCase(
         yandexWeatherRepository.getYandexWeatherDate(mapPoint)
             .getOrNull()
             ?.ifEmpty { null }
-            ?.let { weatherDataFromYandex -> weatherDataRepository.saveWeatherData(weatherDataFromYandex) }
+            ?.let { weatherDataFromYandex -> weatherDataRepository.saveRawWeatherData(weatherDataFromYandex) }
     }
 }

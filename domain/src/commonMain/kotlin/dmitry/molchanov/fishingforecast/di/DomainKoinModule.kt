@@ -90,4 +90,13 @@ val domainKoinModule = module {
         )
     }
 
+    factory<ImportSharedResultUseCase> {
+        ImportSharedResultUseCase(
+            saveResultUseCase = get(),
+            saveProfileUseCase = get(),
+            saveMapPointUseCase = get(),
+            weatherDataRepository = get()
+        )
+    }
+
 }

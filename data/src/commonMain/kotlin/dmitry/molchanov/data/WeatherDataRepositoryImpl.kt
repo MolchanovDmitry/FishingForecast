@@ -42,7 +42,25 @@ class WeatherDataRepositoryImpl(
             }
     }
 
-    override suspend fun saveWeatherData(weatherData: List<RawWeatherData>) {
+    override suspend fun saveRawWeatherData(weatherData: List<RawWeatherData>) {
+        weatherData
+            .forEach { weatherDataItem ->
+                weatherDataQueries.insert(
+                    mapPointId = weatherDataItem.mapPoint.id,
+                    date = weatherDataItem.date,
+                    tempAvg = weatherDataItem.temperature?.avg?.toDouble(),
+                    tempWater = weatherDataItem.temperature?.water?.toDouble(),
+                    windSpeed = weatherDataItem.wind?.speed?.toDouble(),
+                    windGust = weatherDataItem.wind?.gust?.toDouble(),
+                    windDir = weatherDataItem.wind?.dir,
+                    pressureMm = weatherDataItem.pressure?.mm?.toDouble(),
+                    pressurePa = weatherDataItem.pressure?.pa?.toDouble(),
+                    humidity = weatherDataItem.humidity?.toDouble()
+                )
+            }
+    }
+
+    override suspend fun saveWeatherData(weatherData: List<DomainWeatherData>) {
         weatherData
             .forEach { weatherDataItem ->
                 weatherDataQueries.insert(
