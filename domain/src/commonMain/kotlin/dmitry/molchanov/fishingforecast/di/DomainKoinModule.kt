@@ -1,5 +1,7 @@
 package dmitry.molchanov.fishingforecast.di
 
+import dmitry.molchanov.fishingforecast.mapper.MapPointMapper
+import dmitry.molchanov.fishingforecast.mapper.ProfileMapper
 import dmitry.molchanov.fishingforecast.usecase.*
 import org.koin.dsl.module
 
@@ -9,8 +11,8 @@ val domainKoinModule = module {
         DeleteProfileUseCase(profileRepository = get())
     }
 
-    factory<GetCurrentWeatherDataUseCase> {
-        GetCurrentWeatherDataUseCase(yandexWeatherRepository = get())
+    factory<SaveWeatherDataUseCase> {
+        SaveWeatherDataUseCase(yandexWeatherRepository = get(), weatherDataRepository = get())
     }
 
     factory<GetForecastUseCase> {
@@ -26,7 +28,7 @@ val domainKoinModule = module {
     }
 
     factory<GetProfilesUseCase> {
-        GetProfilesUseCase(profileRepository = get())
+        GetProfilesUseCase(profileRepository = get(), commonProfileFetcher = get(), profileMapper = get())
     }
 
     factory<GetSavedWeatherDataUseCase> {
@@ -45,16 +47,20 @@ val domainKoinModule = module {
         SaveProfileUseCase(profileRepository = get())
     }
 
-    factory<SaveWeatherDataUseCase> {
-        SaveWeatherDataUseCase(repository = get())
-    }
-
     factory<SelectProfileUseCase> {
         SelectProfileUseCase(profileRepository = get())
     }
 
+    factory<ProfileMapper> {
+        ProfileMapper(commonProfileFetcher = get())
+    }
+
+    factory<MapPointMapper> {
+        MapPointMapper(getMapPointsByIdUseCase = get())
+    }
+
     factory<GetCurrentProfileUseCase> {
-        GetCurrentProfileUseCase(profileRepository = get())
+        GetCurrentProfileUseCase(profileRepository = get(), profileMapper = get())
     }
 
     factory<GetForecastSettingMarksUseCase> {
@@ -63,6 +69,34 @@ val domainKoinModule = module {
 
     factory<DeleteForecastSettingUseCase> {
         DeleteForecastSettingUseCase(repository = get())
+    }
+
+    factory<SaveResultUseCase> {
+        SaveResultUseCase(resultDataRepository = get(), weatherDataRepository = get())
+    }
+
+    factory<GetResultsUseCase> {
+        GetResultsUseCase(resultDataRepository = get())
+    }
+
+    factory<GetMapPointByIdUseCase> {
+        GetMapPointByIdUseCase(mapPointRepository = get())
+    }
+
+    factory<GetWeatherDataByResultUseCase> {
+        GetWeatherDataByResultUseCase(
+            resultDataRepository = get(),
+            weatherDataRepository = get()
+        )
+    }
+
+    factory<ImportSharedResultUseCase> {
+        ImportSharedResultUseCase(
+            saveResultUseCase = get(),
+            saveProfileUseCase = get(),
+            saveMapPointUseCase = get(),
+            weatherDataRepository = get()
+        )
     }
 
 }

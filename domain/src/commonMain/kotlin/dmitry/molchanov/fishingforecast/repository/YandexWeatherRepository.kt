@@ -1,7 +1,7 @@
 package dmitry.molchanov.fishingforecast.repository
 
 import dmitry.molchanov.fishingforecast.model.MapPoint
-import dmitry.molchanov.fishingforecast.model.WeatherData
+import dmitry.molchanov.fishingforecast.model.RawWeatherData
 
 /**
  * Источник данных яндекс погоды.
@@ -10,5 +10,5 @@ import dmitry.molchanov.fishingforecast.model.WeatherData
 interface YandexWeatherRepository {
 
     /** Получить текущее значение погоды и прогноз на ближайшее время. */
-    suspend fun getYandexWeatherDate(mapPoint: MapPoint): Result<List<WeatherData>>
+    suspend fun getYandexWeatherDate(mapPoint: MapPoint): Result<List<RawWeatherData>>
 }

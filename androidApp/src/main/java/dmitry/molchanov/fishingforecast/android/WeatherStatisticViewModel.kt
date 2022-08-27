@@ -32,7 +32,7 @@ class WeatherStatisticViewModel(
     init {
         viewModelScope.launch {
             getProfilesUseCase.execute()
-                .firstOrNull { (it.isCommon && mapPoint.profileName == null) || (it.name == mapPoint.profileName) }
+                .firstOrNull { profile -> profile == mapPoint.profile }
                 ?.let { profile ->
                     val forecastSettings = getForecastSettings(profile)
                     getObservationPeriod(forecastSettings)
@@ -65,7 +65,7 @@ class WeatherStatisticViewModel(
     }
 
     private fun observeWeather(period: Period, forecastSettings: List<ForecastSetting>) {
-        weatherDataRepository.fetchWeatherData(
+        weatherDataRepository.fetchWeatherDataFlow(
             mapPoint = mapPoint,
             from = period.from,
             to = period.to

@@ -1,5 +1,5 @@
 CREATE TABLE MapPoint(
-    id TEXT NOT NULL PRIMARY KEY,
+    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     name TEXT NOT NULL,
     profileName TEXT,
     latitude REAL NOT NULL,
@@ -17,5 +17,5 @@ FROM MapPoint
 WHERE id = ?;
 
 insert:
-INSERT INTO MapPoint(id, name, profileName, latitude, longitude)
-VALUES ?;
+INSERT OR REPLACE INTO MapPoint(name, profileName, latitude, longitude)
+VALUES (?,?,?,?);

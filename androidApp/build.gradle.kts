@@ -18,7 +18,7 @@ android {
     compileSdk = 31
     defaultConfig {
         applicationId = "dmitry.molchanov.fishingforecast.android"
-        minSdk = 21
+        minSdk = 24
         targetSdk = 31
         versionCode = 1
         versionName = "1.0"
@@ -60,6 +60,7 @@ dependencies {
         Deps.coroutines_android,
 
         Deps.androidx_lifecycle_runtime_ktx,
+        Deps.androidx_activity_ktx,
 
         Deps.play_services_maps,
         Deps.maps_utils,
@@ -78,6 +79,7 @@ dependencies {
         Deps.plot,
         Deps.koin_core,
         Deps.koin_android,
-        Deps.koin_compose
+        Deps.koin_compose,
+        Deps.maps_compose,
     ).forEach(::implementation)
 }

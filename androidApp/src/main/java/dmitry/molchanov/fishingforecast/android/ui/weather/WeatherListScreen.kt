@@ -40,7 +40,7 @@ fun WeatherDebugScreen(vm: MainViewModel, onMapPointSelected: (MapPoint) -> Unit
                         .padding(16.dp)
                         .clickable {
                             state.value.weatherData
-                                .firstOrNull { it.mapPoint.name == item.name && it.mapPoint.profileName == item.profileName }
+                                .firstOrNull { it.mapPoint.name == item.name && it.mapPoint.profile == item.profile }
                                 ?.mapPoint
                                 ?.let { mapPoint -> onMapPointSelected(mapPoint) }
                         })

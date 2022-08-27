@@ -2,6 +2,7 @@ package dmitry.molchanov.fishingforecast.usecase
 
 import dmitry.molchanov.fishingforecast.model.ForecastSetting
 import dmitry.molchanov.fishingforecast.model.Profile
+import dmitry.molchanov.fishingforecast.model.SimpleProfile
 import dmitry.molchanov.fishingforecast.repository.ForecastSettingsRepository
 import dmitry.molchanov.fishingforecast.utils.ioDispatcher
 import kotlinx.coroutines.flow.Flow
@@ -15,9 +16,10 @@ import kotlinx.coroutines.withContext
 class GetForecastSettingMarksUseCase(private val repository: ForecastSettingsRepository) {
 
     suspend fun execute(profile: Profile): List<ForecastSetting> = withContext(ioDispatcher) {
-        repository.fetchForecastSettings(profile)
+        repository.fetchForecastSettings(profile as? SimpleProfile)
     }
 
     fun executeFlow(profile: Profile): Flow<List<ForecastSetting>> =
-        repository.fetchForecastSettingsFlow(profile).flowOn(ioDispatcher)
+        repository.fetchForecastSettingsFlow(profile as? SimpleProfile)
+            .flowOn(ioDispatcher)
 }

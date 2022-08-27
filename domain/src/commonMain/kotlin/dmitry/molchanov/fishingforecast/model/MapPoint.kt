@@ -1,20 +1,15 @@
 package dmitry.molchanov.fishingforecast.model
 
-import kotlinx.serialization.*
-import kotlinx.serialization.json.*
+import kotlinx.serialization.Serializable
 
 /**
  * Точка на карте.
  */
 @Serializable
 data class MapPoint(
-    val id: String,
+    val id: Long,
     val name: String,
-    val profileName: String?,
+    val profile: Profile,
     val latitude: Double,
-    val longitude: Double
+    val longitude: Double,
 )
-
-fun MapPoint.string() = Json.encodeToString(this)
-
-fun String.toMapPoint() = Json.decodeFromString<MapPoint>(this)

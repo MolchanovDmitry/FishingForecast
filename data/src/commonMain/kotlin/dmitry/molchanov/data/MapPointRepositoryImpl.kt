@@ -3,13 +3,18 @@ package dmitry.molchanov.data
 import com.squareup.sqldelight.runtime.coroutines.asFlow
 import com.squareup.sqldelight.runtime.coroutines.mapToList
 import dmitry.molchanov.db.MapPointQueries
+import dmitry.molchanov.fishingforecast.mapper.ProfileMapper
+import dmitry.molchanov.fishingforecast.model.SimpleProfile
 import dmitry.molchanov.fishingforecast.repository.MapPointRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import dmitry.molchanov.db.MapPoint as DataMapPoint
 import dmitry.molchanov.fishingforecast.model.MapPoint as DomainMapPoint
 
-class MapPointRepositoryImpl(private val mapPointQueries: MapPointQueries) : MapPointRepository {
+class MapPointRepositoryImpl(
+    private val profileMapper: ProfileMapper,
+    private val mapPointQueries: MapPointQueries,
+) : MapPointRepository {
 
     override fun fetchMapPointsFlow(): Flow<List<DomainMapPoint>> {
         return mapPointQueries.selectAll()
@@ -19,14 +24,19 @@ class MapPointRepositoryImpl(private val mapPointQueries: MapPointQueries) : Map
     }
 
     override suspend fun fetchMapPoints(): List<DomainMapPoint> {
-        return mapPointQueries.selectAll().executeAsList().map (::getDomainMapPoint)
+        return mapPointQueries.selectAll().executeAsList().map(::getDomainMapPoint)
     }
 
-    override suspend fun saveMapPoint(mapPoint: DomainMapPoint) {
-        mapPointQueries.insert(mapPoint.mapToData())
+    override suspend fun saveMapPoint(
+        name: String,
+        latitude: Double,
+        longitude: Double,
+        profile: SimpleProfile?
+    ) {
+        mapPointQueries.insert(name = name, profileName = profile?.name, latitude = latitude, longitude = longitude)
     }
 
-    override suspend fun getMapPoint(id: String): DomainMapPoint? {
+    override suspend fun getMapPoint(id: Long): DomainMapPoint? {
         return mapPointQueries.select(id).executeAsOneOrNull()?.let(::getDomainMapPoint)
     }
 
@@ -37,18 +47,9 @@ class MapPointRepositoryImpl(private val mapPointQueries: MapPointQueries) : Map
         DomainMapPoint(
             id = dataMapPoint.id,
             name = dataMapPoint.name,
-            profileName = dataMapPoint.profileName,
             latitude = dataMapPoint.latitude,
-            longitude = dataMapPoint.longitude
-        )
-
-    private fun DomainMapPoint.mapToData() =
-        DataMapPoint(
-            id = this.id,
-            name = this.name,
-            profileName = this.profileName,
-            latitude = this.latitude,
-            longitude = this.longitude
+            longitude = dataMapPoint.longitude,
+            profile = profileMapper.mapProfile(dataMapPoint.profileName),
         )
 
 }

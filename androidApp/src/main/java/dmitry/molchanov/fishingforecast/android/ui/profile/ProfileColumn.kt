@@ -11,12 +11,11 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import dmitry.molchanov.fishingforecast.android.R
 import dmitry.molchanov.fishingforecast.android.ui.common.BaseDialog
 import dmitry.molchanov.fishingforecast.model.Profile
+import dmitry.molchanov.fishingforecast.model.SimpleProfile
 
 @Composable
 fun ProfileColumn(
@@ -46,7 +45,7 @@ fun ProfileColumn(
             )
         }
         LazyColumn(modifier = Modifier.fillMaxWidth()) {
-            items(profiles) { profile ->
+            items(items = profiles) { profile ->
                 Row(
                     modifier = Modifier
                         .padding(all = 16.dp)
@@ -66,13 +65,13 @@ fun ProfileColumn(
                         onClick = null
                     )
                     Text(
-                        text = if (profile.isCommon) stringResource(R.string.common_profile) else profile.name,
+                        text = profile.name,
                         fontSize = 18.sp,
                         modifier = Modifier
                             .weight(1F)
                             .padding(8.dp)
                     )
-                    if (!profile.isCommon) {
+                    if (profile is SimpleProfile) {
                         Icon(
                             imageVector = Icons.Filled.Delete,
                             contentDescription = null,

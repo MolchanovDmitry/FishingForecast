@@ -16,13 +16,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import dmitry.molchanov.fishingforecast.android.CreateProfile
-import dmitry.molchanov.fishingforecast.android.DeleteProfile
-import dmitry.molchanov.fishingforecast.android.MainViewModel
-import dmitry.molchanov.fishingforecast.android.SelectProfile
+import org.koin.androidx.compose.viewModel
 
 @Composable
-fun ProfileScreen(vm: MainViewModel) {
+fun ProfileScreen() {
+    val vm by viewModel<ProfileViewModel>()
     val state = vm.state.collectAsState()
     val profiles = state.value.profiles
 
@@ -34,10 +32,10 @@ fun ProfileScreen(vm: MainViewModel) {
             profiles = profiles,
             defaultOption = state.value.currentProfile,
             deleteOption = { profile ->
-                vm.onEvent(DeleteProfile(profile))
+                vm.onAction(DeleteProfile(profile))
             },
             onOptionSelected = { profile ->
-                vm.onEvent(SelectProfile(profile))
+                vm.onAction(SelectProfile(profile))
             }
         )
         Icon(
@@ -53,7 +51,7 @@ fun ProfileScreen(vm: MainViewModel) {
                 }
         )
         CreateProfileDialog(openCreateDialog, profiles) { profile ->
-            vm.onEvent(CreateProfile(profile))
+            vm.onAction(CreateProfile(profile))
         }
     }
 }

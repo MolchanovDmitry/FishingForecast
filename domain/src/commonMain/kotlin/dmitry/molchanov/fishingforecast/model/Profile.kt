@@ -1,10 +1,14 @@
 package dmitry.molchanov.fishingforecast.model
 
-/**
- * Профиль прогнозирования.
- * Например, профиль конкретного человека, времени года или типы рыбалки
- */
-data class Profile(
-    val name: String,
-    val isCommon: Boolean,
-)
+import kotlinx.serialization.Serializable
+
+@Serializable
+sealed class Profile {
+    abstract val name: String
+}
+
+@Serializable
+data class SimpleProfile(override val name: String) : Profile()
+
+@Serializable
+data class CommonProfile(override val name: String) : Profile()

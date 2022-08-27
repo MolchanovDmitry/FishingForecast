@@ -1,0 +1,23 @@
+-- Убираем отношение многие ко многим
+CREATE TABLE ResultToWeatherData(
+    resultId INTEGER NOT NULL,
+    weatherDataId INTEGER NOT NULL,
+    FOREIGN KEY(resultId) REFERENCES Result(id),
+    FOREIGN KEY(weatherDataId) REFERENCES WeatherData(id)
+);
+
+selectAll:
+SELECT *
+FROM ResultToWeatherData
+;
+
+selectWeatherDataResultId:
+SELECT weatherDataId
+FROM ResultToWeatherData
+WHERE resultId = ?
+;
+
+insert:
+INSERT OR REPLACE INTO ResultToWeatherData(resultId, weatherDataId)
+VALUES ?
+;

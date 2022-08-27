@@ -1,6 +1,6 @@
 package dmitry.molchanov.fishingforecast.model
 
-import kotlin.random.Random
+import kotlinx.serialization.Serializable
 
 /**
  * Данные погоды бизнес логики.
@@ -11,54 +11,43 @@ import kotlin.random.Random
  * @property wind ветер
  * @property humidity влажность
  */
-class WeatherData(
+@Serializable
+data class WeatherData(
+    val id: Long,
     val date: Long,
     val mapPoint: MapPoint,
     val pressure: Pressure? = null,
     val temperature: Temperature? = null,
     val wind: Wind? = null,
-    val humidity: Float? = null
+    val humidity: Float? = null,
+    )
 
+data class RawWeatherData(
+    val date: Long,
+    val mapPoint: MapPoint,
+    val pressure: Pressure? = null,
+    val temperature: Temperature? = null,
+    val wind: Wind? = null,
+    val humidity: Float? = null,
 )
 
+@Serializable
 class Temperature(
     val min: Float? = null,
     val avg: Float? = null,
     val max: Float? = null,
-    val water: Float? = null
+    val water: Float? = null,
 )
 
+@Serializable
 class Wind(
     val speed: Float?,
     val gust: Float?,
-    val dir: String?
+    val dir: String?,
 )
 
+@Serializable
 class Pressure(
     val mm: Float?,
-    val pa: Float?
+    val pa: Float?,
 )
-
-val data = listOf(
-    1640995200000,
-    1641081600000,
-    1641168000000,
-    1641254400000,
-    1641340800000,
-    1641427200000,
-    1641513600000
-)
-val mockMapPoint = MapPoint("1", "some point", profileName = "", 0.0, 0.0)
-val mockMapPoint2 = MapPoint("2", "some point 2", profileName = "", 100.0, 100.0)
-val mockWeatherData by lazy {
-    data.map {
-        WeatherData(
-            date = it,
-            mapPoint = mockMapPoint,
-            temperature = Temperature(
-                avg = 10F + Random.nextFloat() * (25F - 10F)
-            )
-        )
-    }
-}
-

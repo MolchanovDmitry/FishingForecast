@@ -14,11 +14,15 @@ import dmitry.molchanov.fishingforecast.android.ui.NavItem
 import dmitry.molchanov.fishingforecast.android.ui.Screen
 import dmitry.molchanov.fishingforecast.android.ui.map.MapScreen
 import dmitry.molchanov.fishingforecast.android.ui.profile.ProfileScreen
+import dmitry.molchanov.fishingforecast.android.ui.result.ResultDetailScreen
 import dmitry.molchanov.fishingforecast.android.ui.result.ResultScreen
 import dmitry.molchanov.fishingforecast.android.ui.setting.ForecastSettingsList
 import dmitry.molchanov.fishingforecast.android.ui.weather.WeatherDebugScreen
 import dmitry.molchanov.fishingforecast.android.ui.weather.WeatherScreen
-import dmitry.molchanov.fishingforecast.model.toMapPoint
+import dmitry.molchanov.fishingforecast.mapper.deserialize
+import dmitry.molchanov.fishingforecast.model.MapPoint
+import dmitry.molchanov.fishingforecast.model.Result
+
 
 @Composable
 fun MainScreen(vm: MainViewModel) {
@@ -52,10 +56,10 @@ fun MainScreen(vm: MainViewModel) {
             modifier = Modifier.padding(innerPadding)
         ) {
             composable(Screen.Map.label) {
-                MapScreen(vm)
+                MapScreen()
             }
             composable(Screen.Profile.label) {
-                ProfileScreen(vm)
+                ProfileScreen()
             }
             composable(Screen.ForecastSettings.label) {
                 ForecastSettingsList(vm)
@@ -66,12 +70,18 @@ fun MainScreen(vm: MainViewModel) {
                 }
             }
             composable(Screen.Weather.label) {
-                val mapPoint = it.arguments?.getString("mapPoint")?.toMapPoint()
+                val mapPoint = it.arguments?.getString("mapPoint")?.deserialize<MapPoint>()
                     ?: return@composable
                 WeatherScreen(mapPoint, vm.state.collectAsState().value.forecastSettings)
             }
-            composable(Screen.Results.label){
-                ResultScreen()
+            composable(Screen.Results.label) {
+                ResultScreen { result: Result ->
+                    navController.navigate(Screen.ResultDetails.route(result))
+                }
+            }
+            composable(Screen.ResultDetails.label) {
+                val result = it.arguments?.getString("result")?.deserialize<Result>() ?: return@composable
+                ResultDetailScreen(result)
             }
         }
     }
