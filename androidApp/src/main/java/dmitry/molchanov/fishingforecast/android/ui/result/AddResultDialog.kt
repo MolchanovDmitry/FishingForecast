@@ -9,9 +9,11 @@ import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import dmitry.molchanov.fishingforecast.android.ui.DropDown
+import dmitry.molchanov.fishingforecast.android.ui.showToast
 import java.util.*
 
 @Composable
@@ -25,6 +27,7 @@ fun AddResultDialog(vm: ResultViewModel) {
         val simpleDateFormat = SimpleDateFormat("dd MMMM yyyy", Locale.getDefault())
         resultState.value.dates.map(simpleDateFormat::format)
     }
+    val context = LocalContext.current
     var commentText by remember { mutableStateOf("") }
     AlertDialog(
         modifier = Modifier.fillMaxWidth(),
@@ -71,7 +74,7 @@ fun AddResultDialog(vm: ResultViewModel) {
                     modifier = Modifier.fillMaxWidth(),
                     value = commentText,
                     onValueChange = { commentText = it },
-                    label = { Text("Оставьте комментарий") }
+                    label = { Text("Наименование результата") }
                 )
             }
 
@@ -97,7 +100,14 @@ fun AddResultDialog(vm: ResultViewModel) {
                     fontSize = 18.sp,
                     modifier = Modifier
                         .padding(8.dp)
-                        .clickable { vm.onAction(CreateResult(resultName = commentText)) }
+                        .clickable {
+                            if (commentText.isNotEmpty()) {
+                                vm.onAction(CreateResult(resultName = commentText))
+                                vm.onAction(CloseAddResultDialog())
+                            } else {
+                                context.showToast("Не заполнено наименование результата")
+                            }
+                        }
                 )
             }
         }

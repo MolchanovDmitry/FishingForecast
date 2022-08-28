@@ -20,6 +20,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import dmitry.molchanov.fishingforecast.model.Result
@@ -58,7 +59,7 @@ fun ResultScreen(onResultClick: (Result) -> Unit) {
         LazyColumn(modifier = Modifier.fillMaxSize()) {
             items(items = results) { result ->
                 Row(modifier = Modifier.fillMaxWidth()) {
-                    Text(text = result.name, modifier = Modifier.clickable {
+                    Text(text = result.name, fontSize = 18.sp, modifier = Modifier.padding(8.dp).clickable {
                         onResultClick(result)
                     })
                 }
@@ -71,8 +72,7 @@ fun ResultScreen(onResultClick: (Result) -> Unit) {
             }
             Button(modifier = Modifier.padding(4.dp), onClick = {
                 // TODO
-                if (ContextCompat.checkSelfPermission(context, WRITE_EXTERNAL_STORAGE) != PERMISSION_GRANTED
-                ) {
+                if (ContextCompat.checkSelfPermission(context, WRITE_EXTERNAL_STORAGE) != PERMISSION_GRANTED) {
                     writePermissionLauncher.launch(WRITE_EXTERNAL_STORAGE)
                 }
                 vm.onAction(SaveToStorageAndShareClick())
@@ -80,8 +80,7 @@ fun ResultScreen(onResultClick: (Result) -> Unit) {
                 Text("Поделиться результатами.")
             }
             Button(modifier = Modifier.padding(4.dp), onClick = {
-                if (ContextCompat.checkSelfPermission(context, WRITE_EXTERNAL_STORAGE) != PERMISSION_GRANTED
-                ) {
+                if (ContextCompat.checkSelfPermission(context, WRITE_EXTERNAL_STORAGE) != PERMISSION_GRANTED) {
                     readPermissionLauncher.launch(READ_EXTERNAL_STORAGE)
                 } else {
                     shouldOpenFile = true
