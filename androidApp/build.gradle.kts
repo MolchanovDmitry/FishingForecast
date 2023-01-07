@@ -15,11 +15,11 @@ android {
     val googleMapApiKey = properties.getProperty("google.map.key")
     val yandexWeatherApiKey = properties.getProperty("yandex.weather.api.key")
 
-    compileSdk = 31
+    compileSdk = Config.compileSdk
     defaultConfig {
         applicationId = "dmitry.molchanov.fishingforecast.android"
-        minSdk = 24
-        targetSdk = 31
+        minSdk = Config.minSdk
+        targetSdk = Config.targetSdk
         versionCode = 1
         versionName = "1.0"
 
@@ -43,7 +43,7 @@ android {
     }
 
     composeOptions {
-        kotlinCompilerExtensionVersion = Deps.compose_version
+        kotlinCompilerExtensionVersion = "1.3.2"
     }
 }
 
@@ -52,12 +52,16 @@ dependencies {
     implementation("com.google.firebase:firebase-analytics-ktx")
     implementation("com.google.firebase:firebase-messaging-ktx:23.0.3")
     listOf(
-        project(":data"),
-        project(":domain"),
+        project(Modules.DOMAIN),
+        project(Modules.DB),
+        project(Modules.WEATHER_DATA_UPDATE),
+        project(Modules.PROFILE),
+        project(Modules.PREFERENCE),
+        project(Modules.WEATHER_REMOTE),
 
         Deps.material,
         Deps.androidx_appcompat,
-        Deps.coroutines_android,
+        Deps.Coroutines.android,
 
         Deps.androidx_lifecycle_runtime_ktx,
         Deps.androidx_activity_ktx,
@@ -77,9 +81,8 @@ dependencies {
         Deps.compose_navigation,
 
         Deps.plot,
-        Deps.koin_core,
-        Deps.koin_android,
-        Deps.koin_compose,
+        Deps.Koin.core,
+        Deps.Koin.compose,
         Deps.maps_compose,
     ).forEach(::implementation)
 }

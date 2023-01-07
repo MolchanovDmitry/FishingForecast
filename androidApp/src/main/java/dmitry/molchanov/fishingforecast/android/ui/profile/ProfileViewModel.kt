@@ -2,11 +2,19 @@ package dmitry.molchanov.fishingforecast.android.ui.profile
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dmitry.molchanov.domain.usecase.GetCurrentProfileUseCase
 import dmitry.molchanov.fishingforecast.android.mapper.CommonProfileFetcherImpl
 import dmitry.molchanov.fishingforecast.model.Profile
 import dmitry.molchanov.fishingforecast.model.SimpleProfile
-import dmitry.molchanov.fishingforecast.usecase.*
-import kotlinx.coroutines.flow.*
+import dmitry.molchanov.fishingforecast.usecase.DeleteProfileUseCase
+import dmitry.molchanov.fishingforecast.usecase.GetProfilesUseCase
+import dmitry.molchanov.fishingforecast.usecase.SaveProfileUseCase
+import dmitry.molchanov.fishingforecast.usecase.SelectProfileUseCase
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class ProfileViewModel(

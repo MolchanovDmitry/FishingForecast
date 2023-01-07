@@ -16,11 +16,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import org.koin.androidx.compose.viewModel
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun ProfileScreen() {
-    val vm by viewModel<ProfileViewModel>()
+    val vm = koinViewModel<ProfileViewModel>()
     val state = vm.state.collectAsState()
     val profiles = state.value.profiles
 

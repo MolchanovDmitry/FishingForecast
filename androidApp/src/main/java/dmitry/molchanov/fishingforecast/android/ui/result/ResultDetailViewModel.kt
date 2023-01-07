@@ -2,8 +2,8 @@ package dmitry.molchanov.fishingforecast.android.ui.result
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dmitry.molchanov.domain.model.WeatherData
 import dmitry.molchanov.fishingforecast.model.Result
-import dmitry.molchanov.fishingforecast.model.WeatherData
 import dmitry.molchanov.fishingforecast.usecase.GetWeatherDataByResultUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow

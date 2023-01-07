@@ -2,13 +2,28 @@ package dmitry.molchanov.fishingforecast.android
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dmitry.molchanov.domain.model.MapPoint
+import dmitry.molchanov.domain.model.WeatherData
+import dmitry.molchanov.domain.repository.WeatherDataRepository
+import dmitry.molchanov.domain.usecase.GetCurrentProfileUseCase
+import dmitry.molchanov.domain.usecase.SaveWeatherDataUseCase
 import dmitry.molchanov.fishingforecast.mapper.CommonProfileFetcher
-import dmitry.molchanov.fishingforecast.model.*
-import dmitry.molchanov.fishingforecast.repository.WeatherDataRepository
+import dmitry.molchanov.fishingforecast.model.CommonProfile
+import dmitry.molchanov.fishingforecast.model.ForecastSetting
+import dmitry.molchanov.fishingforecast.model.Profile
+import dmitry.molchanov.fishingforecast.model.SimpleProfile
 import dmitry.molchanov.fishingforecast.repository.YandexWeatherRepository
-import dmitry.molchanov.fishingforecast.usecase.*
+import dmitry.molchanov.fishingforecast.usecase.DeleteForecastSettingUseCase
+import dmitry.molchanov.fishingforecast.usecase.GetForecastSettingMarksUseCase
+import dmitry.molchanov.fishingforecast.usecase.GetMapPointsUseCase
+import dmitry.molchanov.fishingforecast.usecase.SaveForecastSettingMarkUseCase
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class MainViewModel(

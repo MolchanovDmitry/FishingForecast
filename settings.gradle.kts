@@ -9,4 +9,10 @@ pluginManagement {
 rootProject.name = "FishingForecast"
 include(":androidApp")
 include(":domain")
-include(":data")
+include(":feature:weather-data-update")
+include(":data:db")
+include(":data:repository:profile")
+include(":core")
+include(":data:preference")
+include(":data:http")
+include(":data:weather-remote")

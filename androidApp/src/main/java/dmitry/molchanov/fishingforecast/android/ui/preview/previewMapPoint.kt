@@ -1,7 +1,13 @@
 package dmitry.molchanov.fishingforecast.android.ui.preview
 
-import dmitry.molchanov.fishingforecast.model.*
-import dmitry.molchanov.fishingforecast.utils.ONE_DAY
+import dmitry.molchanov.domain.model.MapPoint
+import dmitry.molchanov.domain.model.Pressure
+import dmitry.molchanov.domain.model.Temperature
+import dmitry.molchanov.domain.model.WeatherData
+import dmitry.molchanov.domain.model.Wind
+import dmitry.molchanov.domain.utils.ONE_DAY
+import dmitry.molchanov.fishingforecast.model.Result
+import dmitry.molchanov.fishingforecast.model.SimpleProfile
 
 private val previewMapPoint = MapPoint(
     id = 0,

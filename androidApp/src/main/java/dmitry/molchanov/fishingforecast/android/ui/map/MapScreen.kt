@@ -4,7 +4,14 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.viewinterop.AndroidView
@@ -15,12 +22,12 @@ import com.google.android.gms.maps.model.MarkerOptions
 import com.google.maps.android.ktx.awaitMap
 import dmitry.molchanov.fishingforecast.android.ui.common.rememberMapViewWithLifecycle
 import kotlinx.coroutines.launch
-import org.koin.androidx.compose.viewModel
+import org.koin.androidx.compose.koinViewModel
 
 
 @Composable
 fun MapScreen() {
-    val vm by viewModel<MapViewModel>()
+    val vm = koinViewModel<MapViewModel>()
     val state = vm.state.collectAsState()
 
     Column(

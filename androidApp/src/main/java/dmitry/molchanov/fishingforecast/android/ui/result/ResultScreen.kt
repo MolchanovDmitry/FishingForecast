@@ -10,12 +10,23 @@ import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Button
 import androidx.compose.material.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -24,21 +35,24 @@ import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import dmitry.molchanov.fishingforecast.model.Result
+import java.io.File
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import org.koin.androidx.compose.viewModel
-import java.io.File
+import org.koin.androidx.compose.koinViewModel
 
 
 @Composable
 fun ResultScreen(onResultClick: (Result) -> Unit) {
-    val vm by viewModel<ResultViewModel>()
+    val vm = koinViewModel<ResultViewModel>()
     val state = vm.stateFlow.collectAsState()
     val results = state.value.results
     val context = LocalContext.current
     var shouldOpenFile by remember { mutableStateOf(false) }
     val launcher = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri ->
-        context.contentResolver.openInputStream(uri)?.let(vm::importResult)
+        uri ?: return@rememberLauncherForActivityResult
+        val inputStream = context.contentResolver.openInputStream(uri)
+        inputStream?.let(vm::importResult)
+        inputStream?.close() // TODO вынести во viewmodel
     }
     // TODO сделать красиво
     val writePermissionLauncher = rememberLauncherForActivityResult(
@@ -59,9 +73,11 @@ fun ResultScreen(onResultClick: (Result) -> Unit) {
         LazyColumn(modifier = Modifier.fillMaxSize()) {
             items(items = results) { result ->
                 Row(modifier = Modifier.fillMaxWidth()) {
-                    Text(text = result.name, fontSize = 18.sp, modifier = Modifier.padding(8.dp).clickable {
-                        onResultClick(result)
-                    })
+                    Text(text = result.name, fontSize = 18.sp, modifier = Modifier
+                        .padding(8.dp)
+                        .clickable {
+                            onResultClick(result)
+                        })
                 }
             }
         }

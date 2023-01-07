@@ -2,13 +2,25 @@ package dmitry.molchanov.fishingforecast.android
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import dmitry.molchanov.fishingforecast.model.*
-import dmitry.molchanov.fishingforecast.repository.WeatherDataRepository
+import dmitry.molchanov.domain.model.MapPoint
+import dmitry.molchanov.domain.model.WeatherData
+import dmitry.molchanov.domain.repository.WeatherDataRepository
+import dmitry.molchanov.domain.utils.ONE_SEC
+import dmitry.molchanov.fishingforecast.model.ExactValueForecastMark
+import dmitry.molchanov.fishingforecast.model.Forecast
+import dmitry.molchanov.fishingforecast.model.ForecastSetting
+import dmitry.molchanov.fishingforecast.model.ForecastSettingsItem
+import dmitry.molchanov.fishingforecast.model.Profile
 import dmitry.molchanov.fishingforecast.usecase.GetForecastSettingMarksUseCase
 import dmitry.molchanov.fishingforecast.usecase.GetForecastUseCase
 import dmitry.molchanov.fishingforecast.usecase.GetProfilesUseCase
-import dmitry.molchanov.fishingforecast.utils.ONE_SEC
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 data class WeatherStatisticViewState(

@@ -5,20 +5,26 @@ object Deps {
 
     // Design
     const val material = "com.google.android.material:material:1.4.0"
-    const val androidx_constraintlayout = "androidx.constraintlayout:constraintlayout:2.1.0"
 
     // for by viewModels and result api
     const val androidx_activity_ktx = "androidx.activity:activity-ktx:1.2.0"
     const val androidx_fragment_ktx = "androidx.fragment:fragment-ktx:1.3.0"
 
-    // kotlinx
-    const val coroutines_android = "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.0"
-    const val serialization_json = "org.jetbrains.kotlinx:kotlinx-serialization-json:1.2.2"
-    const val coroutines_core = "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.2-native-mt"
-    const val coroutines_core_serialization = "org.jetbrains.kotlinx:kotlinx-serialization-core:1.3.1"
+    object Kotlinx {
+        const val datetime = "org.jetbrains.kotlinx:kotlinx-datetime:0.4.0"
+    }
 
-    // Video player
-    const val exo_player = "com.google.android.exoplayer:exoplayer:2.14.1"
+    // kotlinx
+    object Coroutines {
+        private const val version = "1.6.4"
+        const val android = "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4"
+        const val core = "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4"
+    }
+
+    object Serialization {
+        const val kotlinx_core = "org.jetbrains.kotlinx:kotlinx-serialization-core:1.4.1"
+        const val kotlinx_json = "org.jetbrains.kotlinx:kotlinx-serialization-json:1.2.2"
+    }
 
     // Http client
     const val okhttp = "com.squareup.okhttp3:okhttp:4.9.0"
@@ -74,14 +80,33 @@ object Deps {
     const val compose_navigation = "androidx.navigation:navigation-compose:2.4.0-rc01"
 
     //Koin
-    private const val koin_version = "3.1.4"
-    const val koin_core = "io.insert-koin:koin-core:$koin_version"
-    const val koin_android = "io.insert-koin:koin-android:$koin_version"
-    const val koin_compose =  "io.insert-koin:koin-androidx-compose:$koin_version"
+    object Koin {
+        private const val koin_version = "3.3.2"
+        const val core = "io.insert-koin:koin-core:$koin_version"
+        const val android = "io.insert-koin:koin-android:$koin_version"
+        const val compose = "io.insert-koin:koin-androidx-compose:3.4.1"
+    }
+
 
     // Graphics
     const val plot = "com.github.madrapps:plot:0.1.1"
 
+    // Sql
+    object Sqldelight {
+        private const val sqlDelightVersion = "1.5.4"
+        const val android_driver = "com.squareup.sqldelight:android-driver:$sqlDelightVersion"
+        const val runtime = "com.squareup.sqldelight:runtime:$sqlDelightVersion"
+        const val coroutinesExt = "com.squareup.sqldelight:coroutines-extensions:$sqlDelightVersion"
+    }
+
+    object Ktor {
+        private const val ktorVersion = "1.6.5"
+        const val core = "io.ktor:ktor-client-core:$ktorVersion"
+        const val serialization = "io.ktor:ktor-client-serialization-jvm:$ktorVersion"
+        const val okhttp = "io.ktor:ktor-client-okhttp:$ktorVersion"
+        const val android = "io.ktor:ktor-client-android:$ktorVersion"
+        const val interceptor = "com.squareup.okhttp3:logging-interceptor:4.9.1"
+    }
 
     // Unit test
     const val junit = "junit:junit:4.13.2"

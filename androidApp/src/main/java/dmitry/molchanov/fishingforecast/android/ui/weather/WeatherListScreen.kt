@@ -16,10 +16,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import dmitry.molchanov.domain.model.MapPoint
+import dmitry.molchanov.domain.utils.string
 import dmitry.molchanov.fishingforecast.android.FetchWeatherData
 import dmitry.molchanov.fishingforecast.android.MainViewModel
-import dmitry.molchanov.fishingforecast.model.MapPoint
-import dmitry.molchanov.fishingforecast.utils.string
 
 @Composable
 fun WeatherDebugScreen(vm: MainViewModel, onMapPointSelected: (MapPoint) -> Unit) {

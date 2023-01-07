@@ -1,10 +1,14 @@
 package dmitry.molchanov.fishingforecast.android.ui
 
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.filled.List
+import androidx.compose.material.icons.filled.Map
+import androidx.compose.material.icons.filled.People
+import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.ThumbUp
 import androidx.compose.ui.graphics.vector.ImageVector
-import dmitry.molchanov.fishingforecast.mapper.string
-import dmitry.molchanov.fishingforecast.model.MapPoint
+import dmitry.molchanov.domain.mapper.string
+import dmitry.molchanov.domain.model.MapPoint
 import dmitry.molchanov.fishingforecast.model.Result
 
 enum class NavItem(val label: String, val icon: ImageVector, val destination: Screen) {
