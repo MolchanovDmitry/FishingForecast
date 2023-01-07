@@ -20,7 +20,7 @@ data class WeatherData(
     val temperature: Temperature? = null,
     val wind: Wind? = null,
     val humidity: Float? = null,
-    )
+)
 
 data class RawWeatherData(
     val date: Long,

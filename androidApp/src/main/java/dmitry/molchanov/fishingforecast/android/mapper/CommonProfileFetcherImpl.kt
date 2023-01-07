@@ -8,7 +8,7 @@ import dmitry.molchanov.fishingforecast.model.CommonProfile
 /**
  * Получатель общего профиля
  */
-class CommonProfileFetcherImpl(context: Context): CommonProfileFetcher {
+class CommonProfileFetcherImpl(context: Context) : CommonProfileFetcher {
 
     private val name: String = context.resources.getString(R.string.common_profile)
 

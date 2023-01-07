@@ -1,5 +1,6 @@
 plugins {
     id(GradlePlugins.Id.ANDROID_LIBRARY)
+    id(GradlePlugins.Id.KTLINT)
     id("org.jetbrains.kotlin.android")
 }
 

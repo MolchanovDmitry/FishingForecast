@@ -2,6 +2,7 @@ plugins {
     id("java-library")
     id("org.jetbrains.kotlin.jvm")
     id(GradlePlugins.Id.kotlinx_serialization)
+    id(GradlePlugins.Id.KTLINT)
 }
 
 java {

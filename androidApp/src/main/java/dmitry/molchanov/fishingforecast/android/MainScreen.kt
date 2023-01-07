@@ -27,7 +27,6 @@ import dmitry.molchanov.fishingforecast.android.ui.weather.WeatherDebugScreen
 import dmitry.molchanov.fishingforecast.android.ui.weather.WeatherScreen
 import dmitry.molchanov.fishingforecast.model.Result
 
-
 @Composable
 fun MainScreen(vm: MainViewModel) {
     val navController = rememberNavController()
@@ -89,5 +88,4 @@ fun MainScreen(vm: MainViewModel) {
             }
         }
     }
-
 }

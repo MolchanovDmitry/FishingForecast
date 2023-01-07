@@ -13,5 +13,4 @@ class DeleteProfileUseCase(private val profileRepository: ProfileRepository) {
     suspend fun execute(profile: Profile) = withContext(ioDispatcher) {
         profileRepository.deleteProfile(profile.name)
     }
-
 }

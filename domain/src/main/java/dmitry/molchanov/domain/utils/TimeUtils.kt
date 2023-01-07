@@ -30,8 +30,7 @@ val TimeMs.eveningTime: TimeMs
     get() = getTimeRoundedByDayPart(DayPart.EVENING)
 
 val TimeMs.daysCount: Int
-    get() = Instant.fromEpochMilliseconds((this))
-        .epochSeconds.getDayCount()
+    get() = Instant.fromEpochMilliseconds((this)).epochSeconds.getDayCount()
 
 /**
  * Получить время минус [count] дней.
@@ -72,11 +71,7 @@ private fun TimeMs.getTimeRoundedByDayPart(dayPart: DayPart): TimeMs {
 fun TimeMs.string(): String {
     val nowMilliSec = Instant.fromEpochMilliseconds(this)
     val datetimeInUtc: LocalDateTime = nowMilliSec.toLocalDateTime(TimeZone.currentSystemDefault())
-    return " ${datetimeInUtc.year}" +
-            ".${datetimeInUtc.monthNumber}" +
-            ".${datetimeInUtc.dayOfMonth}" +
-            ".${datetimeInUtc.hour}" +
-            ":${datetimeInUtc.minute}"
+    return " ${datetimeInUtc.year}" + ".${datetimeInUtc.monthNumber}" + ".${datetimeInUtc.dayOfMonth}" + ".${datetimeInUtc.hour}" + ":${datetimeInUtc.minute}"
 }
 
 /**
@@ -84,8 +79,5 @@ fun TimeMs.string(): String {
  * @property hour час времени суток.
  */
 private enum class DayPart(val hour: Int) {
-    NIGHT(0),
-    MORNING(6),
-    MIDDAY(12),
-    EVENING(18)
+    NIGHT(0), MORNING(6), MIDDAY(12), EVENING(18)
 }

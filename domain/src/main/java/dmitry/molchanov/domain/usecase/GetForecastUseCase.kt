@@ -1,23 +1,23 @@
-package dmitry.molchanov.fishingforecast.usecase
+package dmitry.molchanov.domain.usecase
 
+import dmitry.molchanov.domain.model.DeltaForecastMark
+import dmitry.molchanov.domain.model.ExactValueForecastMark
+import dmitry.molchanov.domain.model.ForecastMark
+import dmitry.molchanov.domain.model.ForecastSetting
+import dmitry.molchanov.domain.model.ForecastSettingsItem
+import dmitry.molchanov.domain.model.ForecastSettingsItem.HUMIDITY
+import dmitry.molchanov.domain.model.ForecastSettingsItem.OBSERVATION_PERIOD
+import dmitry.molchanov.domain.model.ForecastSettingsItem.PRESSURE_MM
+import dmitry.molchanov.domain.model.ForecastSettingsItem.PRESSURE_PA
+import dmitry.molchanov.domain.model.ForecastSettingsItem.TEMPERATURE_AVG
+import dmitry.molchanov.domain.model.ForecastSettingsItem.TEMPERATURE_MAX
+import dmitry.molchanov.domain.model.ForecastSettingsItem.TEMPERATURE_MIN
+import dmitry.molchanov.domain.model.ForecastSettingsItem.TEMPERATURE_WATER
+import dmitry.molchanov.domain.model.ForecastSettingsItem.WIND_SPEED
+import dmitry.molchanov.domain.model.MaxValueForecastMark
+import dmitry.molchanov.domain.model.MinValueForecastMark
 import dmitry.molchanov.domain.model.WeatherData
-import dmitry.molchanov.fishingforecast.model.DeltaForecastMark
-import dmitry.molchanov.fishingforecast.model.ExactValueForecastMark
 import dmitry.molchanov.fishingforecast.model.Forecast
-import dmitry.molchanov.fishingforecast.model.ForecastMark
-import dmitry.molchanov.fishingforecast.model.ForecastSetting
-import dmitry.molchanov.fishingforecast.model.ForecastSettingsItem
-import dmitry.molchanov.fishingforecast.model.ForecastSettingsItem.HUMIDITY
-import dmitry.molchanov.fishingforecast.model.ForecastSettingsItem.OBSERVATION_PERIOD
-import dmitry.molchanov.fishingforecast.model.ForecastSettingsItem.PRESSURE_MM
-import dmitry.molchanov.fishingforecast.model.ForecastSettingsItem.PRESSURE_PA
-import dmitry.molchanov.fishingforecast.model.ForecastSettingsItem.TEMPERATURE_AVG
-import dmitry.molchanov.fishingforecast.model.ForecastSettingsItem.TEMPERATURE_MAX
-import dmitry.molchanov.fishingforecast.model.ForecastSettingsItem.TEMPERATURE_MIN
-import dmitry.molchanov.fishingforecast.model.ForecastSettingsItem.TEMPERATURE_WATER
-import dmitry.molchanov.fishingforecast.model.ForecastSettingsItem.WIND_SPEED
-import dmitry.molchanov.fishingforecast.model.MaxValueForecastMark
-import dmitry.molchanov.fishingforecast.model.MinValueForecastMark
 
 /**
  * Сделать прогноз.
@@ -41,7 +41,6 @@ class GetForecastUseCase {
                     getForecastForMinMaxDeltaValues(settingsItem, weatherData, mark)
                 }
             }
-
         }
     }
 

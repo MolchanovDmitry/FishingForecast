@@ -13,10 +13,10 @@ import androidx.compose.ui.unit.dp
 import com.madrapps.plot.line.DataPoint
 import com.madrapps.plot.line.LineGraph
 import com.madrapps.plot.line.LinePlot
-import dmitry.molchanov.fishingforecast.model.DeltaForecastMark
-import dmitry.molchanov.fishingforecast.model.ForecastMark
-import dmitry.molchanov.fishingforecast.model.MaxValueForecastMark
-import dmitry.molchanov.fishingforecast.model.MinValueForecastMark
+import dmitry.molchanov.domain.model.DeltaForecastMark
+import dmitry.molchanov.domain.model.ForecastMark
+import dmitry.molchanov.domain.model.MaxValueForecastMark
+import dmitry.molchanov.domain.model.MinValueForecastMark
 
 @Preview
 @Composable

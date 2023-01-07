@@ -13,7 +13,7 @@ class ImportSharedResultUseCase(
     private val saveResultUseCase: SaveResultUseCase,
     private val saveProfileUseCase: SaveProfileUseCase,
     private val saveMapPointUseCase: SaveMapPointUseCase,
-    private val weatherDataRepository: WeatherDataRepository, //TODO заменить на usecase
+    private val weatherDataRepository: WeatherDataRepository, // TODO заменить на usecase
 ) {
 
     suspend fun execute(sharedResults: List<SharedResult>) = withContext(ioDispatcher) {

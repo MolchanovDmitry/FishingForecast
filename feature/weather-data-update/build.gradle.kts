@@ -1,6 +1,7 @@
 plugins {
     id("com.android.library")
     id("org.jetbrains.kotlin.android")
+    id(GradlePlugins.Id.KTLINT)
 }
 
 android {
@@ -53,7 +54,6 @@ dependencies {
         Deps.compose_icons_extended,
         Deps.compose_view_model,
         Deps.compose_navigation,
-
 
         Deps.Koin.core,
         Deps.Koin.android,

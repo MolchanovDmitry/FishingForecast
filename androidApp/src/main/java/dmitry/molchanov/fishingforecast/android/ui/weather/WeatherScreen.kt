@@ -11,14 +11,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import com.madrapps.plot.line.DataPoint
+import dmitry.molchanov.domain.model.ForecastSetting
+import dmitry.molchanov.domain.model.ForecastSettingsItem
 import dmitry.molchanov.domain.model.MapPoint
 import dmitry.molchanov.domain.model.WeatherData
 import dmitry.molchanov.domain.utils.getDayCount
 import dmitry.molchanov.fishingforecast.android.R
 import dmitry.molchanov.fishingforecast.android.WeatherStatisticViewModel
 import dmitry.molchanov.fishingforecast.model.Forecast
-import dmitry.molchanov.fishingforecast.model.ForecastSetting
-import dmitry.molchanov.fishingforecast.model.ForecastSettingsItem
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 
@@ -34,11 +34,11 @@ fun WeatherScreen(
     val context = LocalContext.current
     var positiveCount = 0
 
-    //LaunchedEffect(key1 = Unit) {
+    // LaunchedEffect(key1 = Unit) {
     /*weatherViewModel.messageFlow
         .onEach { message -> Toast.makeText(context, message, Toast.LENGTH_SHORT).show() }
         .launchIn(this)*/
-    //}
+    // }
 
     forecasts.forEach { forecast ->
         if (forecast.isGood) positiveCount += 1

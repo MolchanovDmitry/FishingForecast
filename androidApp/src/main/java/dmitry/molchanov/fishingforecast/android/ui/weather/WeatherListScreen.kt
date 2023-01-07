@@ -48,5 +48,4 @@ fun WeatherDebugScreen(vm: MainViewModel, onMapPointSelected: (MapPoint) -> Unit
             }
         }
     }
-
 }

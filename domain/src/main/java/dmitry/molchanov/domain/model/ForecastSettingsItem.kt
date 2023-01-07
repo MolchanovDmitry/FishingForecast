@@ -1,15 +1,15 @@
-package dmitry.molchanov.fishingforecast.model
+package dmitry.molchanov.domain.model
 
-import dmitry.molchanov.fishingforecast.model.ForecastSettingsItem.HUMIDITY
-import dmitry.molchanov.fishingforecast.model.ForecastSettingsItem.OBSERVATION_PERIOD
-import dmitry.molchanov.fishingforecast.model.ForecastSettingsItem.PRESSURE_MM
-import dmitry.molchanov.fishingforecast.model.ForecastSettingsItem.PRESSURE_PA
-import dmitry.molchanov.fishingforecast.model.ForecastSettingsItem.TEMPERATURE_AVG
-import dmitry.molchanov.fishingforecast.model.ForecastSettingsItem.TEMPERATURE_MAX
-import dmitry.molchanov.fishingforecast.model.ForecastSettingsItem.TEMPERATURE_MIN
-import dmitry.molchanov.fishingforecast.model.ForecastSettingsItem.TEMPERATURE_WATER
-import dmitry.molchanov.fishingforecast.model.ForecastSettingsItem.WIND_GUST
-import dmitry.molchanov.fishingforecast.model.ForecastSettingsItem.WIND_SPEED
+import dmitry.molchanov.domain.model.ForecastSettingsItem.HUMIDITY
+import dmitry.molchanov.domain.model.ForecastSettingsItem.OBSERVATION_PERIOD
+import dmitry.molchanov.domain.model.ForecastSettingsItem.PRESSURE_MM
+import dmitry.molchanov.domain.model.ForecastSettingsItem.PRESSURE_PA
+import dmitry.molchanov.domain.model.ForecastSettingsItem.TEMPERATURE_AVG
+import dmitry.molchanov.domain.model.ForecastSettingsItem.TEMPERATURE_MAX
+import dmitry.molchanov.domain.model.ForecastSettingsItem.TEMPERATURE_MIN
+import dmitry.molchanov.domain.model.ForecastSettingsItem.TEMPERATURE_WATER
+import dmitry.molchanov.domain.model.ForecastSettingsItem.WIND_GUST
+import dmitry.molchanov.domain.model.ForecastSettingsItem.WIND_SPEED
 import kotlin.reflect.KClass
 
 /**

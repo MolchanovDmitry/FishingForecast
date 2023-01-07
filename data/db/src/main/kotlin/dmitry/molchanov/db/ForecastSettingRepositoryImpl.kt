@@ -2,14 +2,14 @@ package dmitry.molchanov.db
 
 import com.squareup.sqldelight.runtime.coroutines.asFlow
 import com.squareup.sqldelight.runtime.coroutines.mapToList
+import dmitry.molchanov.domain.model.DeltaForecastMark
+import dmitry.molchanov.domain.model.ExactValueForecastMark
+import dmitry.molchanov.domain.model.ForecastMark
+import dmitry.molchanov.domain.model.ForecastSetting
+import dmitry.molchanov.domain.model.ForecastSettingsItem
+import dmitry.molchanov.domain.model.MaxValueForecastMark
+import dmitry.molchanov.domain.model.MinValueForecastMark
 import dmitry.molchanov.domain.repository.ForecastSettingsRepository
-import dmitry.molchanov.fishingforecast.model.DeltaForecastMark
-import dmitry.molchanov.fishingforecast.model.ExactValueForecastMark
-import dmitry.molchanov.fishingforecast.model.ForecastMark
-import dmitry.molchanov.fishingforecast.model.ForecastSetting
-import dmitry.molchanov.fishingforecast.model.ForecastSettingsItem
-import dmitry.molchanov.fishingforecast.model.MaxValueForecastMark
-import dmitry.molchanov.fishingforecast.model.MinValueForecastMark
 import dmitry.molchanov.fishingforecast.model.SimpleProfile
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map

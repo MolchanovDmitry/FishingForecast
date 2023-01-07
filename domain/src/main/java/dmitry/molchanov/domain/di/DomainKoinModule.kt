@@ -1,22 +1,22 @@
 package dmitry.molchanov.domain.di
 
+import dmitry.molchanov.domain.mapper.MapPointMapper
+import dmitry.molchanov.domain.usecase.DeleteForecastSettingUseCase
 import dmitry.molchanov.domain.usecase.GetCurrentProfileUseCase
+import dmitry.molchanov.domain.usecase.GetForecastSettingMarksUseCase
+import dmitry.molchanov.domain.usecase.GetForecastUseCase
+import dmitry.molchanov.domain.usecase.GetProfileForecastSettingsUseCase
+import dmitry.molchanov.domain.usecase.SaveForecastSettingMarkUseCase
 import dmitry.molchanov.domain.usecase.SaveWeatherDataUseCase
-import dmitry.molchanov.fishingforecast.mapper.MapPointMapper
 import dmitry.molchanov.fishingforecast.mapper.ProfileMapper
-import dmitry.molchanov.fishingforecast.usecase.DeleteForecastSettingUseCase
 import dmitry.molchanov.fishingforecast.usecase.DeleteProfileUseCase
-import dmitry.molchanov.fishingforecast.usecase.GetForecastSettingMarksUseCase
-import dmitry.molchanov.fishingforecast.usecase.GetForecastUseCase
 import dmitry.molchanov.fishingforecast.usecase.GetMapPointByIdUseCase
 import dmitry.molchanov.fishingforecast.usecase.GetMapPointsUseCase
-import dmitry.molchanov.fishingforecast.usecase.GetProfileForecastSettingsUseCase
 import dmitry.molchanov.fishingforecast.usecase.GetProfilesUseCase
 import dmitry.molchanov.fishingforecast.usecase.GetResultsUseCase
 import dmitry.molchanov.fishingforecast.usecase.GetSavedWeatherDataUseCase
 import dmitry.molchanov.fishingforecast.usecase.GetWeatherDataByResultUseCase
 import dmitry.molchanov.fishingforecast.usecase.ImportSharedResultUseCase
-import dmitry.molchanov.fishingforecast.usecase.SaveForecastSettingMarkUseCase
 import dmitry.molchanov.fishingforecast.usecase.SaveMapPointUseCase
 import dmitry.molchanov.fishingforecast.usecase.SaveProfileUseCase
 import dmitry.molchanov.fishingforecast.usecase.SaveResultUseCase
@@ -46,7 +46,9 @@ val domainKoinModule = module {
     }
 
     factory<GetProfilesUseCase> {
-        GetProfilesUseCase(profileRepository = get(), commonProfileFetcher = get(), profileMapper = get())
+        GetProfilesUseCase(
+            profileRepository = get(), commonProfileFetcher = get(), profileMapper = get()
+        )
     }
 
     factory<GetSavedWeatherDataUseCase> {
@@ -103,8 +105,7 @@ val domainKoinModule = module {
 
     factory<GetWeatherDataByResultUseCase> {
         GetWeatherDataByResultUseCase(
-            resultDataRepository = get(),
-            weatherDataRepository = get()
+            resultDataRepository = get(), weatherDataRepository = get()
         )
     }
 
@@ -116,5 +117,4 @@ val domainKoinModule = module {
             weatherDataRepository = get()
         )
     }
-
 }

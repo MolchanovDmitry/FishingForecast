@@ -1,6 +1,6 @@
 package dmitry.molchanov.domain.repository
 
-import dmitry.molchanov.fishingforecast.model.ForecastSetting
+import dmitry.molchanov.domain.model.ForecastSetting
 import dmitry.molchanov.fishingforecast.model.SimpleProfile
 import kotlinx.coroutines.flow.Flow
 

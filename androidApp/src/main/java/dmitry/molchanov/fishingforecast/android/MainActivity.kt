@@ -52,7 +52,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun initAlarm() {
         val alarmManager = getSystemService(Context.ALARM_SERVICE) as? AlarmManager ?: return
-        //val intent = Intent(applicationContext, DataUpdateActivity::class.java)
+        // val intent = Intent(applicationContext, DataUpdateActivity::class.java)
         val intent = Intent(applicationContext, AlarmReceiver::class.java)
         val pendingIntent =
             PendingIntent.getActivity(applicationContext, 0, intent, FLAG_IMMUTABLE)
@@ -68,7 +68,7 @@ class MainActivity : AppCompatActivity() {
             AlarmManager.INTERVAL_DAY,
             pendingIntent
         )*/
-        //alarmManager.set(AlarmManager.RTC, System.currentTimeMillis() + 1000, pendingIntent)
+        // alarmManager.set(AlarmManager.RTC, System.currentTimeMillis() + 1000, pendingIntent)
 
         /*alarmManager.set(
             AlarmManager.ELAPSED_REALTIME,
@@ -87,8 +87,8 @@ class MainActivity : AppCompatActivity() {
         alarmManager.setInexactRepeating(
             AlarmManager.ELAPSED_REALTIME_WAKEUP,
             triggerTime,
-            1000*5,
+            1000 * 5,
             pendingIntent
-        );
+        )
     }
 }

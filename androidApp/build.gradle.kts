@@ -5,6 +5,7 @@ plugins {
     id("com.google.gms.google-services")
     kotlin("android")
     kotlin("kapt")
+    id(GradlePlugins.Id.KTLINT)
 }
 
 android {

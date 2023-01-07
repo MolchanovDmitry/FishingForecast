@@ -1,7 +1,7 @@
-package dmitry.molchanov.fishingforecast.usecase
+package dmitry.molchanov.domain.usecase
 
+import dmitry.molchanov.domain.model.ForecastSetting
 import dmitry.molchanov.domain.repository.ForecastSettingsRepository
-import dmitry.molchanov.fishingforecast.model.ForecastSetting
 import dmitry.molchanov.fishingforecast.model.SimpleProfile
 import dmitry.molchanov.fishingforecast.utils.ioDispatcher
 import kotlinx.coroutines.withContext

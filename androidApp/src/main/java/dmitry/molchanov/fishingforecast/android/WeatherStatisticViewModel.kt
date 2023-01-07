@@ -2,17 +2,17 @@ package dmitry.molchanov.fishingforecast.android
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dmitry.molchanov.domain.model.ExactValueForecastMark
+import dmitry.molchanov.domain.model.ForecastSetting
+import dmitry.molchanov.domain.model.ForecastSettingsItem
 import dmitry.molchanov.domain.model.MapPoint
 import dmitry.molchanov.domain.model.WeatherData
 import dmitry.molchanov.domain.repository.WeatherDataRepository
+import dmitry.molchanov.domain.usecase.GetForecastSettingMarksUseCase
+import dmitry.molchanov.domain.usecase.GetForecastUseCase
 import dmitry.molchanov.domain.utils.ONE_SEC
-import dmitry.molchanov.fishingforecast.model.ExactValueForecastMark
 import dmitry.molchanov.fishingforecast.model.Forecast
-import dmitry.molchanov.fishingforecast.model.ForecastSetting
-import dmitry.molchanov.fishingforecast.model.ForecastSettingsItem
 import dmitry.molchanov.fishingforecast.model.Profile
-import dmitry.molchanov.fishingforecast.usecase.GetForecastSettingMarksUseCase
-import dmitry.molchanov.fishingforecast.usecase.GetForecastUseCase
 import dmitry.molchanov.fishingforecast.usecase.GetProfilesUseCase
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -43,15 +43,15 @@ class WeatherStatisticViewModel(
 
     init {
         viewModelScope.launch {
-            getProfilesUseCase.execute()
-                .firstOrNull { profile -> profile == mapPoint.profile }
+            getProfilesUseCase.execute().firstOrNull { profile -> profile == mapPoint.profile }
                 ?.let { profile ->
                     val forecastSettings = getForecastSettings(profile)
-                    getObservationPeriod(forecastSettings)
-                        ?.let { period -> observeWeather(period, forecastSettings) }
-                        ?: message.emit("Не найден период прогнозирования для профиля")
-                }
-                ?: message.emit("Не найден период прогнозирования для профиля")
+                    getObservationPeriod(forecastSettings)?.let { period ->
+                        observeWeather(
+                            period, forecastSettings
+                        )
+                    } ?: message.emit("Не найден период прогнозирования для профиля")
+                } ?: message.emit("Не найден период прогнозирования для профиля")
         }
     }
 
@@ -60,13 +60,10 @@ class WeatherStatisticViewModel(
     }
 
     private fun getObservationPeriod(forecastSettings: List<ForecastSetting>): Period? {
-        forecastSettings
-            .firstOrNull { it.forecastSettingsItem == ForecastSettingsItem.OBSERVATION_PERIOD }
+        forecastSettings.firstOrNull { it.forecastSettingsItem == ForecastSettingsItem.OBSERVATION_PERIOD }
             ?.let { forecastSetting ->
-                forecastSetting.forecastMarks
-                    .filterIsInstance<ExactValueForecastMark>()
-                    .firstOrNull()
-                    ?.let { forecastMark ->
+                forecastSetting.forecastMarks.filterIsInstance<ExactValueForecastMark>()
+                    .firstOrNull()?.let { forecastMark ->
                         val days = forecastMark.value
                         val from =
                             System.currentTimeMillis() - (days * 24 * 60 * 60 * ONE_SEC).toLong()
@@ -78,19 +75,14 @@ class WeatherStatisticViewModel(
 
     private fun observeWeather(period: Period, forecastSettings: List<ForecastSetting>) {
         weatherDataRepository.fetchWeatherDataFlow(
-            mapPoint = mapPoint,
-            from = period.from,
-            to = period.to
+            mapPoint = mapPoint, from = period.from, to = period.to
         ).onEach { weatherData ->
             state.update {
                 val forecasts = getForecastUseCase.execute(weatherData, forecastSettings)
                 it.copy(weatherData = weatherData, forecasts = forecasts)
             }
-
         }.launchIn(viewModelScope)
     }
 
     private data class Period(val from: Long, val to: Long)
-
 }
-

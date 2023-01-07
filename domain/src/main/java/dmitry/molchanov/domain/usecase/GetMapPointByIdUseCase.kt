@@ -9,5 +9,4 @@ class GetMapPointByIdUseCase(private val mapPointRepository: MapPointRepository)
     suspend fun execute(mapPointId: Long) = withContext(ioDispatcher) {
         mapPointRepository.getMapPoint(mapPointId)
     }
-
 }

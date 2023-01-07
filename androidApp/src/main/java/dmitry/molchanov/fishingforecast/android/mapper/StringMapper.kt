@@ -1,9 +1,18 @@
 package dmitry.molchanov.fishingforecast.android.mapper
 
 import android.content.Context
+import dmitry.molchanov.domain.model.ForecastSettingsItem
+import dmitry.molchanov.domain.model.ForecastSettingsItem.HUMIDITY
+import dmitry.molchanov.domain.model.ForecastSettingsItem.OBSERVATION_PERIOD
+import dmitry.molchanov.domain.model.ForecastSettingsItem.PRESSURE_MM
+import dmitry.molchanov.domain.model.ForecastSettingsItem.PRESSURE_PA
+import dmitry.molchanov.domain.model.ForecastSettingsItem.TEMPERATURE_AVG
+import dmitry.molchanov.domain.model.ForecastSettingsItem.TEMPERATURE_MAX
+import dmitry.molchanov.domain.model.ForecastSettingsItem.TEMPERATURE_MIN
+import dmitry.molchanov.domain.model.ForecastSettingsItem.TEMPERATURE_WATER
+import dmitry.molchanov.domain.model.ForecastSettingsItem.WIND_GUST
+import dmitry.molchanov.domain.model.ForecastSettingsItem.WIND_SPEED
 import dmitry.molchanov.fishingforecast.android.R
-import dmitry.molchanov.fishingforecast.model.ForecastSettingsItem
-import dmitry.molchanov.fishingforecast.model.ForecastSettingsItem.*
 
 fun ForecastSettingsItem.toString(context: Context): String =
     when (this) {

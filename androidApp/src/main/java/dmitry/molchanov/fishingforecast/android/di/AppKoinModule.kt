@@ -10,7 +10,6 @@ import dmitry.molchanov.fishingforecast.android.ui.map.MapViewModel
 import dmitry.molchanov.fishingforecast.android.ui.profile.ProfileViewModel
 import dmitry.molchanov.fishingforecast.android.ui.result.ResultDetailViewModel
 import dmitry.molchanov.fishingforecast.android.ui.result.ResultViewModel
-import dmitry.molchanov.fishingforecast.android.ui.weather.WeatherDebugViewModel
 import dmitry.molchanov.fishingforecast.mapper.CommonProfileFetcher
 import dmitry.molchanov.weather_data_update.DataUpdateViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -43,10 +42,6 @@ val appKoinModule = module {
 
     viewModel<ProfileViewModel> {
         ProfileViewModel(get(), get(), get(), inject(), inject(), inject())
-    }
-
-    viewModel<WeatherDebugViewModel> {
-        WeatherDebugViewModel()
     }
 
     viewModel<MainViewModel> {

@@ -2,11 +2,11 @@ package dmitry.molchanov.db
 
 import com.squareup.sqldelight.runtime.coroutines.asFlow
 import com.squareup.sqldelight.runtime.coroutines.mapToList
+import dmitry.molchanov.domain.mapper.MapPointMapper
 import dmitry.molchanov.domain.model.MapPoint
 import dmitry.molchanov.domain.repository.NullResultId
 import dmitry.molchanov.domain.repository.NullWeatherData
 import dmitry.molchanov.domain.repository.ResultDataRepository
-import dmitry.molchanov.fishingforecast.mapper.MapPointMapper
 import dmitry.molchanov.fishingforecast.mapper.ProfileMapper
 import dmitry.molchanov.fishingforecast.model.Result
 import dmitry.molchanov.fishingforecast.model.SimpleProfile
