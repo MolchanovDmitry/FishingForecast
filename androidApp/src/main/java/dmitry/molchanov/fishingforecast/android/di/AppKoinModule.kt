@@ -86,7 +86,7 @@ val appKoinModule = module {
         ResultDetailViewModel(parameters.get(), get())
     }
 
-    viewModel<DataUpdateViewModel>{
+    viewModel<DataUpdateViewModel> {
         DataUpdateViewModel()
     }
 }

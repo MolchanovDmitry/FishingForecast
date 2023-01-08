@@ -32,17 +32,16 @@ import dmitry.molchanov.domain.model.WeatherData
 import dmitry.molchanov.domain.utils.getDayCount
 import dmitry.molchanov.fishingforecast.android.ui.preview.previewResult
 import dmitry.molchanov.fishingforecast.model.Result
-import java.util.*
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 
-private val UNKNOWN = "Нет данных"
+private const val UNKNOWN = "Нет данных"
 
 @Preview
 @Composable
 fun ResultDetailScreen(
     result: Result = previewResult,
-    //weatherData: List<WeatherData> = previewWeatherData,
+    // weatherData: List<WeatherData> = previewWeatherData,
 ) {
     val vm = koinViewModel<ResultDetailViewModel> { parametersOf(result) }
     val state = vm.stateFlow.collectAsState()
@@ -53,19 +52,21 @@ fun ResultDetailScreen(
     }
     val sortedWeatherData = remember {
         val sorted = weatherData.sortedBy { it.date }
-        sorted.lastOrNull()
-            ?.let { vm.onAction(OnDateSelected(it.date)) }
+        sorted.lastOrNull()?.let { vm.onAction(OnDateSelected(it.date)) }
         sorted
     }
-    Column(modifier = Modifier
-        .fillMaxSize()
-        .verticalScroll(rememberScrollState())) {
-        Box(modifier = Modifier
-            .fillMaxWidth()
-            .height(200.dp)) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState())
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(200.dp)
+        ) {
             GoogleMap(
-                modifier = Modifier.fillMaxSize(),
-                cameraPositionState = cameraPositionState
+                modifier = Modifier.fillMaxSize(), cameraPositionState = cameraPositionState
             ) {
                 Marker(
                     position = cameraPositionState.position.target,
@@ -73,9 +74,11 @@ fun ResultDetailScreen(
                     snippet = "Какой-то текст",
                 )
             }
-            Row(modifier = Modifier
-                .align(Alignment.BottomCenter)
-                .padding(bottom = 8.dp)) {
+            Row(
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+                    .padding(bottom = 8.dp)
+            ) {
                 sortedWeatherData.forEach { weatherDataItem ->
                     Text(
                         text = weatherDataItem.date.getDayCount().toString(),
@@ -99,14 +102,13 @@ fun ResultDetailScreen(
         weatherData.firstOrNull {
             it.date == state.value.selectedDate
         }?.let { selectedWeatherDataItem -> ResultDetailColumn(selectedWeatherDataItem) }
-
     }
-
 }
 
 @Composable
 private fun ResultDetailColumn(weatherDateItem: WeatherData) {
-    val simpleDateFormat = remember { SimpleDateFormat("dd MMMM yyyy", Locale.getDefault()) }
+    val simpleDateFormat =
+        remember { SimpleDateFormat("dd MMMM yyyy", java.util.Locale.getDefault()) }
     val dataStr = simpleDateFormat.format(weatherDateItem.date)
 
     ResultDetailItemRow(title = "Дата", value = dataStr)
@@ -128,42 +130,40 @@ private fun ResultDetailColumn(weatherDateItem: WeatherData) {
         value = weatherDateItem.temperature?.water?.toString() ?: UNKNOWN
     )
     ResultDetailItemRow(
-        title = "Влажность",
-        value = weatherDateItem.humidity?.toString() ?: UNKNOWN
+        title = "Влажность", value = weatherDateItem.humidity?.toString() ?: UNKNOWN
     )
     ResultDetailItemRow(
         title = "Давление в мм ртутного столба",
         value = weatherDateItem.pressure?.mm?.toString() ?: UNKNOWN
     )
     ResultDetailItemRow(
-        title = "Давление в паскалях",
-        value = weatherDateItem.pressure?.pa?.toString() ?: UNKNOWN
+        title = "Давление в паскалях", value = weatherDateItem.pressure?.pa?.toString() ?: UNKNOWN
     )
     ResultDetailItemRow(
-        title = "Направление ветра",
-        value = weatherDateItem.wind?.dir ?: UNKNOWN
+        title = "Направление ветра", value = weatherDateItem.wind?.dir ?: UNKNOWN
     )
     ResultDetailItemRow(
-        title = "Порыв ветра",
-        value = weatherDateItem.wind?.gust?.toString() ?: UNKNOWN
+        title = "Порыв ветра", value = weatherDateItem.wind?.gust?.toString() ?: UNKNOWN
     )
     ResultDetailItemRow(
-        title = "Скорость ветра",
-        value = weatherDateItem.wind?.speed?.toString() ?: UNKNOWN
+        title = "Скорость ветра", value = weatherDateItem.wind?.speed?.toString() ?: UNKNOWN
     )
-
 }
 
 @Composable
 private fun ResultDetailItemRow(title: String, value: String, showDivider: Boolean = true) {
-    Row(modifier = Modifier
-        .fillMaxWidth()
-        .padding(horizontal = 16.dp, vertical = 16.dp)) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp, vertical = 16.dp)
+    ) {
         Text(text = title)
         Spacer(modifier = Modifier.weight(1f))
         Text(text = value)
     }
     if (showDivider) {
-        Divider(color = Color.Gray, thickness = 1.dp, modifier = Modifier.padding(horizontal = 16.dp))
+        Divider(
+            color = Color.Gray, thickness = 1.dp, modifier = Modifier.padding(horizontal = 16.dp)
+        )
     }
 }

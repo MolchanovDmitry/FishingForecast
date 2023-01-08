@@ -43,7 +43,8 @@ fun WeatherDebugScreen(vm: MainViewModel, onMapPointSelected: (MapPoint) -> Unit
                                 .firstOrNull { it.mapPoint.name == item.name && it.mapPoint.profile == item.profile }
                                 ?.mapPoint
                                 ?.let { mapPoint -> onMapPointSelected(mapPoint) }
-                        })
+                        }
+                )
                 Divider(color = Color.LightGray, modifier = Modifier.padding(start = 16.dp))
             }
         }

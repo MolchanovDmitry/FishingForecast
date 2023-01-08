@@ -18,9 +18,8 @@ class WeatherNotifierPresenter(
                 .firstOrNull { it.name == mapPoint.name || (mapPoint.profileName == null && it.isCommon) }
                 ?: return@forEach*/
             getCurrentWeatherDataUseCase.execute(mapPoint)?.let { currentWeather ->
-                //saveWeatherDataUseCase.execute(currentWeather)
+                // saveWeatherDataUseCase.execute(currentWeather)
             }
         }
     }
-
 }
