@@ -25,7 +25,8 @@ class MapViewModel(
     private val saveMapPointUseCase: Lazy<SaveMapPointUseCase>,
 ) : ViewModel() {
 
-    private val stateFlow = MutableStateFlow(MapViewState(currentProfile = commonProfileFetcher.instance))
+    private val stateFlow =
+        MutableStateFlow(MapViewState(currentProfile = commonProfileFetcher.instance))
     val state = stateFlow.asStateFlow()
 
     private var allMapPoints: List<MapPoint> = emptyList()
@@ -52,12 +53,13 @@ class MapViewModel(
             .onEach { mapPoints ->
                 this.allMapPoints = mapPoints
                 stateFlow.update {
-                    it.copy(mapPoints =
-                    if (state.value.currentProfile is CommonProfile) {
-                        mapPoints
-                    } else {
-                        mapPoints.filter { it.profile == state.value.currentProfile }
-                    })
+                    it.copy(
+                        mapPoints = if (state.value.currentProfile is CommonProfile) {
+                            mapPoints
+                        } else {
+                            mapPoints.filter { it.profile == state.value.currentProfile }
+                        }
+                    )
                 }
             }
             .launchIn(viewModelScope)
@@ -69,13 +71,15 @@ class MapViewModel(
 
         // TODO запрашивать по профилю
         getMapPointsUseCase.executeFlow().onEach { mapPoints ->
-            //this.allMapPoints = mapPoints
+            // this.allMapPoints = mapPoints
             stateFlow.update {
-                it.copy(mapPoints = if (state.value.currentProfile is CommonProfile) {
-                    mapPoints
-                } else {
-                    mapPoints.filter { it.profile == state.value.currentProfile }
-                })
+                it.copy(
+                    mapPoints = if (state.value.currentProfile is CommonProfile) {
+                        mapPoints
+                    } else {
+                        mapPoints.filter { it.profile == state.value.currentProfile }
+                    }
+                )
             }
         }.launchIn(viewModelScope)
     }
@@ -106,5 +110,8 @@ data class MapViewState(
 
 sealed class MapAction
 data class SavePoint(
-    val title: String, val profile: Profile, val latitude: Double, val longitude: Double
+    val title: String,
+    val profile: Profile,
+    val latitude: Double,
+    val longitude: Double
 ) : MapAction()

@@ -40,7 +40,6 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import org.koin.androidx.compose.koinViewModel
 
-
 @Composable
 fun ResultScreen(onResultClick: (Result) -> Unit) {
     val vm = koinViewModel<ResultViewModel>()
@@ -77,18 +76,25 @@ fun ResultScreen(onResultClick: (Result) -> Unit) {
                         .padding(8.dp)
                         .clickable {
                             onResultClick(result)
-                        })
+                        }
+                    )
                 }
             }
         }
 
         Column(modifier = Modifier.align(Alignment.BottomEnd)) {
-            Button(modifier = Modifier.padding(4.dp), onClick = { vm.onAction(AddResultClickAction()) }) {
+            Button(
+                modifier = Modifier.padding(4.dp),
+                onClick = { vm.onAction(AddResultClickAction()) }) {
                 Text("Добавить новый результат.")
             }
             Button(modifier = Modifier.padding(4.dp), onClick = {
                 // TODO
-                if (ContextCompat.checkSelfPermission(context, WRITE_EXTERNAL_STORAGE) != PERMISSION_GRANTED) {
+                if (ContextCompat.checkSelfPermission(
+                        context,
+                        WRITE_EXTERNAL_STORAGE
+                    ) != PERMISSION_GRANTED
+                ) {
                     writePermissionLauncher.launch(WRITE_EXTERNAL_STORAGE)
                 }
                 vm.onAction(SaveToStorageAndShareClick())
@@ -96,7 +102,11 @@ fun ResultScreen(onResultClick: (Result) -> Unit) {
                 Text("Поделиться результатами.")
             }
             Button(modifier = Modifier.padding(4.dp), onClick = {
-                if (ContextCompat.checkSelfPermission(context, WRITE_EXTERNAL_STORAGE) != PERMISSION_GRANTED) {
+                if (ContextCompat.checkSelfPermission(
+                        context,
+                        WRITE_EXTERNAL_STORAGE
+                    ) != PERMISSION_GRANTED
+                ) {
                     readPermissionLauncher.launch(READ_EXTERNAL_STORAGE)
                 } else {
                     shouldOpenFile = true
@@ -105,8 +115,6 @@ fun ResultScreen(onResultClick: (Result) -> Unit) {
                 Text("Импортировать результаты.")
             }
         }
-
-
     }
     if (state.value.shouldShowDialog) {
         AddResultDialog(vm)
@@ -115,12 +123,12 @@ fun ResultScreen(onResultClick: (Result) -> Unit) {
     LaunchedEffect(key1 = Unit) {
         vm.messageFlow.onEach { event ->
             when (event) {
-                is NullMapPoint -> Toast.makeText(context, "Выберите точку", Toast.LENGTH_SHORT).show()
+                is NullMapPoint -> Toast.makeText(context, "Выберите точку", Toast.LENGTH_SHORT)
+                    .show()
                 is ShareFile -> shareFile(context = context, filePath = event.filePath)
             }
         }.launchIn(this)
     }
-
 }
 
 @Composable
@@ -136,7 +144,8 @@ fun importFile() {
 
 private fun shareFile(context: Context, filePath: String) {
 
-    val contentUri: Uri = FileProvider.getUriForFile(context, "com.example.app.fileprovider", File(filePath))
+    val contentUri: Uri =
+        FileProvider.getUriForFile(context, "com.example.app.fileprovider", File(filePath))
 
     val shareIntent = Intent()
     shareIntent.action = Intent.ACTION_SEND
