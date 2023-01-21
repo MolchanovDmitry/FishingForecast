@@ -16,6 +16,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import dmitry.molchanov.fishingforecast.android.notifier.AlarmReceiver
+import dmitry.molchanov.weather_data_update.schedule
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : AppCompatActivity() {
@@ -28,6 +29,11 @@ class MainActivity : AppCompatActivity() {
             MainScreen(vm)
         }
         requestPermissions()
+        schedule(
+            hour = 13,
+            minute = 26,
+            intent = Intent(this, AlarmReceiver::class.java)
+        )
     }
 
     private fun requestPermissions() {
