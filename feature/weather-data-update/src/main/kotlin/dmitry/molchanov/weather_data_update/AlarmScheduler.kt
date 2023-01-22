@@ -4,6 +4,7 @@ import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import dmitry.molchanov.domain.utils.ONE_DAY
 import java.util.*
 
 
@@ -25,12 +26,12 @@ fun Context.schedule(hour: Int, minute: Int, intent: Intent) {
         this,
         1,
         intent,
-        PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+        PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
     )
 
     ////If the Toggle is turned on, set the repeating alarm with a 15 minute interval
-    val repeatInterval = 1 * 60 * 1000L
-    alarmManager.setInexactRepeating(
+    val repeatInterval = ONE_DAY// 1 * 60 * 1000L
+    alarmManager.setRepeating(
         AlarmManager.RTC_WAKEUP,
         calendar.timeInMillis,
         repeatInterval,

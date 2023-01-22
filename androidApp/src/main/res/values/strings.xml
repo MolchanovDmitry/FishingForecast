@@ -15,6 +15,9 @@
     <string name="temperature_water">Теспература воды</string>
     <string name="humidity">Влажность</string>
     <string name="notification_title">Отслеживание прогноза</string>
+
     <string name="reminders_notification_channel_id">reminders_notification_channel_id</string>
     <string name="reminders_notification_channel_name">reminders_notification_channel_name</string>
+    <string name="notification_update_weather_data">Обновить погодные данные</string>
+    <string name="notification_update_weather_data_description">Нажмите на уведомление, чтобы перейти к экрану обновления погодных данных.</string>
 </resources>
