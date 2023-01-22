@@ -1,5 +1,6 @@
 package dmitry.molchanov.db
 
+import dmitry.molchanov.db.ForecastSetting as DataForecastSetting
 import com.squareup.sqldelight.runtime.coroutines.asFlow
 import com.squareup.sqldelight.runtime.coroutines.mapToList
 import dmitry.molchanov.domain.model.DeltaForecastMark
@@ -9,11 +10,10 @@ import dmitry.molchanov.domain.model.ForecastSetting
 import dmitry.molchanov.domain.model.ForecastSettingsItem
 import dmitry.molchanov.domain.model.MaxValueForecastMark
 import dmitry.molchanov.domain.model.MinValueForecastMark
+import dmitry.molchanov.domain.model.SimpleProfile
 import dmitry.molchanov.domain.repository.ForecastSettingsRepository
-import dmitry.molchanov.fishingforecast.model.SimpleProfile
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import dmitry.molchanov.db.ForecastSetting as DataForecastSetting
 
 class ForecastSettingRepositoryImpl(
     private val forecastSettingQueries: ForecastSettingQueries

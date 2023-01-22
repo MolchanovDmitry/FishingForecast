@@ -1,6 +1,6 @@
 package dmitry.molchanov.fishingforecast.mapper
 
-import dmitry.molchanov.fishingforecast.model.SimpleProfile
+import dmitry.molchanov.domain.model.SimpleProfile
 
 class ProfileMapper(private val commonProfileFetcher: CommonProfileFetcher) {
 

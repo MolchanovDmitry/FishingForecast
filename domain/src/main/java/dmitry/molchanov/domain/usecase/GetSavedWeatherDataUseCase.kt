@@ -1,4 +1,4 @@
-package dmitry.molchanov.fishingforecast.usecase
+package dmitry.molchanov.domain.usecase
 
 import dmitry.molchanov.domain.model.MapPoint
 import dmitry.molchanov.domain.model.WeatherData

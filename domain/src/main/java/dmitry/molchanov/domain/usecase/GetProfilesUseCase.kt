@@ -1,10 +1,10 @@
-package dmitry.molchanov.fishingforecast.usecase
+package dmitry.molchanov.domain.usecase
 
+import dmitry.molchanov.domain.model.Profile
+import dmitry.molchanov.domain.model.SimpleProfile
 import dmitry.molchanov.domain.repository.ProfileRepository
 import dmitry.molchanov.fishingforecast.mapper.CommonProfileFetcher
 import dmitry.molchanov.fishingforecast.mapper.ProfileMapper
-import dmitry.molchanov.fishingforecast.model.Profile
-import dmitry.molchanov.fishingforecast.model.SimpleProfile
 import dmitry.molchanov.fishingforecast.utils.ioDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOn

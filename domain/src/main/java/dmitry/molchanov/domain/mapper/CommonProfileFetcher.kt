@@ -1,6 +1,6 @@
 package dmitry.molchanov.fishingforecast.mapper
 
-import dmitry.molchanov.fishingforecast.model.CommonProfile
+import dmitry.molchanov.domain.model.CommonProfile
 
 interface CommonProfileFetcher {
 

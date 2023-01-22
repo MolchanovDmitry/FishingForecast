@@ -1,4 +1,4 @@
-package dmitry.molchanov.fishingforecast.model
+package dmitry.molchanov.domain.model
 
 import kotlinx.serialization.Serializable
 

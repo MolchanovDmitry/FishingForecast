@@ -26,9 +26,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import dmitry.molchanov.domain.model.Profile
+import dmitry.molchanov.domain.model.SimpleProfile
 import dmitry.molchanov.fishingforecast.android.ui.common.BaseDialog
-import dmitry.molchanov.fishingforecast.model.Profile
-import dmitry.molchanov.fishingforecast.model.SimpleProfile
 
 @Composable
 fun ProfileColumn(

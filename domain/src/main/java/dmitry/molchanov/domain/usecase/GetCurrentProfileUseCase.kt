@@ -1,8 +1,8 @@
 package dmitry.molchanov.domain.usecase
 
+import dmitry.molchanov.domain.model.Profile
 import dmitry.molchanov.domain.repository.ProfileRepository
 import dmitry.molchanov.fishingforecast.mapper.ProfileMapper
-import dmitry.molchanov.fishingforecast.model.Profile
 import dmitry.molchanov.fishingforecast.utils.ioDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOn
@@ -14,6 +14,6 @@ class GetCurrentProfileUseCase(
 ) {
 
     fun execute(): Flow<Profile> = profileRepository.currentProfileNameFlow
-        .map (profileMapper::mapProfile)
+        .map(profileMapper::mapProfile)
         .flowOn(ioDispatcher)
 }

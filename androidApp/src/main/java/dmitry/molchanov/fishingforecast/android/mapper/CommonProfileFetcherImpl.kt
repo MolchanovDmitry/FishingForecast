@@ -1,9 +1,9 @@
 package dmitry.molchanov.fishingforecast.android.mapper
 
 import android.content.Context
+import dmitry.molchanov.domain.model.CommonProfile
 import dmitry.molchanov.fishingforecast.android.R
 import dmitry.molchanov.fishingforecast.mapper.CommonProfileFetcher
-import dmitry.molchanov.fishingforecast.model.CommonProfile
 
 /**
  * Получатель общего профиля
