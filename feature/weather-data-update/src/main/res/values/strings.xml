@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="no_update_required">Не требуется</string>
+    <string name="update_in_progress">Обновляется</string>
+    <string name="updated">Обновлен</string>
+    <string name="update_error">Ошибка</string>
+
+    <string name="error_network">Ошибка сети, проверьте подключение и нажмите "обновить".</string>
+
+    <string name="update">Обновить</string>
+</resources>
