@@ -1,27 +1,26 @@
 package dmitry.molchanov.fishingforecast.android.ui.result
 
 import android.content.Context
-import android.icu.text.SimpleDateFormat
 import android.os.Environment
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dmitry.molchanov.domain.mapper.deserialize
 import dmitry.molchanov.domain.mapper.string
 import dmitry.molchanov.domain.model.MapPoint
+import dmitry.molchanov.domain.model.Profile
 import dmitry.molchanov.domain.model.WeatherData
+import dmitry.molchanov.domain.usecase.GetProfilesUseCase
+import dmitry.molchanov.domain.usecase.GetSavedWeatherDataUseCase
+import dmitry.molchanov.domain.usecase.ImportSharedResultUseCase
 import dmitry.molchanov.domain.utils.ONE_DAY
 import dmitry.molchanov.domain.utils.TimeMs
 import dmitry.molchanov.domain.utils.nightTime
 import dmitry.molchanov.fishingforecast.android.mapper.CommonProfileFetcherImpl
-import dmitry.molchanov.fishingforecast.model.Profile
 import dmitry.molchanov.fishingforecast.model.Result
 import dmitry.molchanov.fishingforecast.model.SharedResult
 import dmitry.molchanov.fishingforecast.usecase.GetMapPointsUseCase
-import dmitry.molchanov.fishingforecast.usecase.GetProfilesUseCase
 import dmitry.molchanov.fishingforecast.usecase.GetResultsUseCase
-import dmitry.molchanov.fishingforecast.usecase.GetSavedWeatherDataUseCase
 import dmitry.molchanov.fishingforecast.usecase.GetWeatherDataByResultUseCase
-import dmitry.molchanov.fishingforecast.usecase.ImportSharedResultUseCase
 import dmitry.molchanov.fishingforecast.usecase.SaveResultUseCase
 import dmitry.molchanov.fishingforecast.utils.ioDispatcher
 import java.io.BufferedReader
@@ -29,6 +28,7 @@ import java.io.File
 import java.io.FileOutputStream
 import java.io.InputStream
 import java.io.InputStreamReader
+import java.text.SimpleDateFormat
 import java.util.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -39,7 +39,6 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-
 
 class ResultViewModel(
     getResultUseCase: GetResultsUseCase,
@@ -56,7 +55,8 @@ class ResultViewModel(
     private val _messageFlow = MutableSharedFlow<ResultEvent>(replay = 1)
     val messageFlow = _messageFlow.asSharedFlow()
 
-    private val _stateFlow = MutableStateFlow(ResultScreenState(selectedProfile = commonProfileFetcher.value.instance))
+    private val _stateFlow =
+        MutableStateFlow(ResultScreenState(selectedProfile = commonProfileFetcher.value.instance))
     val stateFlow = _stateFlow.asStateFlow()
 
     private var results: List<Result>? = null
@@ -69,12 +69,10 @@ class ResultViewModel(
     }
 
     private fun observeResults(getResultUseCase: GetResultsUseCase) {
-        getResultUseCase.executeFlow()
-            .onEach { results ->
-                this.results = results
-                _stateFlow.update { it.copy(results = results) }
-            }
-            .launchIn(viewModelScope)
+        getResultUseCase.executeFlow().onEach { results ->
+            this.results = results
+            _stateFlow.update { it.copy(results = results) }
+        }.launchIn(viewModelScope)
     }
 
     private fun updateDates() {
@@ -129,32 +127,30 @@ class ResultViewModel(
     // TODO реализовать публикацию только выбранных результатов
     private fun onShareClick() {
         viewModelScope.launch(ioDispatcher) {
-            results
-                ?.map { result ->
-                    val weatherData = getWeatherDataByResultUseCase.value.execute(result)
-                    SharedResult(result, weatherData)
-                }?.string()
-                ?.let { resultJson ->
-                    val dateFormat = SimpleDateFormat("yyyy-MM-dd-HH-mm-ss", Locale.getDefault())
-                    val fileNamePrefix = dateFormat.format(System.currentTimeMillis())
-                    val fileName = "$fileNamePrefix.txt"
+            results?.map { result ->
+                val weatherData = getWeatherDataByResultUseCase.value.execute(result)
+                SharedResult(result, weatherData)
+            }?.string()?.let { resultJson ->
+                val dateFormat = SimpleDateFormat("yyyy-MM-dd-HH-mm-ss", Locale.getDefault())
+                val fileNamePrefix = dateFormat.format(System.currentTimeMillis())
+                val fileName = "$fileNamePrefix.txt"
 
-                    val file = File(context.cacheDir, fileName)
-                    file.writeText(String(resultJson.toByteArray(), charset("UTF-8")))
+                val file = File(context.cacheDir, fileName)
+                file.writeText(String(resultJson.toByteArray(), charset("UTF-8")))
 
-                    _messageFlow.tryEmit(ShareFile(file.path))
+                _messageFlow.tryEmit(ShareFile(file.path))
 
-                    //try {
+                // try {
 
-                    writeToFile(fileName = fileName, data = resultJson)
-                    /*} catch (t: Throwable) {
-                        // ignore
-                    }*/
-                }
+                writeToFile(fileName = fileName, data = resultJson)
+                /*} catch (t: Throwable) {
+                    // ignore
+                }*/
+            }
         }
     }
 
-    //TODO актуализировать
+    // TODO актуализировать
     private fun writeToFile(fileName: String, data: String) {
         val env = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS)
         val stream = FileOutputStream("$env/$fileName")
@@ -171,11 +167,13 @@ class ResultViewModel(
             return
         }
         val date =
-            System.currentTimeMillis()//_stateFlow.value.selectedDate // TODO выбранная дата минус заданое количество
+            System.currentTimeMillis() // _stateFlow.value.selectedDate // TODO выбранная дата минус заданое количество
         viewModelScope.launch {
-            val weatherData: List<WeatherData> =
-                getSavedWeatherDataUseCase.value
-                    .execute(selectedMapPoint, from = date - (5 * ONE_DAY), to = date + ONE_DAY - 1)
+            val weatherData: List<WeatherData> = getSavedWeatherDataUseCase.value.execute(
+                selectedMapPoint,
+                from = date - (5 * ONE_DAY),
+                to = date + ONE_DAY - 1
+            )
             saveResultUseCase.value.execute(
                 resultName = resultName,
                 weatherData = weatherData,
@@ -183,7 +181,6 @@ class ResultViewModel(
                 profile = stateFlow.value.selectedProfile,
             )
         }
-
     }
 
     private fun updateSelectedDate(date: TimeMs) {
@@ -201,8 +198,11 @@ class ResultViewModel(
     private fun updateMapPoints() {
         viewModelScope.launch {
             val mapPoints = getMapPointsUseCase.value.execute()
-            _stateFlow.update { it.copy(mapPoints = mapPoints, selectedMapPoint = mapPoints.firstOrNull()) }
-
+            _stateFlow.update {
+                it.copy(
+                    mapPoints = mapPoints, selectedMapPoint = mapPoints.firstOrNull()
+                )
+            }
         }
     }
 
@@ -220,7 +220,6 @@ class ResultViewModel(
     private fun showAddDialog() {
         _stateFlow.update { it.copy(shouldShowDialog = true) }
     }
-
 }
 
 data class ResultScreenState(

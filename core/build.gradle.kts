@@ -41,7 +41,6 @@ dependencies {
         Deps.Sqldelight.coroutinesExt,
         Deps.Sqldelight.android_driver,
         Deps.Ktor.core,
-        Deps.Ktor.android,
         Deps.Ktor.okhttp,
         Deps.Ktor.serialization,
         Deps.Ktor.interceptor,

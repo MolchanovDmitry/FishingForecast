@@ -1,4 +1,4 @@
-package dmitry.molchanov.data
+package dmitry.molchanov.http
 
 import io.ktor.client.request.get
 import io.ktor.client.request.headers

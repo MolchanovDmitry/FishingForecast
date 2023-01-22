@@ -2,14 +2,14 @@ package dmitry.molchanov.fishingforecast.android.ui.profile
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dmitry.molchanov.domain.model.Profile
+import dmitry.molchanov.domain.model.SimpleProfile
+import dmitry.molchanov.domain.usecase.DeleteProfileUseCase
 import dmitry.molchanov.domain.usecase.GetCurrentProfileUseCase
+import dmitry.molchanov.domain.usecase.GetProfilesUseCase
+import dmitry.molchanov.domain.usecase.SaveProfileUseCase
+import dmitry.molchanov.domain.usecase.SelectProfileUseCase
 import dmitry.molchanov.fishingforecast.android.mapper.CommonProfileFetcherImpl
-import dmitry.molchanov.fishingforecast.model.Profile
-import dmitry.molchanov.fishingforecast.model.SimpleProfile
-import dmitry.molchanov.fishingforecast.usecase.DeleteProfileUseCase
-import dmitry.molchanov.fishingforecast.usecase.GetProfilesUseCase
-import dmitry.molchanov.fishingforecast.usecase.SaveProfileUseCase
-import dmitry.molchanov.fishingforecast.usecase.SelectProfileUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.launchIn
@@ -24,14 +24,14 @@ class ProfileViewModel(
     private val saveProfileUseCase: Lazy<SaveProfileUseCase>,
     private val deleteProfileUseCase: Lazy<DeleteProfileUseCase>,
     private val selectProfileUseCase: Lazy<SelectProfileUseCase>,
+) : ViewModel() {
 
-    ) : ViewModel() {
-
-    private val stateFlow = MutableStateFlow(ProfileViewState(currentProfile = commonProfileFetcher.instance))
+    private val stateFlow =
+        MutableStateFlow(ProfileViewState(currentProfile = commonProfileFetcher.instance))
     val state = stateFlow.asStateFlow()
 
     init {
-        getProfilesNamesUseCase.executeFlow().onEach { profiles->
+        getProfilesNamesUseCase.executeFlow().onEach { profiles ->
             stateFlow.update {
                 it.copy(profiles = profiles)
             }

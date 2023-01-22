@@ -12,6 +12,8 @@ const val SEC_IN_DAY = 24 * 60 * 60
 
 const val ONE_SEC = 1_000L
 
+const val ONE_HOUR = 60 * 60 * ONE_SEC
+
 const val ONE_DAY = SEC_IN_DAY * ONE_SEC
 
 /*val nowUnixTime: TimeMs

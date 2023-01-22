@@ -36,10 +36,6 @@ object Deps {
     const val androidx_lifecycle_viewmodel_ktx =
         "androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.0-alpha03"
 
-    // Firebase
-    const val firebase_bom = "com.google.firebase:firebase-bom:28.2.1"
-    const val firebase_database_ktx = "com.google.firebase:firebase-database-ktx"
-
     // Leak canary
     const val leak_canary = "com.squareup.leakcanary:leakcanary-android:2.7"
 

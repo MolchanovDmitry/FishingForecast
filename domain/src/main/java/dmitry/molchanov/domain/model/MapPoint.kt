@@ -1,6 +1,5 @@
 package dmitry.molchanov.domain.model
 
-import dmitry.molchanov.fishingforecast.model.Profile
 import kotlinx.serialization.Serializable
 
 /**

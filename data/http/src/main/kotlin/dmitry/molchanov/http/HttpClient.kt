@@ -1,4 +1,4 @@
-package dmitry.molchanov.data
+package dmitry.molchanov.http
 
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.okhttp.OkHttp
@@ -15,6 +15,7 @@ val httpClient = HttpClient(OkHttp) {
     install(JsonFeature) {
         val jsonDecoder = kotlinx.serialization.json.Json {
             ignoreUnknownKeys = true
+            useAlternativeNames = false
         }
         serializer = KotlinxSerializer(jsonDecoder)
     }

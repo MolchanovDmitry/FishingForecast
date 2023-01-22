@@ -40,16 +40,20 @@ fun BaseDialog(
                     horizontalArrangement = Arrangement.End
                 ) {
                     Text("Отменить",
-                        modifier = Modifier.padding(8.dp).clickable {
-                            onNegative()
-                            openDialog.value = false
-                        })
+                        modifier = Modifier
+                            .padding(8.dp)
+                            .clickable {
+                                onNegative()
+                                openDialog.value = false
+                            })
                     Text(
                         "Сохранить",
-                        modifier = Modifier.padding(8.dp).clickable {
-                            onPositive()
-                            openDialog.value = false
-                        })
+                        modifier = Modifier
+                            .padding(8.dp)
+                            .clickable {
+                                onPositive()
+                                openDialog.value = false
+                            })
                 }
             }
         )

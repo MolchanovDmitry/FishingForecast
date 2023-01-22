@@ -24,7 +24,6 @@ import dmitry.molchanov.fishingforecast.android.ui.common.rememberMapViewWithLif
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 
-
 @Composable
 fun MapScreen() {
     val vm = koinViewModel<MapViewModel>()

@@ -72,27 +72,26 @@ fun ResultScreen(onResultClick: (Result) -> Unit) {
         LazyColumn(modifier = Modifier.fillMaxSize()) {
             items(items = results) { result ->
                 Row(modifier = Modifier.fillMaxWidth()) {
-                    Text(text = result.name, fontSize = 18.sp, modifier = Modifier
-                        .padding(8.dp)
-                        .clickable {
-                            onResultClick(result)
-                        }
-                    )
+                    Text(text = result.name,
+                        fontSize = 18.sp,
+                        modifier = Modifier
+                            .padding(8.dp)
+                            .clickable {
+                                onResultClick(result)
+                            })
                 }
             }
         }
 
         Column(modifier = Modifier.align(Alignment.BottomEnd)) {
-            Button(
-                modifier = Modifier.padding(4.dp),
+            Button(modifier = Modifier.padding(4.dp),
                 onClick = { vm.onAction(AddResultClickAction()) }) {
                 Text("Добавить новый результат.")
             }
             Button(modifier = Modifier.padding(4.dp), onClick = {
                 // TODO
                 if (ContextCompat.checkSelfPermission(
-                        context,
-                        WRITE_EXTERNAL_STORAGE
+                        context, WRITE_EXTERNAL_STORAGE
                     ) != PERMISSION_GRANTED
                 ) {
                     writePermissionLauncher.launch(WRITE_EXTERNAL_STORAGE)
@@ -103,8 +102,7 @@ fun ResultScreen(onResultClick: (Result) -> Unit) {
             }
             Button(modifier = Modifier.padding(4.dp), onClick = {
                 if (ContextCompat.checkSelfPermission(
-                        context,
-                        WRITE_EXTERNAL_STORAGE
+                        context, WRITE_EXTERNAL_STORAGE
                     ) != PERMISSION_GRANTED
                 ) {
                     readPermissionLauncher.launch(READ_EXTERNAL_STORAGE)

@@ -16,7 +16,7 @@ class GetMapPointsUseCase(private val mapPointRepository: MapPointRepository) {
         mapPointRepository.fetchMapPointsFlow()
             .flowOn(ioDispatcher)
 
-    suspend fun execute(): List<MapPoint> = withContext(ioDispatcher){
+    suspend fun execute(): List<MapPoint> = withContext(ioDispatcher) {
         mapPointRepository.fetchMapPoints()
     }
 }

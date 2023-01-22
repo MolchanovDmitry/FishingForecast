@@ -1,7 +1,5 @@
 package dmitry.molchanov.weather_remote
 
-import dmitry.molchanov.data.NetworkClient
-import dmitry.molchanov.data.yandexapi.entity.WeatherResponseRoot
 import dmitry.molchanov.domain.model.MapPoint
 import dmitry.molchanov.domain.model.Pressure
 import dmitry.molchanov.domain.model.RawWeatherData
@@ -9,6 +7,8 @@ import dmitry.molchanov.domain.model.Temperature
 import dmitry.molchanov.domain.model.Wind
 import dmitry.molchanov.domain.utils.ONE_SEC
 import dmitry.molchanov.fishingforecast.repository.YandexWeatherRepository
+import dmitry.molchanov.http.NetworkClient
+import dmitry.molchanov.weather_remote.entity.WeatherResponseRoot
 
 class YandexWeatherNetworkDataSourceImpl(
     private val apiKey: String,
@@ -17,8 +17,8 @@ class YandexWeatherNetworkDataSourceImpl(
     override suspend fun getYandexWeatherDate(mapPoint: MapPoint): Result<List<RawWeatherData>> {
         val result = NetworkClient.loadData<WeatherResponseRoot>(
             headers = mapOf("X-Yandex-API-Key" to apiKey),
-            url = "https://api.weather.yandex.ru/v2/informers?\n" +
-                    "lat=${mapPoint.latitude}\n" +
+            url = "https://api.weather.yandex.ru/v2/informers?" +
+                    "lat=${mapPoint.latitude}" +
                     "&lon=${mapPoint.longitude}"
         )
         return result.getOrNull()
