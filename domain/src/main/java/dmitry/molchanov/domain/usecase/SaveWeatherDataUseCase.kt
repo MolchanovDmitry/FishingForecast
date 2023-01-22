@@ -14,10 +14,10 @@ class SaveWeatherDataUseCase(
     private val yandexWeatherRepository: YandexWeatherRepository
 ) {
 
-    suspend fun execute(mapPoint: MapPoint) = withContext(ioDispatcher) {
+    suspend fun execute(mapPoint: MapPoint): Unit = withContext(ioDispatcher) {
         yandexWeatherRepository.getYandexWeatherDate(mapPoint)
-            .getOrNull()
-            ?.ifEmpty { null }
-            ?.let { weatherDataFromYandex -> weatherDataRepository.saveRawWeatherData(weatherDataFromYandex) }
+            .onSuccess { weatherDataFromYandex ->
+                weatherDataRepository.saveRawWeatherData(weatherDataFromYandex)
+            }
     }
 }

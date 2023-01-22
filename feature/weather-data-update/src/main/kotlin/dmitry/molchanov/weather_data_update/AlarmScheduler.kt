@@ -25,7 +25,7 @@ fun Context.schedule(hour: Int, minute: Int, intent: Intent) {
         this,
         1,
         intent,
-        PendingIntent.FLAG_UPDATE_CURRENT
+        PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
     )
 
     ////If the Toggle is turned on, set the repeating alarm with a 15 minute interval

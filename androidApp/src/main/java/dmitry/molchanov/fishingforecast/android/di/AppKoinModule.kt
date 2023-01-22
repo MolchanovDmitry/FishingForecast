@@ -87,6 +87,6 @@ val appKoinModule = module {
     }
 
     viewModel<DataUpdateViewModel> {
-        DataUpdateViewModel()
+        DataUpdateViewModel(weatherDataRepository = get())
     }
 }

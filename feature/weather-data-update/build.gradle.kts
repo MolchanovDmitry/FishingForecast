@@ -62,6 +62,7 @@ dependencies {
         Deps.compose_navigation,
 
         Deps.Koin.core,
+        Deps.Koin.compose,
         Deps.Koin.android,
     ).forEach(::implementation)
 }
