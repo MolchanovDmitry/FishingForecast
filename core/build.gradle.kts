@@ -44,6 +44,15 @@ dependencies {
         Deps.Ktor.okhttp,
         Deps.Ktor.serialization,
         Deps.Ktor.interceptor,
-        Deps.Koin.core
+        Deps.Koin.core,
+        Deps.compose_activity,
+        Deps.compose_ui,
+        Deps.compose_ui_tooling,
+        Deps.compose_foundation,
+        Deps.compose_material,
+        Deps.compose_icons_core,
+        Deps.compose_icons_extended,
+        Deps.compose_view_model,
+        Deps.compose_navigation,
     ).forEach(::api)
 }

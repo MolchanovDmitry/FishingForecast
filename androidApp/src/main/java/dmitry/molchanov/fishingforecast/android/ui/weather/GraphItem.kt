@@ -10,13 +10,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.madrapps.plot.line.DataPoint
-import com.madrapps.plot.line.LineGraph
-import com.madrapps.plot.line.LinePlot
 import dmitry.molchanov.domain.model.DeltaForecastMark
 import dmitry.molchanov.domain.model.ForecastMark
 import dmitry.molchanov.domain.model.MaxValueForecastMark
 import dmitry.molchanov.domain.model.MinValueForecastMark
+import dmitry.molchanov.graph.line.DataPoint
+import dmitry.molchanov.graph.line.LineGraph
+import dmitry.molchanov.graph.line.LinePlot
 
 @Preview
 @Composable
@@ -72,6 +72,7 @@ fun GraphItem(
                     LinePlot.Line(
                         dataPoints = dataPoints,
                         connection = LinePlot.Connection(Color.Blue, 3.dp),
+
                         intersection = LinePlot.Intersection(Color.Green, 6.dp) { center, point ->
                             if (point.y > maxY || point.y < minY) {
                                 drawCircle(Color.Red, 6.dp.toPx(), center)
@@ -80,7 +81,9 @@ fun GraphItem(
                             }
                         },
                     ),
-                ), LinePlot.Grid(Color.Gray), paddingRight = 16.dp
+                ),
+                LinePlot.Grid(Color.LightGray),
+                paddingRight = 16.dp,
             ), modifier = Modifier
                 .fillMaxWidth()
                 .height(200.dp)

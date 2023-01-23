@@ -83,10 +83,6 @@ object Deps {
         const val compose = "io.insert-koin:koin-androidx-compose:3.4.1"
     }
 
-
-    // Graphics
-    const val plot = "com.github.madrapps:plot:0.1.1"
-
     // Sql
     object Sqldelight {
         private const val sqlDelightVersion = "1.5.4"

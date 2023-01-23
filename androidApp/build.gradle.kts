@@ -49,12 +49,14 @@ android {
 
 dependencies {
     listOf(
+        project(Modules.CORE),
         project(Modules.DOMAIN),
         project(Modules.DB),
         project(Modules.WEATHER_DATA_UPDATE),
         project(Modules.PROFILE),
         project(Modules.PREFERENCE),
         project(Modules.WEATHER_REMOTE),
+        project(Modules.GRAPH),
 
         Deps.material,
         Deps.androidx_appcompat,
@@ -67,17 +69,6 @@ dependencies {
         Deps.maps_utils,
         Deps.maps_ktx,
 
-        Deps.compose_activity,
-        Deps.compose_ui,
-        Deps.compose_ui_tooling,
-        Deps.compose_foundation,
-        Deps.compose_material,
-        Deps.compose_icons_core,
-        Deps.compose_icons_extended,
-        Deps.compose_view_model,
-        Deps.compose_navigation,
-
-        Deps.plot,
         Deps.Koin.core,
         Deps.Koin.compose,
         Deps.maps_compose,
