@@ -6,8 +6,8 @@ import dmitry.molchanov.domain.model.MapPoint
 import dmitry.molchanov.domain.model.WeatherData
 import dmitry.molchanov.domain.repository.WeatherDataRepository
 import dmitry.molchanov.domain.usecase.SaveWeatherDataUseCase
-import dmitry.molchanov.domain.utils.ONE_DAY
-import dmitry.molchanov.domain.utils.ONE_HOUR
+import dmitry.molchanov.domain.utils.getDayCount
+import dmitry.molchanov.domain.utils.getMonthCount
 import dmitry.molchanov.weather_data_update.UpdateStatus.ERROR
 import dmitry.molchanov.weather_data_update.UpdateStatus.NO_UPDATE_REQUIRED
 import dmitry.molchanov.weather_data_update.UpdateStatus.UPDATE_IN_PROGRESS
@@ -84,7 +84,8 @@ class DataUpdateViewModel(
     }
 
     private fun shouldUpdate(date: Long): Boolean {
-        return System.currentTimeMillis() - date >= ONE_DAY - ONE_HOUR
+        return System.currentTimeMillis().getDayCount() != date.getDayCount() &&
+                System.currentTimeMillis().getMonthCount() != date.getMonthCount()
     }
 }
 
