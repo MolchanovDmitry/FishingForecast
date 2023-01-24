@@ -24,10 +24,7 @@ import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 
 @Composable
-fun WeatherScreen(
-    mapPointId: MapPoint,
-    forecastSettings: List<ForecastSetting>
-) {
+fun WeatherScreen(mapPointId: MapPoint, forecastSettings: List<ForecastSetting>) {
     val weatherViewModel = koinViewModel<WeatherStatisticViewModel> { parametersOf(mapPointId) }
     val state = weatherViewModel.stateFlow.collectAsState()
     val weatherData = state.value.weatherData
@@ -59,46 +56,52 @@ fun WeatherScreen(
             it.temperature?.avg?.let { value ->
                 it.getDataPointByValue(value, shouldMonthInclude = !isOnlyOneDigitDays)
             }
-        }.ifEmpty { null }
-            ?.let { avgTemperature ->
-                GraphItem(
-                    title = stringResource(R.string.temperature_avg),
-                    dataPoints = avgTemperature
-                )
-            }
+        }.ifEmpty { null }?.let { avgTemperature ->
+            GraphItem(
+                title = stringResource(R.string.temperature_avg),
+                dataPoints = avgTemperature,
+                forecastMars = forecastSettings.find { it.forecastSettingsItem == ForecastSettingsItem.TEMPERATURE_AVG }?.forecastMarks
+            )
+        }
         forecasts.GetItemForecast(ForecastSettingsItem.TEMPERATURE_AVG)
 
         weatherData.mapNotNull {
-            it.temperature?.water?.let{ value ->
+            it.temperature?.water?.let { value ->
                 it.getDataPointByValue(value, shouldMonthInclude = !isOnlyOneDigitDays)
             }
-        }.ifEmpty { null }
-            ?.let { waterTemperature ->
-                GraphItem(
-                    title = stringResource(R.string.temperature_water),
-                    dataPoints = waterTemperature
-                )
-            }
+        }.ifEmpty { null }?.let { waterTemperature ->
+            GraphItem(
+                title = stringResource(R.string.temperature_water),
+                dataPoints = waterTemperature,
+                forecastMars = forecastSettings.find { it.forecastSettingsItem == ForecastSettingsItem.TEMPERATURE_WATER }?.forecastMarks
+            )
+        }
         forecasts.GetItemForecast(ForecastSettingsItem.TEMPERATURE_WATER)
 
         weatherData.mapNotNull {
-            it.pressure?.mm?.let{ value ->
+            it.pressure?.mm?.let { value ->
                 it.getDataPointByValue(value, shouldMonthInclude = !isOnlyOneDigitDays)
             }
-        }.ifEmpty { null }
-            ?.let { pressure ->
-                GraphItem(title = stringResource(R.string.pressure_mm), dataPoints = pressure)
-            }
+        }.ifEmpty { null }?.let { pressure ->
+            GraphItem(
+                title = stringResource(R.string.pressure_mm),
+                dataPoints = pressure,
+                forecastMars = forecastSettings.find { it.forecastSettingsItem == ForecastSettingsItem.PRESSURE_MM }?.forecastMarks
+            )
+        }
         forecasts.GetItemForecast(ForecastSettingsItem.PRESSURE_MM)
 
         weatherData.mapNotNull {
-            it.humidity?.let{ value ->
+            it.humidity?.let { value ->
                 it.getDataPointByValue(value, shouldMonthInclude = !isOnlyOneDigitDays)
             }
-        }.ifEmpty { null }
-            ?.let { humidity ->
-                GraphItem(title = stringResource(R.string.humidity), dataPoints = humidity)
-            }
+        }.ifEmpty { null }?.let { humidity ->
+            GraphItem(
+                title = stringResource(R.string.humidity),
+                dataPoints = humidity,
+                forecastMars = forecastSettings.find { it.forecastSettingsItem == ForecastSettingsItem.HUMIDITY }?.forecastMarks
+            )
+        }
         forecasts.GetItemForecast(ForecastSettingsItem.HUMIDITY)
     }
 }
