@@ -47,7 +47,6 @@ fun DataUpdateScreen() {
     val context = LocalContext.current
     val vm = koinViewModel<DataUpdateViewModel>()
     val state = vm.weatherDataStateFlow.collectAsState()
-    println("1488 state = ${state.value}")
     val formatter = remember {
         SimpleDateFormat("yyyy-MM-dd hh:mm:ss", Locale.getDefault())
     }
@@ -137,13 +136,10 @@ private fun RowScope.StatusCell(status: UpdateStatus, weight: Float) {
 
 @Composable
 private fun getStringStatus(status: UpdateStatus): String {
-    println("1488 status = ${status}")
     return when (status) {
         NO_UPDATE_REQUIRED -> stringResource(R.string.no_update_required)
         UPDATE_IN_PROGRESS -> stringResource(R.string.update_in_progress)
         UPDATED -> stringResource(R.string.updated)
         ERROR -> stringResource(R.string.update_error)
-    }.also {
-        println("1488 return value = ${it}")
     }
 }

@@ -12,5 +12,6 @@ object Modules {
     const val WEATHER_REMOTE = "$DATA:weather-remote"
     const val WEATHER_DATA_UPDATE = "$FEATURE:weather-data-update"
     const val PROFILE = "$DATA$REPOSITORY:profile"
+    const val GRAPH = "$FEATURE:graph"
 
 }

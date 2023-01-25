@@ -48,6 +48,20 @@ fun TimeMs.getDayCount(): Int {
     return datetimeInUtc.dayOfMonth
 }
 
+fun TimeMs.getMonthCount(): Int {
+    val nowMilliSec = Instant.fromEpochMilliseconds(this)
+    val datetimeInUtc: LocalDateTime = nowMilliSec.toLocalDateTime(TimeZone.currentSystemDefault())
+    return datetimeInUtc.monthNumber
+}
+
+fun TimeMs.getMonthDayCount(): Float {
+    val nowMilliSec = Instant.fromEpochMilliseconds(this)
+    val datetimeInUtc: LocalDateTime = nowMilliSec.toLocalDateTime(TimeZone.currentSystemDefault())
+    val day = datetimeInUtc.dayOfMonth
+    val month = datetimeInUtc.monthNumber
+    return month + day / 100F
+}
+
 /**
  * Получить время округленное значением [dayPart].
  */
