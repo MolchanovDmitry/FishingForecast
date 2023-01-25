@@ -90,7 +90,7 @@ fun GraphItem(
                                 dataPoints = it,
                                 connection = null,
                                 intersection = null,
-                                areaUnderLine = LinePlot.AreaUnderLine(Color.White, alpha = 1f)
+                                areaUnderLine = LinePlot.AreaUnderLine(Color.White)
                             )
                         },
                         getMaxBorderPoints(dataPoints, forecastMars)?.let {
@@ -110,11 +110,7 @@ fun GraphItem(
                         LinePlot.Line(
                             dataPoints = dataPoints,
                             connection = LinePlot.Connection(Color.Blue, 3.dp),
-
-                            intersection = LinePlot.Intersection(
-                                Color.Green,
-                                6.dp,
-                            ) { center, point ->
+                            intersection = LinePlot.Intersection(Color.Green) { center, point ->
                                 if (point.y > maxY || point.y < minY) {
                                     drawCircle(Color.Red, 6.dp.toPx(), center)
                                 } else {
@@ -123,7 +119,7 @@ fun GraphItem(
                             },
                         ),
                     ),
-                    LinePlot.Grid(Color.LightGray),
+                    grid = LinePlot.Grid(Color.LightGray),
                     paddingRight = 16.dp,
                 ),
                 onSelectionStart = { visibility.value = true },

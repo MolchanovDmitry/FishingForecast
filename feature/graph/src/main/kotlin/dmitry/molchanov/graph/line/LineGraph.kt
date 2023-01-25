@@ -138,13 +138,6 @@ fun LineGraph(
                     } else 0f
 
                     val dragLocks = mutableMapOf<LinePlot.Line, Pair<DataPoint, Offset>>()
-
-                    // Draw Grid lines
-                    val top = yBottom - ((yMax - yMin) * yOffset)
-                    val region =
-                        Rect(xLeft, top, size.width - paddingRight.toPx(), yBottom)
-                    plot.grid?.draw?.invoke(this, region, xOffset * (1 / xUnit), yOffset)
-
                     // Draw Lines and Points and AreaUnderLine
                     lines.forEach { line ->
                         val intersection = line.intersection
@@ -171,6 +164,12 @@ fun LineGraph(
                             p.lineTo(first.x, yBottom)
                             areaUnderLine.draw(this, p)
                         }
+
+                        // Draw Grid lines
+                        val top = yBottom - ((yMax - yMin) * yOffset)
+                        val region =
+                            Rect(xLeft, top, size.width - paddingRight.toPx(), yBottom)
+                        plot.grid?.draw?.invoke(this, region, xOffset * (1 / xUnit), yOffset)
 
                         // Draw Lines and Points
                         var curOffset: Offset? = null
