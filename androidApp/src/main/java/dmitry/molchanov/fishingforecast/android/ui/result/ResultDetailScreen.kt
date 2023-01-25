@@ -15,6 +15,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Divider
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -50,11 +51,13 @@ fun ResultDetailScreen(
         val point = LatLng(result.mapPoint.latitude, result.mapPoint.longitude)
         position = CameraPosition.fromLatLngZoom(point, 12f)
     }
-    val sortedWeatherData = remember {
-        val sorted = weatherData.sortedBy { it.date }
-        sorted.lastOrNull()?.let { vm.onAction(OnDateSelected(it.date)) }
-        sorted
+    val sortedWeatherData = state.value.weatherData.sortedBy { it.date }
+    if (sortedWeatherData.isNotEmpty()) {
+        LaunchedEffect(Unit) {
+            sortedWeatherData.lastOrNull()?.let { vm.onAction(OnDateSelected(it.date)) }
+        }
     }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -163,7 +166,7 @@ private fun ResultDetailItemRow(title: String, value: String, showDivider: Boole
     }
     if (showDivider) {
         Divider(
-            color = Color.Gray, thickness = 1.dp, modifier = Modifier.padding(horizontal = 16.dp)
+            color = Color.LightGray, thickness = 1.dp, modifier = Modifier.padding(horizontal = 16.dp)
         )
     }
 }
