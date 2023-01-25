@@ -22,6 +22,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.google.android.gms.maps.model.CameraPosition
@@ -29,21 +30,17 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.rememberCameraPositionState
+import dmitry.molchanov.domain.model.Result
 import dmitry.molchanov.domain.model.WeatherData
 import dmitry.molchanov.domain.utils.getDayCount
+import dmitry.molchanov.fishingforecast.android.R
 import dmitry.molchanov.fishingforecast.android.ui.preview.previewResult
-import dmitry.molchanov.fishingforecast.model.Result
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 
-private const val UNKNOWN = "Нет данных"
-
 @Preview
 @Composable
-fun ResultDetailScreen(
-    result: Result = previewResult,
-    // weatherData: List<WeatherData> = previewWeatherData,
-) {
+fun ResultDetailScreen(result: Result = previewResult) {
     val vm = koinViewModel<ResultDetailViewModel> { parametersOf(result) }
     val state = vm.stateFlow.collectAsState()
     val weatherData = state.value.weatherData
@@ -102,9 +99,8 @@ fun ResultDetailScreen(
                 }
             }
         }
-        weatherData.firstOrNull {
-            it.date == state.value.selectedDate
-        }?.let { selectedWeatherDataItem -> ResultDetailColumn(selectedWeatherDataItem) }
+        weatherData.find { it.date == state.value.selectedDate }
+            ?.let { selectedWeatherDataItem -> ResultDetailColumn(selectedWeatherDataItem) }
     }
 }
 
@@ -114,43 +110,38 @@ private fun ResultDetailColumn(weatherDateItem: WeatherData) {
         remember { SimpleDateFormat("dd MMMM yyyy", java.util.Locale.getDefault()) }
     val dataStr = simpleDateFormat.format(weatherDateItem.date)
 
-    ResultDetailItemRow(title = "Дата", value = dataStr)
+    ResultDetailItemRow(title = stringResource(R.string.date), value = dataStr)
 
-    ResultDetailItemRow(
-        title = "Средняя температура окружающей среды",
-        value = weatherDateItem.temperature?.avg?.toString() ?: UNKNOWN
-    )
-    ResultDetailItemRow(
-        title = "Минимальная температура окражающей среды",
-        value = weatherDateItem.temperature?.min?.toString() ?: UNKNOWN
-    )
-    ResultDetailItemRow(
-        title = "Максимальная температура окружающей среды",
-        value = weatherDateItem.temperature?.max?.toString() ?: UNKNOWN
-    )
-    ResultDetailItemRow(
-        title = "Температура воды",
-        value = weatherDateItem.temperature?.water?.toString() ?: UNKNOWN
-    )
-    ResultDetailItemRow(
-        title = "Влажность", value = weatherDateItem.humidity?.toString() ?: UNKNOWN
-    )
-    ResultDetailItemRow(
-        title = "Давление в мм ртутного столба",
-        value = weatherDateItem.pressure?.mm?.toString() ?: UNKNOWN
-    )
-    ResultDetailItemRow(
-        title = "Давление в паскалях", value = weatherDateItem.pressure?.pa?.toString() ?: UNKNOWN
-    )
-    ResultDetailItemRow(
-        title = "Направление ветра", value = weatherDateItem.wind?.dir ?: UNKNOWN
-    )
-    ResultDetailItemRow(
-        title = "Порыв ветра", value = weatherDateItem.wind?.gust?.toString() ?: UNKNOWN
-    )
-    ResultDetailItemRow(
-        title = "Скорость ветра", value = weatherDateItem.wind?.speed?.toString() ?: UNKNOWN
-    )
+    weatherDateItem.temperature?.avg?.toString()?.let { tempAvgValue ->
+        ResultDetailItemRow(stringResource(R.string.value_temp_avg), tempAvgValue)
+    }
+    weatherDateItem.temperature?.min?.toString()?.let { tempMinValue ->
+        ResultDetailItemRow(stringResource(R.string.value_temp_min), tempMinValue)
+    }
+    weatherDateItem.temperature?.max?.toString()?.let { temMaxValue ->
+        ResultDetailItemRow(stringResource(R.string.value_temp_max), temMaxValue)
+    }
+    weatherDateItem.temperature?.water?.toString()?.let { tempWaterValue ->
+        ResultDetailItemRow(stringResource(R.string.value_temp_water), tempWaterValue)
+    }
+    weatherDateItem.humidity?.toString()?.let { humidity ->
+        ResultDetailItemRow(stringResource(R.string.value_humidity), humidity)
+    }
+    weatherDateItem.pressure?.mm?.toString()?.let { pressureMm ->
+        ResultDetailItemRow(stringResource(R.string.value_pres_mm), pressureMm)
+    }
+    weatherDateItem.pressure?.pa?.toString()?.let { pa ->
+        ResultDetailItemRow(stringResource(R.string.value_pres_pa), pa)
+    }
+    weatherDateItem.wind?.dir?.let { dir ->
+        ResultDetailItemRow(stringResource(R.string.value_wind_dir), dir)
+    }
+    weatherDateItem.wind?.gust?.toString()?.let { gust ->
+        ResultDetailItemRow(stringResource(R.string.value_wind_gust), gust)
+    }
+    weatherDateItem.wind?.speed?.toString()?.let { speed ->
+        ResultDetailItemRow(stringResource(R.string.value_wind_speed), speed, showDivider = false)
+    }
 }
 
 @Composable
@@ -166,7 +157,9 @@ private fun ResultDetailItemRow(title: String, value: String, showDivider: Boole
     }
     if (showDivider) {
         Divider(
-            color = Color.LightGray, thickness = 1.dp, modifier = Modifier.padding(horizontal = 16.dp)
+            color = Color.LightGray,
+            thickness = 1.dp,
+            modifier = Modifier.padding(horizontal = 16.dp)
         )
     }
 }

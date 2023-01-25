@@ -4,9 +4,9 @@ import dmitry.molchanov.db.MapPoint as DataMapPoint
 import dmitry.molchanov.domain.model.MapPoint as DomainMapPoint
 import com.squareup.sqldelight.runtime.coroutines.asFlow
 import com.squareup.sqldelight.runtime.coroutines.mapToList
+import dmitry.molchanov.domain.mapper.ProfileMapper
 import dmitry.molchanov.domain.model.SimpleProfile
 import dmitry.molchanov.domain.repository.MapPointRepository
-import dmitry.molchanov.fishingforecast.mapper.ProfileMapper
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 

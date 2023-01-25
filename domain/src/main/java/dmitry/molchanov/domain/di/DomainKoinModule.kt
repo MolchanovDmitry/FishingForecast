@@ -1,26 +1,26 @@
 package dmitry.molchanov.domain.di
 
 import dmitry.molchanov.domain.mapper.MapPointMapper
+import dmitry.molchanov.domain.mapper.ProfileMapper
 import dmitry.molchanov.domain.usecase.DeleteForecastSettingUseCase
 import dmitry.molchanov.domain.usecase.DeleteProfileUseCase
 import dmitry.molchanov.domain.usecase.GetCurrentProfileUseCase
 import dmitry.molchanov.domain.usecase.GetForecastSettingMarksUseCase
 import dmitry.molchanov.domain.usecase.GetForecastUseCase
+import dmitry.molchanov.domain.usecase.GetMapPointByIdUseCase
+import dmitry.molchanov.domain.usecase.GetMapPointsUseCase
 import dmitry.molchanov.domain.usecase.GetProfileForecastSettingsUseCase
 import dmitry.molchanov.domain.usecase.GetProfilesUseCase
+import dmitry.molchanov.domain.usecase.GetResultsUseCase
 import dmitry.molchanov.domain.usecase.GetSavedWeatherDataUseCase
+import dmitry.molchanov.domain.usecase.GetWeatherDataByResultUseCase
 import dmitry.molchanov.domain.usecase.ImportSharedResultUseCase
 import dmitry.molchanov.domain.usecase.SaveForecastSettingMarkUseCase
 import dmitry.molchanov.domain.usecase.SaveMapPointUseCase
 import dmitry.molchanov.domain.usecase.SaveProfileUseCase
+import dmitry.molchanov.domain.usecase.SaveResultUseCase
 import dmitry.molchanov.domain.usecase.SaveWeatherDataUseCase
 import dmitry.molchanov.domain.usecase.SelectProfileUseCase
-import dmitry.molchanov.fishingforecast.mapper.ProfileMapper
-import dmitry.molchanov.fishingforecast.usecase.GetMapPointByIdUseCase
-import dmitry.molchanov.fishingforecast.usecase.GetMapPointsUseCase
-import dmitry.molchanov.fishingforecast.usecase.GetResultsUseCase
-import dmitry.molchanov.fishingforecast.usecase.GetWeatherDataByResultUseCase
-import dmitry.molchanov.fishingforecast.usecase.SaveResultUseCase
 import org.koin.dsl.module
 
 val domainKoinModule = module {

@@ -5,8 +5,8 @@ import dmitry.molchanov.domain.model.Pressure
 import dmitry.molchanov.domain.model.RawWeatherData
 import dmitry.molchanov.domain.model.Temperature
 import dmitry.molchanov.domain.model.Wind
+import dmitry.molchanov.domain.repository.YandexWeatherRepository
 import dmitry.molchanov.domain.utils.ONE_SEC
-import dmitry.molchanov.fishingforecast.repository.YandexWeatherRepository
 import dmitry.molchanov.http.NetworkClient
 import dmitry.molchanov.weather_remote.entity.WeatherResponseRoot
 

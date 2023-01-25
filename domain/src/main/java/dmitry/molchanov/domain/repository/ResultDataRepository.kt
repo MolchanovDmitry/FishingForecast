@@ -1,8 +1,8 @@
 package dmitry.molchanov.domain.repository
 
 import dmitry.molchanov.domain.model.MapPoint
+import dmitry.molchanov.domain.model.Result
 import dmitry.molchanov.domain.model.SimpleProfile
-import dmitry.molchanov.fishingforecast.model.Result
 import kotlinx.coroutines.flow.Flow
 
 interface ResultDataRepository {

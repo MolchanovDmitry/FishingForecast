@@ -1,9 +1,9 @@
 package dmitry.molchanov.domain.usecase
 
+import dmitry.molchanov.domain.ioDispatcher
 import dmitry.molchanov.domain.model.MapPoint
 import dmitry.molchanov.domain.repository.WeatherDataRepository
-import dmitry.molchanov.fishingforecast.repository.YandexWeatherRepository
-import dmitry.molchanov.fishingforecast.utils.ioDispatcher
+import dmitry.molchanov.domain.repository.YandexWeatherRepository
 import kotlinx.coroutines.withContext
 
 /**

@@ -1,10 +1,10 @@
 package dmitry.molchanov.domain.usecase
 
+import dmitry.molchanov.domain.ioDispatcher
 import dmitry.molchanov.domain.model.MapPoint
 import dmitry.molchanov.domain.model.WeatherData
 import dmitry.molchanov.domain.repository.WeatherDataRepository
 import dmitry.molchanov.domain.utils.TimeMs
-import dmitry.molchanov.fishingforecast.utils.ioDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
 

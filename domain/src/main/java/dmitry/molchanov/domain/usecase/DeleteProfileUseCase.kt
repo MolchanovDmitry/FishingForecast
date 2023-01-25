@@ -1,8 +1,8 @@
 package dmitry.molchanov.domain.usecase
 
+import dmitry.molchanov.domain.ioDispatcher
 import dmitry.molchanov.domain.model.Profile
 import dmitry.molchanov.domain.repository.ProfileRepository
-import dmitry.molchanov.fishingforecast.utils.ioDispatcher
 import kotlinx.coroutines.withContext
 
 /**

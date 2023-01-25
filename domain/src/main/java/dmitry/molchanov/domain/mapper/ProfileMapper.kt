@@ -1,4 +1,4 @@
-package dmitry.molchanov.fishingforecast.mapper
+package dmitry.molchanov.domain.mapper
 
 import dmitry.molchanov.domain.model.SimpleProfile
 

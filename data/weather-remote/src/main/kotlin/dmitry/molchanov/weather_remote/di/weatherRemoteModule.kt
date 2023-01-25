@@ -1,6 +1,6 @@
 package dmitry.molchanov.weather_remote.di
 
-import dmitry.molchanov.fishingforecast.repository.YandexWeatherRepository
+import dmitry.molchanov.domain.repository.YandexWeatherRepository
 import dmitry.molchanov.weather_remote.YandexWeatherNetworkDataSourceImpl
 import org.koin.dsl.module
 

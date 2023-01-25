@@ -1,6 +1,4 @@
-package dmitry.molchanov.fishingforecast.model
-
-import dmitry.molchanov.domain.model.ForecastSettingsItem
+package dmitry.molchanov.domain.model
 
 /**
  * Результат прогноза.
