@@ -1,7 +1,7 @@
 package dmitry.molchanov.fishingforecast.android.notifier
 
+import dmitry.molchanov.domain.usecase.GetMapPointsUseCase
 import dmitry.molchanov.domain.usecase.SaveWeatherDataUseCase
-import dmitry.molchanov.fishingforecast.usecase.GetMapPointsUseCase
 
 /**
  * TODO актуализировать

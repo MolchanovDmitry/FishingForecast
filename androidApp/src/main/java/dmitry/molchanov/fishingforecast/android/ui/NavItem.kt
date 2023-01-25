@@ -9,7 +9,7 @@ import androidx.compose.material.icons.filled.ThumbUp
 import androidx.compose.ui.graphics.vector.ImageVector
 import dmitry.molchanov.domain.mapper.string
 import dmitry.molchanov.domain.model.MapPoint
-import dmitry.molchanov.fishingforecast.model.Result
+import dmitry.molchanov.domain.model.Result
 
 enum class NavItem(val label: String, val icon: ImageVector, val destination: Screen) {
     MAP(label = "Карта", icon = Icons.Filled.Map, destination = Screen.Map),

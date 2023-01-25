@@ -3,6 +3,7 @@ package dmitry.molchanov.fishingforecast.android
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dmitry.molchanov.domain.model.ExactValueForecastMark
+import dmitry.molchanov.domain.model.Forecast
 import dmitry.molchanov.domain.model.ForecastSetting
 import dmitry.molchanov.domain.model.ForecastSettingsItem
 import dmitry.molchanov.domain.model.MapPoint
@@ -13,7 +14,6 @@ import dmitry.molchanov.domain.usecase.GetForecastSettingMarksUseCase
 import dmitry.molchanov.domain.usecase.GetForecastUseCase
 import dmitry.molchanov.domain.usecase.GetProfilesUseCase
 import dmitry.molchanov.domain.utils.ONE_SEC
-import dmitry.molchanov.fishingforecast.model.Forecast
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
