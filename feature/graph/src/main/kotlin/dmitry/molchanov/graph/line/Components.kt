@@ -32,7 +32,7 @@ import java.text.DecimalFormat
  * @param x the x coordinate or the number in the x axis
  * @param y the y coordinate or the number in the y axis
  */
-data class DataPoint(val x: Float, val y: Float, val xName: String? = "q")
+data class DataPoint(val x: Float, val y: Float)
 
 /**
  * The configuration for the [LineGraph]

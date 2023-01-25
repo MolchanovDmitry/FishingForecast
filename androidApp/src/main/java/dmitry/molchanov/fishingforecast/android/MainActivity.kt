@@ -18,7 +18,7 @@ class MainActivity : AppCompatActivity() {
             MainScreen(vm)
         }
         schedule(
-            hour = 13,
+            hour = 11,
             minute = 0,
             intent = Intent(this, AlarmReceiver::class.java)
         )

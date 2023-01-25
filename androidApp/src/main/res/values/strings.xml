@@ -15,6 +15,8 @@
     <string name="temperature_water">Теспература воды</string>
     <string name="humidity">Влажность</string>
 
+    <string name="point_hint">Число: %1$s, значение: %2$s</string>
+
     <string name="notification_update_weather_data">Обновить погодные данные</string>
     <string name="notification_update_weather_data_description">Нажмите на уведомление, чтобы перейти к экрану обновления погодных данных.</string>
 </resources>

@@ -26,6 +26,7 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.Dp
@@ -36,6 +37,7 @@ import dmitry.molchanov.domain.model.DeltaForecastMark
 import dmitry.molchanov.domain.model.ForecastMark
 import dmitry.molchanov.domain.model.MaxValueForecastMark
 import dmitry.molchanov.domain.model.MinValueForecastMark
+import dmitry.molchanov.fishingforecast.android.R
 import dmitry.molchanov.graph.line.DataPoint
 import dmitry.molchanov.graph.line.LineGraph
 import dmitry.molchanov.graph.line.LinePlot
@@ -70,10 +72,7 @@ fun GraphItem(
         .onSizeChanged {
             parentSize = it
         }) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-        ) {
+        Column(modifier = Modifier.fillMaxWidth()) {
             Text(text = title, modifier = Modifier.align(Alignment.CenterHorizontally))
             LineGraph(
                 plot = LinePlot(
@@ -114,12 +113,12 @@ fun GraphItem(
 
                             intersection = LinePlot.Intersection(
                                 Color.Green,
-                                6.dp
+                                6.dp,
                             ) { center, point ->
                                 if (point.y > maxY || point.y < minY) {
                                     drawCircle(Color.Red, 6.dp.toPx(), center)
                                 } else {
-                                    drawCircle(Color.Green, 5.dp.toPx(), center)
+                                    drawCircle(Color.Green, 6.dp.toPx(), center)
                                 }
                             },
                         ),
@@ -156,18 +155,17 @@ fun GraphItem(
                     shape = RoundRectangle,
                     color = Color.Gray
                 ) {
-                    Column(
-                        Modifier
-                            .padding(horizontal = 8.dp)
-                    ) {
-                        val value = points.value
-                        if (value.isNotEmpty()) {
-                            val format = DecimalFormat("#.##")
-                            val x = format.format(value[0].x)
-                            val y = format.format(value[0].y)
+                    Column(Modifier.padding(horizontal = 8.dp)) {
+                        val firstPoint = points.value.firstOrNull()
+                        val xValue = firstPoint?.x
+                        val yValue = dataPoints.find { it.x == xValue }?.y
+                        if (xValue != null && yValue != null) {
+                            val format = remember { DecimalFormat("#.##") }
+                            val x = format.format(xValue)
+                            val y = format.format(yValue)
                             Text(
                                 modifier = Modifier.padding(vertical = 8.dp),
-                                text = "Число: $x, значение: $y",
+                                text = stringResource(id = R.string.point_hint, x, y),
                                 style = MaterialTheme.typography.subtitle1,
                                 color = Color.White
                             )
@@ -175,7 +173,6 @@ fun GraphItem(
                     }
                 }
             }
-
         }
     }
 }
