@@ -1,4 +1,4 @@
-package dmitry.molchanov.data.yandexapi.entity
+package dmitry.molchanov.weather_remote.entity
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
