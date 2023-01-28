@@ -32,6 +32,7 @@ import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.rememberCameraPositionState
 import dmitry.molchanov.domain.model.Result
 import dmitry.molchanov.domain.model.WeatherData
+import dmitry.molchanov.domain.model.WindDir
 import dmitry.molchanov.domain.utils.getDayCount
 import dmitry.molchanov.fishingforecast.android.R
 import dmitry.molchanov.fishingforecast.android.ui.preview.previewResult
@@ -134,7 +135,17 @@ private fun ResultDetailColumn(weatherDateItem: WeatherData) {
         ResultDetailItemRow(stringResource(R.string.value_pres_pa), pa)
     }
     weatherDateItem.wind?.dir?.let { dir ->
-        ResultDetailItemRow(stringResource(R.string.value_wind_dir), dir.value) // TODO направление ветрка
+        ResultDetailItemRow(stringResource(R.string.value_wind_dir), when (dir) {
+            WindDir.NW -> R.string.wind_dir_nw
+            WindDir.N -> R.string.wind_dir_n
+            WindDir.NE -> R.string.wind_dir_ne
+            WindDir.E -> R.string.wind_dir_e
+            WindDir.SE -> R.string.wind_dir_se
+            WindDir.S -> R.string.wind_dir_s
+            WindDir.SW -> R.string.wind_dir_sw
+            WindDir.W -> R.string.wind_dir_w
+            WindDir.C -> R.string.wind_dir_c
+        }.let { strId -> stringResource(strId) })
     }
     weatherDateItem.wind?.gust?.toString()?.let { gust ->
         ResultDetailItemRow(stringResource(R.string.value_wind_gust), gust)
