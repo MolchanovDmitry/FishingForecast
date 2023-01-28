@@ -46,6 +46,7 @@ class YandexWeatherNetworkDataSourceImpl(
                 speed = fact.windSpeed,
             ),
             humidity = fact.humidity,
+            moonCode = fact.moonCode
         )
         return listOf(factData) // TODO добавить промежуточных значений.
     }

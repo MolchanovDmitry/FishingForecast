@@ -10,6 +10,7 @@ CREATE TABLE WeatherData(
     pressureMm REAL,
     pressurePa REAL,
     humidity REAL,
+    moonCode INTEGER,
     UNIQUE (mapPointId, date),
     FOREIGN KEY(mapPointId) REFERENCES MapPoint(id)
 )
@@ -28,6 +29,6 @@ WHERE id IN ?
 
 insert:
 INSERT OR REPLACE INTO WeatherData(mapPointId, date, tempAvg, tempWater, windSpeed, windGust, windDir,
-pressureMm, pressurePa, humidity)
-VALUES (?,?,?,?,?,?,?,?,?,?)
+pressureMm, pressurePa, humidity, moonCode)
+VALUES (?,?,?,?,?,?,?,?,?,?,?)
 ;

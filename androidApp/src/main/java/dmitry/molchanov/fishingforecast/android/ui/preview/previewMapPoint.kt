@@ -32,7 +32,8 @@ val previewWeatherData = listOf<WeatherData>(
         pressure = Pressure(mm = 120F, pa = 130f),
         temperature = Temperature(min = 10F, avg = 20F, max = 30F, water = 20F),
         wind = Wind(speed = 1F, gust = 2F, dir = WindDir.W),
-        humidity = 10F
+        humidity = 10F,
+        moonCode = 0
     ),
     WeatherData(
         id = 1,
@@ -41,6 +42,7 @@ val previewWeatherData = listOf<WeatherData>(
         pressure = Pressure(mm = 100F, pa = 110f),
         temperature = Temperature(min = 11F, avg = 21F, max = 31F, water = 21F),
         wind = Wind(speed = 2F, gust = 3F, dir = WindDir.W),
-        humidity = 4F
+        humidity = 4F,
+        moonCode = 0
     )
 )

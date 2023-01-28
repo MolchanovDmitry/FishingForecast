@@ -42,4 +42,13 @@
     <string name="wind_dir_c">Штиль</string>
     <string name="wind_dir_title">Направление ветра</string>
     <string name="wind_dir_no_data">Нет данных</string>
+
+    <string name="moon_full">Полнолуние</string>
+    <string name="moon_waning">Убывающая луна</string>
+    <string name="moon_last_quarter">Последняя четверть</string>
+    <string name="moon_new">Новолуние</string>
+    <string name="moon_waxing_crescent">Растущая луна</string>
+    <string name="moon_first_quarter">Первая четверть</string>
+    <string name="moon_unknown">Неизвестное значение</string>
+    <string name="moon_phase_title">Фаза луны</string>
 </resources>

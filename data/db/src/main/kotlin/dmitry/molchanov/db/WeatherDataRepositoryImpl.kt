@@ -59,7 +59,8 @@ class WeatherDataRepositoryImpl(
                     windDir = weatherDataItem.wind?.dir?.value,
                     pressureMm = weatherDataItem.pressure?.mm?.toDouble(),
                     pressurePa = weatherDataItem.pressure?.pa?.toDouble(),
-                    humidity = weatherDataItem.humidity?.toDouble()
+                    humidity = weatherDataItem.humidity?.toDouble(),
+                    moonCode = weatherDataItem.moonCode?.toLong()
                 )
             }
     }
@@ -77,7 +78,8 @@ class WeatherDataRepositoryImpl(
                     windDir = weatherDataItem.wind?.dir?.value,
                     pressureMm = weatherDataItem.pressure?.mm?.toDouble(),
                     pressurePa = weatherDataItem.pressure?.pa?.toDouble(),
-                    humidity = weatherDataItem.humidity?.toDouble()
+                    humidity = weatherDataItem.humidity?.toDouble(),
+                    moonCode = weatherDataItem.moonCode?.toLong()
                 )
             }
     }
@@ -129,7 +131,8 @@ class WeatherDataRepositoryImpl(
                 gust = dataWeatherData.windGust?.toFloat(),
                 dir = dataWeatherData.windDir?.let(WindDir::getByValue)
             ),
-            humidity = dataWeatherData.humidity?.toFloat()
+            humidity = dataWeatherData.humidity?.toFloat(),
+            moonCode = dataWeatherData.moonCode?.toInt()
         )
     }
 }

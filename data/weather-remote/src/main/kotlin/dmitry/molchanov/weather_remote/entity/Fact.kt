@@ -34,5 +34,7 @@ data class Fact(
     @SerialName("season")
     val season: String,
     @SerialName("wind_gust")
-    val windGust: Float? = null
+    val windGust: Float? = null,
+    @SerialName("moon_code")
+    val moonCode: Int? = null
 )

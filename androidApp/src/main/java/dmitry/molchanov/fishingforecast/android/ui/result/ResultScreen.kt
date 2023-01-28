@@ -72,20 +72,24 @@ fun ResultScreen(onResultClick: (Result) -> Unit) {
         LazyColumn(modifier = Modifier.fillMaxSize()) {
             items(items = results) { result ->
                 Row(modifier = Modifier.fillMaxWidth()) {
-                    Text(text = result.name,
+                    Text(
+                        text = result.name,
                         fontSize = 18.sp,
                         modifier = Modifier
                             .padding(8.dp)
                             .clickable {
                                 onResultClick(result)
-                            })
+                            }
+                    )
                 }
             }
         }
 
         Column(modifier = Modifier.align(Alignment.BottomEnd)) {
-            Button(modifier = Modifier.padding(4.dp),
-                onClick = { vm.onAction(AddResultClickAction()) }) {
+            Button(
+                modifier = Modifier.padding(4.dp),
+                onClick = { vm.onAction(AddResultClickAction()) }
+            ) {
                 Text("Добавить новый результат.")
             }
             Button(modifier = Modifier.padding(4.dp), onClick = {

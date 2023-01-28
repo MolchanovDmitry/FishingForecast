@@ -19,6 +19,7 @@ import kotlinx.serialization.Serializable
  * @property temperature температура
  * @property wind ветер
  * @property humidity влажность
+ * @property moonCode фаза луны
  */
 @Serializable
 data class WeatherData(
@@ -28,6 +29,7 @@ data class WeatherData(
     val pressure: Pressure? = null,
     val temperature: Temperature? = null,
     val wind: Wind? = null,
+    val moonCode: Int?,
     val humidity: Float? = null,
 )
 
@@ -38,6 +40,7 @@ data class RawWeatherData(
     val temperature: Temperature? = null,
     val wind: Wind? = null,
     val humidity: Float? = null,
+    val moonCode: Int?
 )
 
 @Serializable
@@ -74,7 +77,7 @@ class Pressure(
  * @property W западное.
  * @property C штиль.
  */
-enum class WindDir(val value: String){
+enum class WindDir(val value: String) {
     NW("nw"),
     N("n"),
     NE("ne"),
@@ -85,8 +88,8 @@ enum class WindDir(val value: String){
     W("w"),
     C("c");
 
-    companion object{
+    companion object {
         fun getByValue(value: String): WindDir? =
-            WindDir.values().associateBy(WindDir::value)[value]
+            values().associateBy(WindDir::value)[value]
     }
 }
