@@ -1,8 +1,8 @@
-package dmitry.molchanov.fishingforecast.usecase
+package dmitry.molchanov.domain.usecase
 
+import dmitry.molchanov.domain.ioDispatcher
 import dmitry.molchanov.domain.model.MapPoint
 import dmitry.molchanov.domain.repository.MapPointRepository
-import dmitry.molchanov.fishingforecast.utils.ioDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.withContext

@@ -19,4 +19,27 @@
 
     <string name="notification_update_weather_data">Обновить погодные данные</string>
     <string name="notification_update_weather_data_description">Нажмите на уведомление, чтобы перейти к экрану обновления погодных данных.</string>
+    <string name="value_temp_avg">Средняя температура окружающей среды</string>
+    <string name="value_temp_min">Минимальная температура окражающей среды</string>
+    <string name="value_temp_max">Максимальная температура окружающей среды</string>
+    <string name="value_temp_water">Температура воды</string>
+    <string name="value_pres_mm">Давление в мм ртутного столба</string>
+    <string name="value_humidity">Влажность</string>
+    <string name="date">Дата</string>
+    <string name="value_pres_pa">Давление в паскалях</string>
+    <string name="value_wind_dir">Направление ветра</string>
+    <string name="value_wind_gust">Порыв ветра</string>
+    <string name="value_wind_speed">Скорость ветра</string>
+
+    <string name="wind_dir_nw">Северо-западное</string>
+    <string name="wind_dir_n">Северное</string>
+    <string name="wind_dir_ne">Северо-восточное</string>
+    <string name="wind_dir_e">Восточное</string>
+    <string name="wind_dir_se">Юго-восточное</string>
+    <string name="wind_dir_s">Южное</string>
+    <string name="wind_dir_sw">Юго-западное</string>
+    <string name="wind_dir_w">Западное</string>
+    <string name="wind_dir_c">Штиль</string>
+    <string name="wind_dir_title">Направление ветра</string>
+    <string name="wind_dir_no_data">Нет данных</string>
 </resources>

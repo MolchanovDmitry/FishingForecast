@@ -1,4 +1,4 @@
-package dmitry.molchanov.fishingforecast.repository
+package dmitry.molchanov.domain.repository
 
 import dmitry.molchanov.domain.model.MapPoint
 import dmitry.molchanov.domain.model.RawWeatherData

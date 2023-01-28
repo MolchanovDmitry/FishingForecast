@@ -1,6 +1,5 @@
-package dmitry.molchanov.fishingforecast.model
+package dmitry.molchanov.domain.model
 
-import dmitry.molchanov.domain.model.WeatherData
 import kotlinx.serialization.Serializable
 
 @Serializable

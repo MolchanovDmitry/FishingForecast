@@ -6,10 +6,10 @@ import dmitry.molchanov.domain.model.CommonProfile
 import dmitry.molchanov.domain.model.MapPoint
 import dmitry.molchanov.domain.model.Profile
 import dmitry.molchanov.domain.usecase.GetCurrentProfileUseCase
+import dmitry.molchanov.domain.usecase.GetMapPointsUseCase
 import dmitry.molchanov.domain.usecase.GetProfilesUseCase
 import dmitry.molchanov.domain.usecase.SaveMapPointUseCase
 import dmitry.molchanov.fishingforecast.android.mapper.CommonProfileFetcherImpl
-import dmitry.molchanov.fishingforecast.usecase.GetMapPointsUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.launchIn

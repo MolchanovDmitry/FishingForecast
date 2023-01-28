@@ -2,6 +2,7 @@ package dmitry.molchanov.fishingforecast.android
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dmitry.molchanov.domain.mapper.CommonProfileFetcher
 import dmitry.molchanov.domain.model.CommonProfile
 import dmitry.molchanov.domain.model.ForecastSetting
 import dmitry.molchanov.domain.model.MapPoint
@@ -9,14 +10,13 @@ import dmitry.molchanov.domain.model.Profile
 import dmitry.molchanov.domain.model.SimpleProfile
 import dmitry.molchanov.domain.model.WeatherData
 import dmitry.molchanov.domain.repository.WeatherDataRepository
+import dmitry.molchanov.domain.repository.YandexWeatherRepository
 import dmitry.molchanov.domain.usecase.DeleteForecastSettingUseCase
 import dmitry.molchanov.domain.usecase.GetCurrentProfileUseCase
 import dmitry.molchanov.domain.usecase.GetForecastSettingMarksUseCase
+import dmitry.molchanov.domain.usecase.GetMapPointsUseCase
 import dmitry.molchanov.domain.usecase.SaveForecastSettingMarkUseCase
 import dmitry.molchanov.domain.usecase.SaveWeatherDataUseCase
-import dmitry.molchanov.fishingforecast.mapper.CommonProfileFetcher
-import dmitry.molchanov.fishingforecast.repository.YandexWeatherRepository
-import dmitry.molchanov.fishingforecast.usecase.GetMapPointsUseCase
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

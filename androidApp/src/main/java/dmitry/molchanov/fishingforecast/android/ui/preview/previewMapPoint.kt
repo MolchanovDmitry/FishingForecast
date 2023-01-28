@@ -2,12 +2,13 @@ package dmitry.molchanov.fishingforecast.android.ui.preview
 
 import dmitry.molchanov.domain.model.MapPoint
 import dmitry.molchanov.domain.model.Pressure
+import dmitry.molchanov.domain.model.Result
 import dmitry.molchanov.domain.model.SimpleProfile
 import dmitry.molchanov.domain.model.Temperature
 import dmitry.molchanov.domain.model.WeatherData
 import dmitry.molchanov.domain.model.Wind
+import dmitry.molchanov.domain.model.WindDir
 import dmitry.molchanov.domain.utils.ONE_DAY
-import dmitry.molchanov.fishingforecast.model.Result
 
 private val previewMapPoint = MapPoint(
     id = 0,
@@ -30,7 +31,7 @@ val previewWeatherData = listOf<WeatherData>(
         mapPoint = previewMapPoint,
         pressure = Pressure(mm = 120F, pa = 130f),
         temperature = Temperature(min = 10F, avg = 20F, max = 30F, water = 20F),
-        wind = Wind(speed = 1F, gust = 2F, dir = "Северо-восточный ветер"),
+        wind = Wind(speed = 1F, gust = 2F, dir = WindDir.W),
         humidity = 10F
     ),
     WeatherData(
@@ -39,7 +40,7 @@ val previewWeatherData = listOf<WeatherData>(
         mapPoint = previewMapPoint,
         pressure = Pressure(mm = 100F, pa = 110f),
         temperature = Temperature(min = 11F, avg = 21F, max = 31F, water = 21F),
-        wind = Wind(speed = 2F, gust = 3F, dir = "Юго-западный ветер"),
+        wind = Wind(speed = 2F, gust = 3F, dir = WindDir.W),
         humidity = 4F
     )
 )

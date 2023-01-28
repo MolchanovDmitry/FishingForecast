@@ -1,5 +1,7 @@
 package dmitry.molchanov.db
 
+import dmitry.molchanov.db.WeatherData as DataWeatherData
+import dmitry.molchanov.domain.model.WeatherData as DomainWeatherData
 import com.squareup.sqldelight.runtime.coroutines.asFlow
 import com.squareup.sqldelight.runtime.coroutines.mapToList
 import dmitry.molchanov.domain.model.MapPoint
@@ -7,13 +9,12 @@ import dmitry.molchanov.domain.model.Pressure
 import dmitry.molchanov.domain.model.RawWeatherData
 import dmitry.molchanov.domain.model.Temperature
 import dmitry.molchanov.domain.model.Wind
+import dmitry.molchanov.domain.model.WindDir
 import dmitry.molchanov.domain.repository.MapPointRepository
 import dmitry.molchanov.domain.repository.WeatherDataRepository
 import dmitry.molchanov.domain.utils.TimeMs
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import dmitry.molchanov.db.WeatherData as DataWeatherData
-import dmitry.molchanov.domain.model.WeatherData as DomainWeatherData
 
 class WeatherDataRepositoryImpl(
     private val weatherDataQueries: WeatherDataQueries,
@@ -55,7 +56,7 @@ class WeatherDataRepositoryImpl(
                     tempWater = weatherDataItem.temperature?.water?.toDouble(),
                     windSpeed = weatherDataItem.wind?.speed?.toDouble(),
                     windGust = weatherDataItem.wind?.gust?.toDouble(),
-                    windDir = weatherDataItem.wind?.dir,
+                    windDir = weatherDataItem.wind?.dir?.value,
                     pressureMm = weatherDataItem.pressure?.mm?.toDouble(),
                     pressurePa = weatherDataItem.pressure?.pa?.toDouble(),
                     humidity = weatherDataItem.humidity?.toDouble()
@@ -73,7 +74,7 @@ class WeatherDataRepositoryImpl(
                     tempWater = weatherDataItem.temperature?.water?.toDouble(),
                     windSpeed = weatherDataItem.wind?.speed?.toDouble(),
                     windGust = weatherDataItem.wind?.gust?.toDouble(),
-                    windDir = weatherDataItem.wind?.dir,
+                    windDir = weatherDataItem.wind?.dir?.value,
                     pressureMm = weatherDataItem.pressure?.mm?.toDouble(),
                     pressurePa = weatherDataItem.pressure?.pa?.toDouble(),
                     humidity = weatherDataItem.humidity?.toDouble()
@@ -126,7 +127,7 @@ class WeatherDataRepositoryImpl(
             wind = Wind(
                 speed = dataWeatherData.windSpeed?.toFloat(),
                 gust = dataWeatherData.windGust?.toFloat(),
-                dir = dataWeatherData.windDir
+                dir = dataWeatherData.windDir?.let(WindDir::getByValue)
             ),
             humidity = dataWeatherData.humidity?.toFloat()
         )

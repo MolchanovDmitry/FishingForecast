@@ -2,6 +2,7 @@ package dmitry.molchanov.domain.usecase
 
 import dmitry.molchanov.domain.model.DeltaForecastMark
 import dmitry.molchanov.domain.model.ExactValueForecastMark
+import dmitry.molchanov.domain.model.Forecast
 import dmitry.molchanov.domain.model.ForecastMark
 import dmitry.molchanov.domain.model.ForecastSetting
 import dmitry.molchanov.domain.model.ForecastSettingsItem
@@ -17,7 +18,6 @@ import dmitry.molchanov.domain.model.ForecastSettingsItem.WIND_SPEED
 import dmitry.molchanov.domain.model.MaxValueForecastMark
 import dmitry.molchanov.domain.model.MinValueForecastMark
 import dmitry.molchanov.domain.model.WeatherData
-import dmitry.molchanov.fishingforecast.model.Forecast
 
 /**
  * Сделать прогноз.

@@ -16,6 +16,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import dmitry.molchanov.domain.mapper.deserialize
 import dmitry.molchanov.domain.model.MapPoint
+import dmitry.molchanov.domain.model.Result
 import dmitry.molchanov.fishingforecast.android.ui.NavItem
 import dmitry.molchanov.fishingforecast.android.ui.Screen
 import dmitry.molchanov.fishingforecast.android.ui.map.MapScreen
@@ -25,7 +26,6 @@ import dmitry.molchanov.fishingforecast.android.ui.result.ResultScreen
 import dmitry.molchanov.fishingforecast.android.ui.setting.ForecastSettingsList
 import dmitry.molchanov.fishingforecast.android.ui.weather.WeatherDebugScreen
 import dmitry.molchanov.fishingforecast.android.ui.weather.WeatherScreen
-import dmitry.molchanov.fishingforecast.model.Result
 
 @Composable
 fun MainScreen(vm: MainViewModel) {

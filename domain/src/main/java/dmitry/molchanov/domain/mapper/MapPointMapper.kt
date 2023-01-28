@@ -1,7 +1,7 @@
 package dmitry.molchanov.domain.mapper
 
 import dmitry.molchanov.domain.model.MapPoint
-import dmitry.molchanov.fishingforecast.usecase.GetMapPointByIdUseCase
+import dmitry.molchanov.domain.usecase.GetMapPointByIdUseCase
 
 class MapPointMapper(private val getMapPointsByIdUseCase: GetMapPointByIdUseCase) {
 

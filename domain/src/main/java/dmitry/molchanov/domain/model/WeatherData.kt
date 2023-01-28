@@ -1,5 +1,14 @@
 package dmitry.molchanov.domain.model
 
+import dmitry.molchanov.domain.model.WindDir.C
+import dmitry.molchanov.domain.model.WindDir.E
+import dmitry.molchanov.domain.model.WindDir.N
+import dmitry.molchanov.domain.model.WindDir.NE
+import dmitry.molchanov.domain.model.WindDir.NW
+import dmitry.molchanov.domain.model.WindDir.S
+import dmitry.molchanov.domain.model.WindDir.SE
+import dmitry.molchanov.domain.model.WindDir.SW
+import dmitry.molchanov.domain.model.WindDir.W
 import kotlinx.serialization.Serializable
 
 /**
@@ -43,7 +52,7 @@ class Temperature(
 class Wind(
     val speed: Float?,
     val gust: Float?,
-    val dir: String?,
+    val dir: WindDir?,
 )
 
 @Serializable
@@ -51,3 +60,33 @@ class Pressure(
     val mm: Float?,
     val pa: Float?,
 )
+
+/**
+ * Направление ветрка
+ *
+ * @property NW северо-западное
+ * @property N северное
+ * @property NE северо-восточное.
+ * @property E восточное.
+ * @property SE юго-восточное.
+ * @property S южное.
+ * @property SW юго-западное.
+ * @property W западное.
+ * @property C штиль.
+ */
+enum class WindDir(val value: String){
+    NW("nw"),
+    N("n"),
+    NE("ne"),
+    E("e"),
+    SE("se"),
+    S("s"),
+    SW("sw"),
+    W("w"),
+    C("c");
+
+    companion object{
+        fun getByValue(value: String): WindDir? =
+            WindDir.values().associateBy(WindDir::value)[value]
+    }
+}

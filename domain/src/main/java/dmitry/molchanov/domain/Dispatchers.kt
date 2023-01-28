@@ -1,4 +1,4 @@
-package dmitry.molchanov.fishingforecast.utils
+package dmitry.molchanov.domain
 
 import kotlinx.coroutines.Dispatchers
 

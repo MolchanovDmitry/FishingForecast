@@ -34,7 +34,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
-import dmitry.molchanov.fishingforecast.model.Result
+import dmitry.molchanov.domain.model.Result
 import java.io.File
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach

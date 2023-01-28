@@ -5,8 +5,9 @@ import dmitry.molchanov.domain.model.Pressure
 import dmitry.molchanov.domain.model.RawWeatherData
 import dmitry.molchanov.domain.model.Temperature
 import dmitry.molchanov.domain.model.Wind
+import dmitry.molchanov.domain.model.WindDir
+import dmitry.molchanov.domain.repository.YandexWeatherRepository
 import dmitry.molchanov.domain.utils.ONE_SEC
-import dmitry.molchanov.fishingforecast.repository.YandexWeatherRepository
 import dmitry.molchanov.http.NetworkClient
 import dmitry.molchanov.weather_remote.entity.WeatherResponseRoot
 
@@ -40,7 +41,7 @@ class YandexWeatherNetworkDataSourceImpl(
                 water = fact.tempWater
             ),
             wind = Wind(
-                dir = fact.windDir,
+                dir = fact.windDir?.let(WindDir::getByValue),
                 gust = fact.windGust,
                 speed = fact.windSpeed,
             ),
