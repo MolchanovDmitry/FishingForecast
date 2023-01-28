@@ -7,6 +7,7 @@ import dmitry.molchanov.domain.model.SimpleProfile
 import dmitry.molchanov.domain.model.Temperature
 import dmitry.molchanov.domain.model.WeatherData
 import dmitry.molchanov.domain.model.Wind
+import dmitry.molchanov.domain.model.WindDir
 import dmitry.molchanov.domain.utils.ONE_DAY
 
 private val previewMapPoint = MapPoint(
@@ -30,7 +31,7 @@ val previewWeatherData = listOf<WeatherData>(
         mapPoint = previewMapPoint,
         pressure = Pressure(mm = 120F, pa = 130f),
         temperature = Temperature(min = 10F, avg = 20F, max = 30F, water = 20F),
-        wind = Wind(speed = 1F, gust = 2F, dir = "Северо-восточный ветер"),
+        wind = Wind(speed = 1F, gust = 2F, dir = WindDir.W),
         humidity = 10F
     ),
     WeatherData(
@@ -39,7 +40,7 @@ val previewWeatherData = listOf<WeatherData>(
         mapPoint = previewMapPoint,
         pressure = Pressure(mm = 100F, pa = 110f),
         temperature = Temperature(min = 11F, avg = 21F, max = 31F, water = 21F),
-        wind = Wind(speed = 2F, gust = 3F, dir = "Юго-западный ветер"),
+        wind = Wind(speed = 2F, gust = 3F, dir = WindDir.W),
         humidity = 4F
     )
 )

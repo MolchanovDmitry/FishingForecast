@@ -134,7 +134,7 @@ private fun ResultDetailColumn(weatherDateItem: WeatherData) {
         ResultDetailItemRow(stringResource(R.string.value_pres_pa), pa)
     }
     weatherDateItem.wind?.dir?.let { dir ->
-        ResultDetailItemRow(stringResource(R.string.value_wind_dir), dir)
+        ResultDetailItemRow(stringResource(R.string.value_wind_dir), dir.value) // TODO направление ветрка
     }
     weatherDateItem.wind?.gust?.toString()?.let { gust ->
         ResultDetailItemRow(stringResource(R.string.value_wind_gust), gust)

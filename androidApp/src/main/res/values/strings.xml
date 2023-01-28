@@ -30,4 +30,16 @@
     <string name="value_wind_dir">Направление ветра</string>
     <string name="value_wind_gust">Порыв ветра</string>
     <string name="value_wind_speed">Скорость ветра</string>
+
+    <string name="wind_dir_nw">Северо-западное</string>
+    <string name="wind_dir_n">Северное</string>
+    <string name="wind_dir_ne">Северо-восточное</string>
+    <string name="wind_dir_e">Восточное</string>
+    <string name="wind_dir_se">Юго-восточное</string>
+    <string name="wind_dir_s">Южное</string>
+    <string name="wind_dir_sw">Юго-западное</string>
+    <string name="wind_dir_w">Западное</string>
+    <string name="wind_dir_c">Штиль</string>
+    <string name="wind_dir_title">Направление ветра</string>
+    <string name="wind_dir_no_data">Нет данных</string>
 </resources>
