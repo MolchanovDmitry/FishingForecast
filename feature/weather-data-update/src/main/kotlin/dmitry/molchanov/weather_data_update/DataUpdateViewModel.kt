@@ -84,7 +84,7 @@ class DataUpdateViewModel(
     }
 
     private fun shouldUpdate(date: Long): Boolean {
-        return System.currentTimeMillis().getDayCount() != date.getDayCount() &&
+        return System.currentTimeMillis().getDayCount() != date.getDayCount() ||
                 System.currentTimeMillis().getMonthCount() != date.getMonthCount()
     }
 }
