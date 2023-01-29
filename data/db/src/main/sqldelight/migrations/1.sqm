@@ -1,0 +1,1 @@
+ALTER TABLE WeatherData ADD COLUMN moonCode INTEGER;
