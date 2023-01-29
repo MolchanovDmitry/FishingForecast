@@ -41,14 +41,14 @@ fun DrawWindDir(weatherData: List<WeatherData>) {
                         .padding(vertical = 16.dp, horizontal = 8.dp)
                 ) {
                     when (weatherItem.wind?.dir) {
-                        WindDir.NW -> 180F + 90 + 45
-                        WindDir.N -> 0F
-                        WindDir.NE -> 45F
-                        WindDir.E -> 90F
-                        WindDir.SE -> 90F + 45
-                        WindDir.S -> 180F
-                        WindDir.SW -> 180F + 45
-                        WindDir.W -> 180F + 90
+                        WindDir.NW -> 90F + 45
+                        WindDir.N -> 180F
+                        WindDir.NE -> 180F + 45F
+                        WindDir.E -> 180F + 90F
+                        WindDir.SE -> 180F + 90F + 45
+                        WindDir.S -> 0F
+                        WindDir.SW -> 45F
+                        WindDir.W -> 90F
                         WindDir.C -> null
                         null -> null
                     }?.let { angle ->
