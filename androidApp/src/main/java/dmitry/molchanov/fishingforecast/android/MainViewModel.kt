@@ -89,6 +89,9 @@ class MainViewModel(
         viewModelScope.launch {
             state.value.mapPoints.forEach { mapPoint ->
                 saveWeatherDataUseCase.execute(mapPoint)
+                    .onFailure {
+                        it.printStackTrace()
+                    }
             }
         }
     }

@@ -1,6 +1,7 @@
 package dmitry.molchanov.fishingforecast.android.ui.result
 
 import android.icu.text.SimpleDateFormat
+import android.widget.TextView
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -25,16 +26,16 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.google.android.gms.maps.model.CameraPosition
-import com.google.android.gms.maps.model.LatLng
-import com.google.maps.android.compose.GoogleMap
-import com.google.maps.android.compose.Marker
-import com.google.maps.android.compose.rememberCameraPositionState
+import androidx.compose.ui.viewinterop.AndroidView
+import com.yandex.mapkit.geometry.Point
+import com.yandex.mapkit.map.CameraPosition
+import com.yandex.runtime.ui_view.ViewProvider
 import dmitry.molchanov.domain.model.Result
 import dmitry.molchanov.domain.model.WeatherData
 import dmitry.molchanov.domain.model.WindDir
 import dmitry.molchanov.domain.utils.getDayCount
 import dmitry.molchanov.fishingforecast.android.R
+import dmitry.molchanov.fishingforecast.android.ui.common.rememberMapViewWithLifecycle
 import dmitry.molchanov.fishingforecast.android.ui.preview.previewResult
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
@@ -45,10 +46,11 @@ fun ResultDetailScreen(result: Result = previewResult) {
     val vm = koinViewModel<ResultDetailViewModel> { parametersOf(result) }
     val state = vm.stateFlow.collectAsState()
     val weatherData = state.value.weatherData
-    val cameraPositionState = rememberCameraPositionState {
+    val mapView = rememberMapViewWithLifecycle()
+    /*val cameraPositionState = rememberCameraPositionState {
         val point = LatLng(result.mapPoint.latitude, result.mapPoint.longitude)
         position = CameraPosition.fromLatLngZoom(point, 12f)
-    }
+    }*/
     val sortedWeatherData = state.value.weatherData.sortedBy { it.date }
     if (sortedWeatherData.isNotEmpty()) {
         LaunchedEffect(Unit) {
@@ -66,7 +68,7 @@ fun ResultDetailScreen(result: Result = previewResult) {
                 .fillMaxWidth()
                 .height(200.dp)
         ) {
-            GoogleMap(
+            /*GoogleMap(
                 modifier = Modifier.fillMaxSize(), cameraPositionState = cameraPositionState
             ) {
                 Marker(
@@ -74,7 +76,31 @@ fun ResultDetailScreen(result: Result = previewResult) {
                     title = "Тверь",
                     snippet = "Какой-то текст",
                 )
-            }
+            }*/
+            AndroidView(factory = {
+                mapView.apply {
+                    mapView.map.isZoomGesturesEnabled = true
+                    mapView.map.mapObjects.addPlacemark(
+                        Point(
+                            result.mapPoint.latitude,
+                            result.mapPoint.longitude
+                        ),
+                        ViewProvider(
+                            TextView(context).apply {
+                                text = result.name
+                            }, false
+                        )
+                    )
+                    mapView.map.move(
+                        CameraPosition(
+                            Point(
+                                result.mapPoint.latitude,
+                                result.mapPoint.longitude
+                            ), 12.0f, 0.0f, 0.0f
+                        )
+                    )
+                }
+            })
             Row(
                 modifier = Modifier
                     .align(Alignment.BottomCenter)

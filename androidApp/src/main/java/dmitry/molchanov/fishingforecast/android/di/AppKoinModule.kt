@@ -18,7 +18,7 @@ import org.koin.dsl.module
 val appKoinModule = module {
 
     factory<String> {
-        BuildConfig.API_KEY
+        BuildConfig.YANDEX_WEATHER_API_KEY
     }
 
     factory<CommonProfileFetcherImpl> { CommonProfileFetcherImpl(get()) }

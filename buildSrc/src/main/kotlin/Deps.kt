@@ -39,16 +39,8 @@ object Deps {
     // Leak canary
     const val leak_canary = "com.squareup.leakcanary:leakcanary-android:2.7"
 
-    // map
-    const val play_services_maps = "com.google.android.gms:play-services-maps:18.0.2"
-
     // for custom marker
-    const val maps_utils = "com.google.maps.android:android-maps-utils-v3:2.3.0"
-    const val maps_ktx = "com.google.maps.android:maps-ktx:3.0.0"
-
-    const val maps_v3 = "com.google.maps.android:maps-v3-ktx:2.2.0"
-
-    const val maps_compose = "com.google.maps.android:maps-compose:1.0.0"
+    const val yandexMaps = "com.yandex.android:maps.mobile:4.3.1-lite"
 
     /* Compose */
     const val compose_version = "1.3.1"

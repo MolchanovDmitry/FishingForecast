@@ -1,6 +1,7 @@
 package dmitry.molchanov.fishingforecast.android
 
 import android.app.Application
+import com.yandex.mapkit.MapKitFactory
 import dmitry.molchanov.db.di.dbModule
 import dmitry.molchanov.domain.di.domainKoinModule
 import dmitry.molchanov.fishingforecast.android.di.appKoinModule
@@ -16,6 +17,8 @@ class App : Application() {
 
     override fun onCreate() {
         super.onCreate()
+
+        MapKitFactory.setApiKey(BuildConfig.YANDEX_MAP_API_KEY)
 
         startKoin {
             androidLogger(if (BuildConfig.DEBUG) Level.ERROR else Level.NONE)

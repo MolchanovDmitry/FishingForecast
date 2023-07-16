@@ -12,7 +12,7 @@ android {
     val properties = Properties()
     val q: File = rootProject.file("local.properties")
     properties.load(q.inputStream())
-    val googleMapApiKey = properties.getProperty("google.map.key")
+    val yandexMapApiKey = properties.getProperty("yandex.map.api.key")
     val yandexWeatherApiKey = properties.getProperty("yandex.weather.api.key")
 
     compileSdk = Config.compileSdk
@@ -23,8 +23,8 @@ android {
         versionCode = 1
         versionName = "1.0"
 
-        manifestPlaceholders["googleMapApiKey"] = googleMapApiKey
-        buildConfigField("String", "API_KEY", yandexWeatherApiKey)
+        buildConfigField("String", "YANDEX_WEATHER_API_KEY", yandexWeatherApiKey)
+        buildConfigField("String", "YANDEX_MAP_API_KEY", yandexMapApiKey)
     }
     buildTypes {
         getByName("release") {
@@ -65,12 +65,9 @@ dependencies {
         Deps.androidx_lifecycle_runtime_ktx,
         Deps.androidx_activity_ktx,
 
-        Deps.play_services_maps,
-        Deps.maps_utils,
-        Deps.maps_ktx,
-
         Deps.Koin.core,
         Deps.Koin.compose,
-        Deps.maps_compose,
+
+        Deps.yandexMaps
     ).forEach(::implementation)
 }
