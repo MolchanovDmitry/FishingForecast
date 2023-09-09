@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dmitry.molchanov.domain.model.Result
 import dmitry.molchanov.domain.model.WeatherData
+import dmitry.molchanov.domain.model.WeatherDate
 import dmitry.molchanov.domain.usecase.GetWeatherDataByResultUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -34,9 +35,9 @@ class ResultDetailViewModel(
 }
 
 data class ResultDetailState(
-    val selectedDate: Long? = null,
+    val selectedDate: WeatherDate? = null,
     val weatherData: List<WeatherData> = emptyList()
 )
 
 sealed class ResultDetailAction
-class OnDateSelected(val date: Long) : ResultDetailAction()
+class OnDateSelected(val date: WeatherDate) : ResultDetailAction()

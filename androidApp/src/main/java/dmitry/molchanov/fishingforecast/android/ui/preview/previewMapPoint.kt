@@ -1,5 +1,6 @@
 package dmitry.molchanov.fishingforecast.android.ui.preview
 
+import dmitry.molchanov.domain.mapper.toWeatherDate
 import dmitry.molchanov.domain.model.MapPoint
 import dmitry.molchanov.domain.model.Pressure
 import dmitry.molchanov.domain.model.Result
@@ -27,7 +28,7 @@ val previewResult = Result(
 val previewWeatherData = listOf<WeatherData>(
     WeatherData(
         id = 0,
-        date = System.currentTimeMillis(),
+        date = System.currentTimeMillis().toWeatherDate(),
         mapPoint = previewMapPoint,
         pressure = Pressure(mm = 120F, pa = 130f),
         temperature = Temperature(min = 10F, avg = 20F, max = 30F, water = 20F),
@@ -37,7 +38,7 @@ val previewWeatherData = listOf<WeatherData>(
     ),
     WeatherData(
         id = 1,
-        date = System.currentTimeMillis() - ONE_DAY,
+        date = (System.currentTimeMillis() - ONE_DAY).toWeatherDate(),
         mapPoint = previewMapPoint,
         pressure = Pressure(mm = 100F, pa = 110f),
         temperature = Temperature(min = 11F, avg = 21F, max = 31F, water = 21F),

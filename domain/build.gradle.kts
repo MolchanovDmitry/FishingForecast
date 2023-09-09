@@ -18,4 +18,8 @@ dependencies {
         Deps.Serialization.kotlinx_json,
         Deps.Kotlinx.datetime
     ).forEach(::implementation)
+
+    arrayOf(
+        Deps.junit
+    ).forEach(::testImplementation)
 }

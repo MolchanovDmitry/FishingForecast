@@ -33,7 +33,6 @@ import com.yandex.runtime.ui_view.ViewProvider
 import dmitry.molchanov.domain.model.Result
 import dmitry.molchanov.domain.model.WeatherData
 import dmitry.molchanov.domain.model.WindDir
-import dmitry.molchanov.domain.utils.getDayCount
 import dmitry.molchanov.fishingforecast.android.R
 import dmitry.molchanov.fishingforecast.android.ui.common.rememberMapViewWithLifecycle
 import dmitry.molchanov.fishingforecast.android.ui.preview.previewResult
@@ -51,7 +50,7 @@ fun ResultDetailScreen(result: Result = previewResult) {
         val point = LatLng(result.mapPoint.latitude, result.mapPoint.longitude)
         position = CameraPosition.fromLatLngZoom(point, 12f)
     }*/
-    val sortedWeatherData = state.value.weatherData.sortedBy { it.date }
+    val sortedWeatherData = state.value.weatherData.sortedBy { it.date.raw }
     if (sortedWeatherData.isNotEmpty()) {
         LaunchedEffect(Unit) {
             sortedWeatherData.lastOrNull()?.let { vm.onAction(OnDateSelected(it.date)) }
@@ -108,7 +107,7 @@ fun ResultDetailScreen(result: Result = previewResult) {
             ) {
                 sortedWeatherData.forEach { weatherDataItem ->
                     Text(
-                        text = weatherDataItem.date.getDayCount().toString(),
+                        text = weatherDataItem.date.day.toString(),
                         color = Color.White,
                         modifier = Modifier
                             .padding(8.dp)
@@ -135,7 +134,7 @@ fun ResultDetailScreen(result: Result = previewResult) {
 private fun ResultDetailColumn(weatherDateItem: WeatherData) {
     val simpleDateFormat =
         remember { SimpleDateFormat("dd MMMM yyyy", java.util.Locale.getDefault()) }
-    val dataStr = simpleDateFormat.format(weatherDateItem.date)
+    val dataStr = simpleDateFormat.format(weatherDateItem.date.raw)
 
     ResultDetailItemRow(title = stringResource(R.string.date), value = dataStr)
 

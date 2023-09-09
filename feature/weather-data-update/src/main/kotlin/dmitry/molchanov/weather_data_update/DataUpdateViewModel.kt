@@ -47,7 +47,7 @@ class DataUpdateViewModel(
             .groupBy { it.mapPoint }
             .map { pointToWeatherMap ->
                 val mapPoint = pointToWeatherMap.key
-                val lastDate = pointToWeatherMap.value.maxOf { it.date }
+                val lastDate = pointToWeatherMap.value.maxOf { it.date.raw }
                 UiWeatherData(
                     mapPoint = mapPoint,
                     lastUpdateTime = lastDate,

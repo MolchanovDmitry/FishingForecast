@@ -41,4 +41,6 @@ dependencies {
         project(Modules.DOMAIN),
         project(Modules.HTTP)
     ).forEach(::implementation)
+
+    testImplementation(Deps.junit)
 }

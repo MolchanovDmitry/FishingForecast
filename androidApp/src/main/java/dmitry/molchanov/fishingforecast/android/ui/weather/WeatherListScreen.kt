@@ -24,7 +24,7 @@ import dmitry.molchanov.fishingforecast.android.MainViewModel
 @Composable
 fun WeatherDebugScreen(vm: MainViewModel, onMapPointSelected: (MapPoint) -> Unit) {
     val state = vm.state.collectAsState()
-    val lastDate = state.value.weatherData.maxOfOrNull { it.date }
+    val lastDate = state.value.weatherData.maxOfOrNull { it.date.raw }
 
     Column(modifier = Modifier.fillMaxSize()) {
         Text("Дата последнего запроса: ${lastDate?.string() ?: "не запрашивались"}")

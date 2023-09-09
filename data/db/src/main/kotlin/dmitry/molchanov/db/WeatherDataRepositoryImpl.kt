@@ -4,6 +4,7 @@ import dmitry.molchanov.db.WeatherData as DataWeatherData
 import dmitry.molchanov.domain.model.WeatherData as DomainWeatherData
 import com.squareup.sqldelight.runtime.coroutines.asFlow
 import com.squareup.sqldelight.runtime.coroutines.mapToList
+import dmitry.molchanov.domain.mapper.toWeatherDate
 import dmitry.molchanov.domain.model.MapPoint
 import dmitry.molchanov.domain.model.Pressure
 import dmitry.molchanov.domain.model.RawWeatherData
@@ -70,7 +71,7 @@ class WeatherDataRepositoryImpl(
             .forEach { weatherDataItem ->
                 weatherDataQueries.insert(
                     mapPointId = weatherDataItem.mapPoint.id,
-                    date = weatherDataItem.date,
+                    date = weatherDataItem.date.raw,
                     tempAvg = weatherDataItem.temperature?.avg?.toDouble(),
                     tempWater = weatherDataItem.temperature?.water?.toDouble(),
                     windSpeed = weatherDataItem.wind?.speed?.toDouble(),
@@ -104,7 +105,7 @@ class WeatherDataRepositoryImpl(
         val dates = weatherData.map { it.date }
         return weatherDataQueries.selectAll()
             .executeAsList()
-            .filter { mapPointsIds.contains(it.mapPointId) && dates.contains(it.date) }
+            .filter { mapPointsIds.contains(it.mapPointId) && dates.contains(it.date.toWeatherDate()) }
             .map { it.id }
     }
 
@@ -117,7 +118,7 @@ class WeatherDataRepositoryImpl(
         val mapPoint = mapPointRepository.getMapPoint(dataWeatherData.mapPointId) ?: return null
         return DomainWeatherData(
             id = dataWeatherData.id,
-            date = dataWeatherData.date,
+            date = dataWeatherData.date.toWeatherDate(),
             mapPoint = mapPoint,
             pressure = Pressure(
                 mm = dataWeatherData.pressureMm?.toFloat(),

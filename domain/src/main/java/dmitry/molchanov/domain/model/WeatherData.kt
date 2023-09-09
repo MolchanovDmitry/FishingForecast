@@ -9,6 +9,7 @@ import dmitry.molchanov.domain.model.WindDir.S
 import dmitry.molchanov.domain.model.WindDir.SE
 import dmitry.molchanov.domain.model.WindDir.SW
 import dmitry.molchanov.domain.model.WindDir.W
+import dmitry.molchanov.domain.utils.DayPart
 import kotlinx.serialization.Serializable
 
 /**
@@ -24,7 +25,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class WeatherData(
     val id: Long,
-    val date: Long,
+    val date: WeatherDate,
     val mapPoint: MapPoint,
     val pressure: Pressure? = null,
     val temperature: Temperature? = null,
@@ -62,6 +63,15 @@ class Wind(
 class Pressure(
     val mm: Float?,
     val pa: Float?,
+)
+
+@Serializable
+data class WeatherDate(
+    val raw: Long,
+    val year: Int,
+    val month: Int,
+    val day: Int,
+    val dayPart: DayPart
 )
 
 /**

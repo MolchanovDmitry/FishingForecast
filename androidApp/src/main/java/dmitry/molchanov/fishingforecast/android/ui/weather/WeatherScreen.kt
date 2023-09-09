@@ -8,15 +8,12 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import dmitry.molchanov.domain.model.Forecast
 import dmitry.molchanov.domain.model.ForecastSetting
 import dmitry.molchanov.domain.model.ForecastSettingsItem
 import dmitry.molchanov.domain.model.MapPoint
 import dmitry.molchanov.domain.model.WeatherData
-import dmitry.molchanov.domain.utils.getDayCount
-import dmitry.molchanov.domain.utils.getMonthDayCount
 import dmitry.molchanov.fishingforecast.android.R
 import dmitry.molchanov.fishingforecast.android.WeatherStatisticViewModel
 import dmitry.molchanov.graph.line.DataPoint
@@ -30,7 +27,6 @@ fun WeatherScreen(mapPointId: MapPoint, forecastSettings: List<ForecastSetting>)
     val weatherData = state.value.weatherData
     val isOnlyOneDigitDays = weatherData.isOnlyOneDigitDays()
     val forecasts = state.value.forecasts
-    val context = LocalContext.current
     var positiveCount = 0
 
     // LaunchedEffect(key1 = Unit) {
@@ -111,15 +107,15 @@ fun WeatherScreen(mapPointId: MapPoint, forecastSettings: List<ForecastSetting>)
 }
 
 private fun List<WeatherData>.isOnlyOneDigitDays(): Boolean {
-    return this.find { it.date.length() > 1 } != null
+    return this.find { it.date.raw.length() > 1 } != null
 }
 
 private fun Long.length(): Int = this.toString().length
 
 /** Получить точку дата - значение. */
 fun WeatherData.getDataPointByValue(value: Float, shouldMonthInclude: Boolean): DataPoint {
-    val x = if (shouldMonthInclude) date.getMonthDayCount() else date.getDayCount().toFloat()
-    return DataPoint(x, value)
+    val x = if (shouldMonthInclude) date.month else date.day
+    return DataPoint(x.toFloat(), value)
 }
 
 

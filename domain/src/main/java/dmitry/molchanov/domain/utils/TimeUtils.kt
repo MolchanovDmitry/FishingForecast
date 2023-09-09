@@ -34,6 +34,14 @@ val TimeMs.eveningTime: TimeMs
 val TimeMs.daysCount: Int
     get() = Instant.fromEpochMilliseconds((this)).epochSeconds.getDayCount()
 
+val TimeMs.dayPart: DayPart
+    get() = when (this.getHour()) {
+        in 6..11 -> DayPart.MORNING
+        in 12..17 -> DayPart.MIDDAY
+        in 18..23 -> DayPart.EVENING
+        else -> DayPart.NIGHT
+    }
+
 /**
  * Получить время минус [count] дней.
  */
@@ -52,6 +60,18 @@ fun TimeMs.getMonthCount(): Int {
     val nowMilliSec = Instant.fromEpochMilliseconds(this)
     val datetimeInUtc: LocalDateTime = nowMilliSec.toLocalDateTime(TimeZone.currentSystemDefault())
     return datetimeInUtc.monthNumber
+}
+
+fun TimeMs.getYearCount(): Int {
+    val nowMilliSec = Instant.fromEpochMilliseconds(this)
+    val datetimeInUtc: LocalDateTime = nowMilliSec.toLocalDateTime(TimeZone.currentSystemDefault())
+    return datetimeInUtc.year
+}
+
+fun TimeMs.getHour(): Int {
+    val nowMilliSec = Instant.fromEpochMilliseconds(this)
+    val datetimeInUtc: LocalDateTime = nowMilliSec.toLocalDateTime(TimeZone.currentSystemDefault())
+    return datetimeInUtc.hour
 }
 
 fun TimeMs.getMonthDayCount(): Float {
@@ -94,6 +114,7 @@ fun TimeMs.string(): String {
  * Время суток.
  * @property hour час времени суток.
  */
-private enum class DayPart(val hour: Int) {
+enum class DayPart(val hour: Int) {
     NIGHT(0), MORNING(6), MIDDAY(12), EVENING(18)
 }
+

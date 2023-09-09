@@ -2,6 +2,7 @@ package dmitry.molchanov.domain.usecase
 
 import dmitry.molchanov.domain.ioDispatcher
 import dmitry.molchanov.domain.model.MapPoint
+import dmitry.molchanov.domain.model.RawWeatherData
 import dmitry.molchanov.domain.repository.WeatherDataRepository
 import dmitry.molchanov.domain.repository.YandexWeatherRepository
 import kotlinx.coroutines.withContext
@@ -18,6 +19,15 @@ class SaveWeatherDataUseCase(
         yandexWeatherRepository.getYandexWeatherDate(mapPoint)
             .map { weatherDataFromYandex ->
                 weatherDataRepository.saveRawWeatherData(weatherDataFromYandex)
+                updateMoonCodes(weatherDataFromYandex)
             }
+    }
+
+    /**
+     * Информация о луне приходит только на будущее время.
+     * Берем информацию фыв
+     */
+    private fun updateMoonCodes(weatherDataFromYandex: List<RawWeatherData>) {
+
     }
 }

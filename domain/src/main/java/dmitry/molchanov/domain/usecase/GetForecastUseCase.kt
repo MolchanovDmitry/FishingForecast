@@ -61,8 +61,8 @@ class GetForecastUseCase {
     /** Получить количество дней из списка прогноза. */
     private fun getPeriodObservation(weatherData: List<WeatherData>): Int {
         if (weatherData.isEmpty()) return 0
-        val firstDay = weatherData.first().date
-        val lastDay = weatherData.last().date
+        val firstDay = weatherData.first().date.raw
+        val lastDay = weatherData.last().date.raw
         val secondDifference = lastDay - firstDay
         val minutes = secondDifference / 60
         val hours = minutes / 60

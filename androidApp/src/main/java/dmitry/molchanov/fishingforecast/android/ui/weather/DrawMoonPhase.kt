@@ -22,6 +22,8 @@ import androidx.compose.ui.unit.dp
 import dmitry.molchanov.domain.model.CommonProfile
 import dmitry.molchanov.domain.model.MapPoint
 import dmitry.molchanov.domain.model.WeatherData
+import dmitry.molchanov.domain.model.WeatherDate
+import dmitry.molchanov.domain.utils.DayPart
 import dmitry.molchanov.fishingforecast.android.R
 import java.util.*
 
@@ -91,7 +93,7 @@ fun DrawMoonPhase(
                         modifier = Modifier.align(CenterHorizontally)
                     )
                     Text(
-                        text = formatter.format(weatherItem.date),
+                        text = formatter.format(weatherItem.date.raw),
                         modifier = Modifier.align(CenterHorizontally)
                     )
                 }
@@ -104,7 +106,7 @@ private fun getPreviewWeatherDataByMoonCodes(moonCodes: List<Int>) =
     moonCodes.map { moonCode ->
         WeatherData(
             id = 0,
-            date = 0,
+            date = WeatherDate(raw = 5242, year = 1984, month = 6039, day = 5087, dayPart = DayPart.NIGHT),
             mapPoint = MapPoint(
                 id = 0,
                 name = "",
