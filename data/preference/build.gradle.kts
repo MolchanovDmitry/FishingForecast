@@ -1,46 +1,13 @@
 plugins {
-    id("com.android.library")
-    id("org.jetbrains.kotlin.android")
-    id(GradlePlugins.Id.KTLINT)
-}
-
-android {
-    namespace = "dmitry.molchanov.preference"
-    compileSdk = Config.compileSdk
-
-    defaultConfig {
-        minSdk = Config.minSdk
-        targetSdk = Config.targetSdk
-
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        consumerProguardFiles("consumer-rules.pro")
-    }
-
-    buildTypes {
-        release {
-            isMinifyEnabled = false
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
-            )
-        }
-    }
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
-    }
-    kotlinOptions {
-        jvmTarget = "1.8"
-    }
+    id("android-feature-setup")
 }
 
 dependencies {
     arrayOf(
-        project(Modules.DOMAIN),
-        project(Modules.CORE)
+        projects.domain,
+        libs.koin.core,
+        libs.multiplatform.settings,
+        libs.multiplatform.settings.coroutines.native.mt,
     ).forEach(::implementation)
-    // TODO заменить на data store
-    val settingsVersion = "0.8.1"
-    implementation("com.russhwolf:multiplatform-settings:$settingsVersion")
-    implementation("com.russhwolf:multiplatform-settings-coroutines-native-mt:$settingsVersion")
+
 }

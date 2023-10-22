@@ -1,30 +1,30 @@
 package dmitry.molchanov.repository.profile
 
+import app.cash.sqldelight.coroutines.asFlow
+import app.cash.sqldelight.coroutines.mapToList
 import com.russhwolf.settings.ObservableSettings
 import com.russhwolf.settings.coroutines.toFlowSettings
 import com.russhwolf.settings.set
-import com.squareup.sqldelight.runtime.coroutines.asFlow
-import com.squareup.sqldelight.runtime.coroutines.mapToList
+import dmitry.molchanov.core.DispatcherDefault
 import dmitry.molchanov.db.ProfileQueries
 import dmitry.molchanov.domain.repository.ProfileRepository
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import dmitry.molchanov.db.Profile as DataProfile
 
-
 class ProfileRepositoryImpl(
     private val profileQueries: ProfileQueries,
-    private val appSettings: ObservableSettings // TODO вынести в репозиторий
+    private val appSettings: ObservableSettings, // TODO вынести в репозиторий
+    mapDispatcher: DispatcherDefault,
 ) : ProfileRepository {
-
     override val profilesNamesFlow: Flow<List<String>> =
-        profileQueries.selectAll().asFlow().mapToList()
+        profileQueries.selectAll().asFlow().mapToList(mapDispatcher)
 
     override val currentProfileNameFlow: Flow<String?> =
         appSettings.toFlowSettings().getStringOrNullFlow(PROFILE_FLOW)
 
-    override suspend fun getProfilesNames(): List<String> {
-        return profileQueries.selectAll().executeAsList()
-    }
+    override suspend fun getProfilesNames(): List<String> = profileQueries.selectAll().executeAsList()
 
     override suspend fun createProfile(profileName: String) {
         runCatching {

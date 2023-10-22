@@ -1,22 +1,21 @@
 plugins {
     id("java-library")
     id("org.jetbrains.kotlin.jvm")
-    id(GradlePlugins.Id.kotlinx_serialization)
-    id(GradlePlugins.Id.KTLINT)
+    alias(libs.plugins.kotlin.serialization)
 }
 
-java {
-    sourceCompatibility = JavaVersion.VERSION_1_8
-    targetCompatibility = JavaVersion.VERSION_1_8
+kotlin {
+    jvmToolchain(libs.versions.javaVersion.get().toInt())
 }
 
 dependencies {
     arrayOf(
-        Deps.Koin.core,
-        Deps.Coroutines.core,
-        Deps.Serialization.kotlinx_core,
-        Deps.Serialization.kotlinx_json,
-        Deps.Kotlinx.datetime
+        projects.core,
+        libs.koin.core,
+        libs.kotlinx.coroutines.core,
+        libs.kotlinx.serialization.core,
+        libs.kotlinx.serialization.json,
+        libs.kotlinx.datetime
     ).forEach(::implementation)
 
     arrayOf(

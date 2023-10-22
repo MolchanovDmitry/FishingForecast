@@ -5,9 +5,8 @@ import com.russhwolf.settings.set
 import dmitry.molchanov.domain.repository.AppPreferenceRepository
 
 class AppPreferenceRepositoryImpl(
-    private val appSettings: ObservableSettings
+    private val appSettings: ObservableSettings,
 ) : AppPreferenceRepository {
-
     override var lastRequestTime: Long?
         get() = appSettings.getLongOrNull(LAST_REQUEST_TIME)
         set(value) = appSettings.set(LAST_REQUEST_TIME, value)

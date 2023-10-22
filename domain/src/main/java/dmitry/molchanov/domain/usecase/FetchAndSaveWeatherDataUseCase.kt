@@ -1,6 +1,6 @@
 package dmitry.molchanov.domain.usecase
 
-import dmitry.molchanov.domain.ioDispatcher
+import dmitry.molchanov.core.DispatcherDefault
 import dmitry.molchanov.domain.mapper.toWeatherDate
 import dmitry.molchanov.domain.model.MapPoint
 import dmitry.molchanov.domain.model.WeatherDate
@@ -13,27 +13,29 @@ import kotlinx.coroutines.withContext
  */
 class FetchAndSaveWeatherDataUseCase(
     private val weatherDataRepository: WeatherDataRepository,
-    private val yandexWeatherRepository: YandexWeatherRepository
+    private val yandexWeatherRepository: YandexWeatherRepository,
+    private val dispatcherDefault: DispatcherDefault,
 ) {
 
-    suspend fun execute(mapPoint: MapPoint): Result<WeatherDataUpdate> = withContext(ioDispatcher) {
-        val currentDate = System.currentTimeMillis().toWeatherDate()
-        val lastWeatherDate = weatherDataRepository.getLastWeatherData()?.date
+    suspend fun execute(mapPoint: MapPoint): Result<WeatherDataUpdate> =
+        withContext(dispatcherDefault) {
+            val currentDate = System.currentTimeMillis().toWeatherDate()
+            val lastWeatherDate = weatherDataRepository.getLastWeatherData()?.date
 
-        if (lastWeatherDate?.isSameDay(currentDate) == true) {
-            return@withContext Result.failure(WeatherDataAlreadyExistError())
-        }
-
-        yandexWeatherRepository.getYandexWeatherDate(mapPoint)
-            .mapCatching { weatherDataFromYandex ->
-                weatherDataRepository.saveRawWeatherData(weatherDataFromYandex)
-                weatherDataFromYandex.maxByOrNull { it.date }
-                    ?.date
-                    ?.toWeatherDate()
-                    ?.let(::WeatherDataUpdate)
-                    ?: error("")
+            if (lastWeatherDate?.isSameDay(currentDate) == true) {
+                return@withContext Result.failure(WeatherDataAlreadyExistError())
             }
-    }
+
+            yandexWeatherRepository.getYandexWeatherDate(mapPoint)
+                .mapCatching { weatherDataFromYandex ->
+                    weatherDataRepository.saveRawWeatherData(weatherDataFromYandex)
+                    weatherDataFromYandex.maxByOrNull { it.date }
+                        ?.date
+                        ?.toWeatherDate()
+                        ?.let(::WeatherDataUpdate)
+                        ?: error("")
+                }
+        }
 
     private fun WeatherDate.isSameDay(weatherDate: WeatherDate): Boolean =
         this.day == weatherDate.day

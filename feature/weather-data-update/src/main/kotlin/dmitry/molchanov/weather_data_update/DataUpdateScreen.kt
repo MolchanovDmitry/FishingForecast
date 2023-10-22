@@ -29,6 +29,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import dmitry.molchanov.feature.weather_data_update.R
 import dmitry.molchanov.weather_data_update.UpdateStatus.ERROR
 import dmitry.molchanov.weather_data_update.UpdateStatus.NO_UPDATE_REQUIRED
 import dmitry.molchanov.weather_data_update.UpdateStatus.UPDATED

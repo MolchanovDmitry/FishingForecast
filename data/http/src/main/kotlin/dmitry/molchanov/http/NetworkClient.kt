@@ -9,8 +9,10 @@ import io.ktor.http.HttpMethod
  * В будущем будет переопределен для каждой из платформ. На раннем этапе обойдемся общим.
  */
 object NetworkClient {
-
-    suspend inline fun <reified T> loadData(url: String, headers: Map<String, String>): Result<T> =
+    suspend inline fun <reified T> loadData(
+        url: String,
+        headers: Map<String, String>,
+    ): Result<T> =
         kotlin.runCatching {
             httpClient.get(url) {
                 method = HttpMethod.Get

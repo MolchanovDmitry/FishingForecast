@@ -32,7 +32,10 @@ import java.text.DecimalFormat
  * @param x the x coordinate or the number in the x axis
  * @param y the y coordinate or the number in the y axis
  */
-data class DataPoint(val x: Float, val y: Float)
+data class DataPoint(
+    val x: Float,
+    val y: Float,
+)
 
 /**
  * The configuration for the [LineGraph]
@@ -78,7 +81,7 @@ data class LinePlot(
         val connection: Connection?,
         val intersection: Intersection?,
         val highlight: Highlight? = null,
-        val areaUnderLine: AreaUnderLine? = null
+        val areaUnderLine: AreaUnderLine? = null,
     )
 
     /**
@@ -113,9 +116,9 @@ data class LinePlot(
                 pathEffect,
                 alpha,
                 colorFilter,
-                blendMode
+                blendMode,
             )
-        }
+        },
     )
 
     /**
@@ -146,9 +149,9 @@ data class LinePlot(
                 alpha,
                 style,
                 colorFilter,
-                blendMode
+                blendMode,
             )
-        }
+        },
     )
 
     /**
@@ -179,9 +182,9 @@ data class LinePlot(
                 alpha,
                 style,
                 colorFilter,
-                blendMode
+                blendMode,
             )
-        }
+        },
     )
 
     /**
@@ -195,11 +198,12 @@ data class LinePlot(
      */
     data class Selection(
         val enabled: Boolean = true,
-        val highlight: Connection? = Connection(
-            Color.Red,
-            strokeWidth = 2.dp,
-            pathEffect = PathEffect.dashPathEffect(floatArrayOf(40f, 20f))
-        ),
+        val highlight: Connection? =
+            Connection(
+                Color.Red,
+                strokeWidth = 2.dp,
+                pathEffect = PathEffect.dashPathEffect(floatArrayOf(40f, 20f)),
+            ),
         val detectionTime: Long = 100L,
     )
 
@@ -224,7 +228,7 @@ data class LinePlot(
         val blendMode: BlendMode = DrawScope.DefaultBlendMode,
         val draw: DrawScope.(Path) -> Unit = { path ->
             drawPath(path, color, alpha, style, colorFilter, blendMode)
-        }
+        },
     )
 
     /**
@@ -252,10 +256,10 @@ data class LinePlot(
                     color,
                     Offset(left, y),
                     Offset(right, y),
-                    lineWidth.toPx()
+                    lineWidth.toPx(),
                 )
             }
-        }
+        },
     )
 
     /**
@@ -289,13 +293,13 @@ data class LinePlot(
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                     style = MaterialTheme.typography.caption,
-                    color = MaterialTheme.colors.onSurface
+                    color = MaterialTheme.colors.onSurface,
                 )
                 if (value > max) {
                     break
                 }
             }
-        }
+        },
     )
 
     /**
@@ -323,10 +327,10 @@ data class LinePlot(
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                     style = MaterialTheme.typography.caption,
-                    color = MaterialTheme.colors.onSurface
+                    color = MaterialTheme.colors.onSurface,
                 )
             }
-        }
+        },
     )
 }
 

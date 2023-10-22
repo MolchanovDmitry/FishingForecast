@@ -1,10 +1,8 @@
 package dmitry.molchanov.domain.usecase
 
-import dmitry.molchanov.domain.ioDispatcher
 import dmitry.molchanov.domain.model.ForecastSetting
 import dmitry.molchanov.domain.model.SimpleProfile
 import dmitry.molchanov.domain.repository.ForecastSettingsRepository
-import kotlinx.coroutines.withContext
 
 /**
  * Сохранить показатель прогнозирования, например:
@@ -19,7 +17,7 @@ class SaveForecastSettingMarkUseCase(private val repository: ForecastSettingsRep
     suspend fun execute(
         profile: SimpleProfile?,
         forecastSetting: ForecastSetting,
-    ) = withContext(ioDispatcher) {
+    ) {
         repository.saveForecastSettings(profile, forecastSetting)
     }
 }

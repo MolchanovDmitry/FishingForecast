@@ -1,8 +1,8 @@
 package dmitry.molchanov.db
 
-import dmitry.molchanov.db.ForecastSetting as DataForecastSetting
-import com.squareup.sqldelight.runtime.coroutines.asFlow
-import com.squareup.sqldelight.runtime.coroutines.mapToList
+import app.cash.sqldelight.coroutines.asFlow
+import app.cash.sqldelight.coroutines.mapToList
+import dmitry.molchanov.core.DispatcherDefault
 import dmitry.molchanov.domain.model.DeltaForecastMark
 import dmitry.molchanov.domain.model.ExactValueForecastMark
 import dmitry.molchanov.domain.model.ForecastMark
@@ -14,14 +14,18 @@ import dmitry.molchanov.domain.model.SimpleProfile
 import dmitry.molchanov.domain.repository.ForecastSettingsRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import dmitry.molchanov.db.ForecastSetting as DataForecastSetting
 
 class ForecastSettingRepositoryImpl(
-    private val forecastSettingQueries: ForecastSettingQueries
+    private val forecastSettingQueries: ForecastSettingQueries,
+    private val mapDispatcher: DispatcherDefault,
 
 ) : ForecastSettingsRepository {
 
     override fun fetchForecastSettingsFlow(profile: SimpleProfile?): Flow<List<ForecastSetting>> =
-        forecastSettingQueries.selectAll().asFlow().mapToList()
+        forecastSettingQueries.selectAll()
+            .asFlow()
+            .mapToList(mapDispatcher)
             .map { it.toDomainForecastSetting(profile) }
 
     override suspend fun fetchForecastSettings(profile: SimpleProfile?): List<ForecastSetting> =

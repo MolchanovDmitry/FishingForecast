@@ -2,6 +2,7 @@ package dmitry.molchanov.weather_data_update
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dmitry.molchanov.core.DispatcherDefault
 import dmitry.molchanov.domain.model.MapPoint
 import dmitry.molchanov.domain.model.WeatherData
 import dmitry.molchanov.domain.repository.WeatherDataRepository
@@ -25,7 +26,8 @@ import kotlinx.coroutines.launch
 
 class DataUpdateViewModel(
     weatherDataRepository: WeatherDataRepository,
-    private val fetchAndSaveWeatherDataUseCase: FetchAndSaveWeatherDataUseCase
+    private val fetchAndSaveWeatherDataUseCase: FetchAndSaveWeatherDataUseCase,
+    private val dispatcherDefault: DispatcherDefault,
 ) : ViewModel() {
 
     private val _weatherDataStateFlow = MutableStateFlow(WeatherDataState())
@@ -38,7 +40,7 @@ class DataUpdateViewModel(
         weatherDataRepository
             .fetchAllWeatherData()
             .onEach(::onWeatherDataFetched)
-            .flowOn(Dispatchers.IO)
+            .flowOn(dispatcherDefault)
             .launchIn(viewModelScope)
     }
 

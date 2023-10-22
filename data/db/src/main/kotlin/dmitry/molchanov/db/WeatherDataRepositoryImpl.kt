@@ -1,9 +1,10 @@
 package dmitry.molchanov.db
 
+import app.cash.sqldelight.coroutines.asFlow
+import app.cash.sqldelight.coroutines.mapToList
+import dmitry.molchanov.core.DispatcherDefault
 import dmitry.molchanov.db.WeatherData as DataWeatherData
 import dmitry.molchanov.domain.model.WeatherData as DomainWeatherData
-import com.squareup.sqldelight.runtime.coroutines.asFlow
-import com.squareup.sqldelight.runtime.coroutines.mapToList
 import dmitry.molchanov.domain.mapper.toWeatherDate
 import dmitry.molchanov.domain.model.MapPoint
 import dmitry.molchanov.domain.model.Pressure
@@ -15,6 +16,8 @@ import dmitry.molchanov.domain.repository.MapPointRepository
 import dmitry.molchanov.domain.repository.WeatherDataRepository
 import dmitry.molchanov.domain.utils.TimeMs
 import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
@@ -22,12 +25,13 @@ import kotlinx.coroutines.launch
 class WeatherDataRepositoryImpl(
     private val weatherDataQueries: WeatherDataQueries,
     private val mapPointRepository: MapPointRepository,
+    private val dispatcherDefault: DispatcherDefault,
 ) : WeatherDataRepository {
 
     override fun fetchAllWeatherData(): Flow<List<DomainWeatherData>> {
         return weatherDataQueries.selectAll()
             .asFlow()
-            .mapToList()
+            .mapToList(dispatcherDefault)
             .map { weatherData ->
                 weatherData.mapNotNull { dataWeatherData -> getDomainWeatherData(dataWeatherData) }
             }
@@ -46,7 +50,7 @@ class WeatherDataRepositoryImpl(
     ): Flow<List<DomainWeatherData>> {
         return weatherDataQueries.selectAll()// TODO запрашивать по параметрам
             .asFlow()
-            .mapToList()
+            .mapToList(dispatcherDefault)
             .map { weatherData ->
                 weatherData.filter { it.mapPointId == mapPoint.id && it.date <= to && it.date >= from }
             }

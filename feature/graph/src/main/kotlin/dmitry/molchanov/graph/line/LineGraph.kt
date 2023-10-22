@@ -54,10 +54,11 @@ import kotlin.math.ceil
  */
 @Composable
 fun LineGraph(
-    plot: LinePlot, modifier: Modifier = Modifier,
+    plot: LinePlot,
+    modifier: Modifier = Modifier,
     onSelectionStart: () -> Unit = {},
     onSelectionEnd: () -> Unit = {},
-    onSelection: ((Float, List<DataPoint>) -> Unit)? = null
+    onSelection: ((Float, List<DataPoint>) -> Unit)? = null,
 ) {
     val paddingTop = plot.paddingTop
     val paddingRight = plot.paddingRight
@@ -89,40 +90,46 @@ fun LineGraph(
             val (xMin, xMax, xAxisScale) = getXAxisScale(points, plot)
             val (yMin, yMax, yAxisScale) = getYAxisScale(points, plot)
 
-            Canvas(modifier = Modifier
-                .align(Alignment.Center)
-                .fillMaxHeight()
-                .fillMaxWidth()
-                .background(bgColor)
-                .scrollable(
-                    state = rememberScrollableState { delta ->
-                        offset.value -= delta
-                        if (offset.value < 0f) offset.value = 0f
-                        if (offset.value > maxScrollOffset.value) {
-                            offset.value = maxScrollOffset.value
-                        }
-                        delta
-                    }, Orientation.Horizontal, enabled = true
-                )
-                .pointerInput(Unit, Unit) {
-                    detectDragZoomGesture(
-                        isZoomAllowed = isZoomAllowed,
-                        isDragAllowed = plot.selection.enabled,
-                        detectDragTimeOut = plot.selection.detectionTime,
-                        onDragStart = {
-                            dragOffset.value = it.x
-                            onSelectionStart()
-                            isDragging.value = true
-                        }, onDragEnd = {
-                            isDragging.value = false
-                            onSelectionEnd()
-                        }, onZoom = { zoom ->
-                            xZoom.value *= zoom
-                        }
-                    ) { change, _ ->
-                        dragOffset.value = change.position.x
-                    }
-                },
+            Canvas(
+                modifier =
+                    Modifier
+                        .align(Alignment.Center)
+                        .fillMaxHeight()
+                        .fillMaxWidth()
+                        .background(bgColor)
+                        .scrollable(
+                            state =
+                                rememberScrollableState { delta ->
+                                    offset.value -= delta
+                                    if (offset.value < 0f) offset.value = 0f
+                                    if (offset.value > maxScrollOffset.value) {
+                                        offset.value = maxScrollOffset.value
+                                    }
+                                    delta
+                                },
+                            Orientation.Horizontal,
+                            enabled = true,
+                        ).pointerInput(Unit, Unit) {
+                            detectDragZoomGesture(
+                                isZoomAllowed = isZoomAllowed,
+                                isDragAllowed = plot.selection.enabled,
+                                detectDragTimeOut = plot.selection.detectionTime,
+                                onDragStart = {
+                                    dragOffset.value = it.x
+                                    onSelectionStart()
+                                    isDragging.value = true
+                                },
+                                onDragEnd = {
+                                    isDragging.value = false
+                                    onSelectionEnd()
+                                },
+                                onZoom = { zoom ->
+                                    xZoom.value *= zoom
+                                },
+                            ) { change, _ ->
+                                dragOffset.value = change.position.x
+                            }
+                        },
                 onDraw = {
                     val xLeft = columnWidth.value + horizontalGap.toPx()
                     val yBottom = size.height - rowHeight.value
@@ -133,9 +140,12 @@ fun LineGraph(
 
                     val xLastPoint =
                         (xMax - xMin) * xOffset * (1 / xUnit) + xLeft + paddingRight.toPx() + horizontalGap.toPx()
-                    maxScrollOffset.value = if (xLastPoint > size.width) {
-                        xLastPoint - size.width
-                    } else 0f
+                    maxScrollOffset.value =
+                        if (xLastPoint > size.width) {
+                            xLastPoint - size.width
+                        } else {
+                            0f
+                        }
 
                     val dragLocks = mutableMapOf<LinePlot.Line, Pair<DataPoint, Offset>>()
                     // Draw Lines and Points and AreaUnderLine
@@ -146,11 +156,12 @@ fun LineGraph(
 
                         // Draw area under curve
                         if (areaUnderLine != null) {
-                            val pts = line.dataPoints.map { (x, y) ->
-                                val x1 = ((x - xMin) * xOffset * (1 / xUnit)) + xLeft - offset.value
-                                val y1 = yBottom - ((y - yMin) * yOffset)
-                                Offset(x1, y1)
-                            }
+                            val pts =
+                                line.dataPoints.map { (x, y) ->
+                                    val x1 = ((x - xMin) * xOffset * (1 / xUnit)) + xLeft - offset.value
+                                    val y1 = yBottom - ((y - yMin) * yOffset)
+                                    Offset(x1, y1)
+                                }
                             val p = Path()
                             pts.forEachIndexed { index, offset ->
                                 if (index == 0) {
@@ -191,14 +202,15 @@ fun LineGraph(
                                 connection?.draw?.invoke(
                                     this,
                                     curOffset!!,
-                                    nextOffset!!
+                                    nextOffset!!,
                                 )
                             }
                             curOffset?.let {
-                                if (isDragging.value && isDragLocked(
+                                if (isDragging.value &&
+                                    isDragLocked(
                                         dragOffset.value,
                                         it,
-                                        xOffset
+                                        xOffset,
                                     )
                                 ) {
                                     dragLocks[line] = line.dataPoints[i] to it
@@ -214,14 +226,14 @@ fun LineGraph(
                     drawRect(
                         bgColor,
                         Offset(0f, 0f),
-                        Size(columnWidth.value, size.height)
+                        Size(columnWidth.value, size.height),
                     )
 
                     // Draw right padding
                     drawRect(
                         bgColor,
                         Offset(size.width - paddingRight.toPx(), 0f),
-                        Size(paddingRight.toPx(), size.height)
+                        Size(paddingRight.toPx(), size.height),
                     )
 
                     // Draw drag selection Highlight
@@ -233,7 +245,7 @@ fun LineGraph(
                                 plot.selection.highlight?.draw?.invoke(
                                     this,
                                     Offset(x, yBottom),
-                                    Offset(x, 0f)
+                                    Offset(x, 0f),
                                 )
                             }
                         }
@@ -250,12 +262,17 @@ fun LineGraph(
 
                     // OnSelection
                     if (isDragging.value) {
-                        val x = dragLocks.values.firstOrNull()?.second?.x
+                        val x =
+                            dragLocks.values
+                                .firstOrNull()
+                                ?.second
+                                ?.x
                         if (x != null) {
                             onSelection?.invoke(x, dragLocks.values.map { it.first })
                         }
                     }
-                })
+                },
+            )
 
             GraphXAxis(
                 Modifier
@@ -265,13 +282,11 @@ fun LineGraph(
                     .clip(
                         RowClip(
                             columnWidth.value,
-                            paddingRight
-                        )
-                    )
-                    .onGloballyPositioned {
+                            paddingRight,
+                        ),
+                    ).onGloballyPositioned {
                         rowHeight.value = it.size.height.toFloat()
-                    }
-                    .padding(bottom = plot.xAxis.paddingBottom, top = plot.xAxis.paddingTop),
+                    }.padding(bottom = plot.xAxis.paddingBottom, top = plot.xAxis.paddingTop),
                 columnWidth.value + horizontalGap.value * LocalDensity.current.density,
                 offset.value,
                 xZoom.value * xAxisScale * (1 / xUnit),
@@ -280,7 +295,7 @@ fun LineGraph(
                 plot.xAxis.content(
                     xMin,
                     xAxisScale,
-                    xMax
+                    xMax,
                 )
             }
 
@@ -291,8 +306,7 @@ fun LineGraph(
                     .wrapContentWidth()
                     .onGloballyPositioned {
                         columnWidth.value = it.size.width.toFloat()
-                    }
-                    .padding(start = plot.yAxis.paddingStart, end = plot.yAxis.paddingEnd),
+                    }.padding(start = plot.yAxis.paddingStart, end = plot.yAxis.paddingEnd),
                 paddingTop = paddingTop.value * LocalDensity.current.density,
                 paddingBottom = rowHeight.value,
                 scale = globalYScale,
@@ -303,12 +317,15 @@ fun LineGraph(
     }
 }
 
-private fun isDragLocked(dragOffset: Float, it: Offset, xOffset: Float) =
-    ((dragOffset) > it.x - xOffset / 2) && ((dragOffset) < it.x + xOffset / 2)
+private fun isDragLocked(
+    dragOffset: Float,
+    it: Offset,
+    xOffset: Float,
+) = ((dragOffset) > it.x - xOffset / 2) && ((dragOffset) < it.x + xOffset / 2)
 
 private fun getXAxisScale(
     points: List<DataPoint>,
-    plot: LinePlot
+    plot: LinePlot,
 ): Triple<Float, Float, Float> {
     val xMin = points.minOf { it.x }
     val xMax = points.maxOf { it.x }
@@ -321,7 +338,7 @@ private fun getXAxisScale(
 
 private fun getYAxisScale(
     points: List<DataPoint>,
-    plot: LinePlot
+    plot: LinePlot,
 ): Triple<Float, Float, Float> {
     val steps = plot.yAxis.steps
     val yMin = points.minOf { it.y }
@@ -334,23 +351,26 @@ private fun getYAxisScale(
     return Triple(yMin, yMax, scale)
 }
 
-private fun getMaxElementInYAxis(offset: Float, steps: Int): Float {
-    return (if (steps > 1) steps - 1 else 1) * offset
-}
+private fun getMaxElementInYAxis(
+    offset: Float,
+    steps: Int,
+): Float = (if (steps > 1) steps - 1 else 1) * offset
 
-private class RowClip(private val leftPadding: Float, private val rightPadding: Dp) : Shape {
+private class RowClip(
+    private val leftPadding: Float,
+    private val rightPadding: Dp,
+) : Shape {
     override fun createOutline(
         size: Size,
         layoutDirection: LayoutDirection,
-        density: Density
-    ): Outline {
-        return Outline.Rectangle(
+        density: Density,
+    ): Outline =
+        Outline.Rectangle(
             Rect(
                 leftPadding,
                 0f,
                 size.width - rightPadding.value * density.density,
-                size.height
-            )
+                size.height,
+            ),
         )
-    }
 }

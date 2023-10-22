@@ -30,7 +30,11 @@ val domainKoinModule = module {
     }
 
     factory<FetchAndSaveWeatherDataUseCase> {
-        FetchAndSaveWeatherDataUseCase(yandexWeatherRepository = get(), weatherDataRepository = get())
+        FetchAndSaveWeatherDataUseCase(
+            yandexWeatherRepository = get(),
+            weatherDataRepository = get(),
+            dispatcherDefault = get()
+        )
     }
 
     factory<GetForecastUseCase> {

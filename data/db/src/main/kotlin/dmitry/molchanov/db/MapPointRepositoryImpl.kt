@@ -1,24 +1,26 @@
 package dmitry.molchanov.db
 
-import dmitry.molchanov.db.MapPoint as DataMapPoint
-import dmitry.molchanov.domain.model.MapPoint as DomainMapPoint
-import com.squareup.sqldelight.runtime.coroutines.asFlow
-import com.squareup.sqldelight.runtime.coroutines.mapToList
+import app.cash.sqldelight.coroutines.asFlow
+import app.cash.sqldelight.coroutines.mapToList
+import dmitry.molchanov.core.DispatcherDefault
 import dmitry.molchanov.domain.mapper.ProfileMapper
 import dmitry.molchanov.domain.model.SimpleProfile
 import dmitry.molchanov.domain.repository.MapPointRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import dmitry.molchanov.db.MapPoint as DataMapPoint
+import dmitry.molchanov.domain.model.MapPoint as DomainMapPoint
 
 class MapPointRepositoryImpl(
     private val profileMapper: ProfileMapper,
     private val mapPointQueries: MapPointQueries,
+    private val mapDispatcher: DispatcherDefault,
 ) : MapPointRepository {
 
     override fun fetchMapPointsFlow(): Flow<List<DomainMapPoint>> {
         return mapPointQueries.selectAll()
             .asFlow()
-            .mapToList()
+            .mapToList(mapDispatcher)
             .map(::mapDataMapPointsToDomain)
     }
 

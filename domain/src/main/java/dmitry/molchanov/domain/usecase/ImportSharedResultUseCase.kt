@@ -1,13 +1,11 @@
 package dmitry.molchanov.domain.usecase
 
-import dmitry.molchanov.domain.ioDispatcher
 import dmitry.molchanov.domain.model.MapPoint
 import dmitry.molchanov.domain.model.Profile
 import dmitry.molchanov.domain.model.SharedResult
 import dmitry.molchanov.domain.model.SimpleProfile
 import dmitry.molchanov.domain.model.WeatherData
 import dmitry.molchanov.domain.repository.WeatherDataRepository
-import kotlinx.coroutines.withContext
 
 class ImportSharedResultUseCase(
     private val saveResultUseCase: SaveResultUseCase,
@@ -16,7 +14,7 @@ class ImportSharedResultUseCase(
     private val weatherDataRepository: WeatherDataRepository, // TODO заменить на usecase
 ) {
 
-    suspend fun execute(sharedResults: List<SharedResult>) = withContext(ioDispatcher) {
+    suspend fun execute(sharedResults: List<SharedResult>) {
         sharedResults.forEach {
             val result = it.result
             val mapPoint = result.mapPoint

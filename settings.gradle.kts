@@ -1,12 +1,27 @@
+enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
+
 pluginManagement {
+
+    resolutionStrategy {
+        eachPlugin {
+            if (requested.id.namespace == "app.cash") {
+                useModule("app.cash.sqldelight:gradle-plugin:+")
+            }
+        }
+    }
+
+    includeBuild("build-logic")
+
     repositories {
         google()
         gradlePluginPortal()
         mavenCentral()
+        maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
     }
 }
 
 rootProject.name = "FishingForecast"
+
 include(":androidApp")
 include(":domain")
 include(":feature:weather-data-update")

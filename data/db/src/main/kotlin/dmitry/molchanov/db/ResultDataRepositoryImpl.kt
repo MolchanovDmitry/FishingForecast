@@ -1,8 +1,8 @@
 package dmitry.molchanov.db
 
-import dmitry.molchanov.db.Result as DataResult
-import com.squareup.sqldelight.runtime.coroutines.asFlow
-import com.squareup.sqldelight.runtime.coroutines.mapToList
+import app.cash.sqldelight.coroutines.asFlow
+import app.cash.sqldelight.coroutines.mapToList
+import dmitry.molchanov.core.DispatcherDefault
 import dmitry.molchanov.domain.mapper.MapPointMapper
 import dmitry.molchanov.domain.mapper.ProfileMapper
 import dmitry.molchanov.domain.model.MapPoint
@@ -11,20 +11,24 @@ import dmitry.molchanov.domain.model.SimpleProfile
 import dmitry.molchanov.domain.repository.NullResultId
 import dmitry.molchanov.domain.repository.NullWeatherData
 import dmitry.molchanov.domain.repository.ResultDataRepository
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import dmitry.molchanov.db.Result as DataResult
 
 class ResultDataRepositoryImpl(
     private val resultQueries: ResultQueries,
     private val profileMapper: ProfileMapper,
     private val mapPointMapper: MapPointMapper,
     private val resultToWeatherDataQueries: ResultToWeatherDataQueries,
+    private val mapDispatcher: DispatcherDefault,
 ) : ResultDataRepository {
 
     override fun getResultsFlow(): Flow<List<Result>> =
         resultQueries.selectAll()
             .asFlow()
-            .mapToList()
+            .mapToList(mapDispatcher)
             .map { dataResults -> mapToResult(dataResults) }
 
 
