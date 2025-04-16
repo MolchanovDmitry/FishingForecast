@@ -1,9 +1,8 @@
 package dmitry.molchanov.db
 
-import dmitry.molchanov.db.AppDatabase
 import android.content.Context
-import app.cash.sqldelight.driver.android.AndroidSqliteDriver
 import app.cash.sqldelight.db.SqlDriver
+import app.cash.sqldelight.driver.android.AndroidSqliteDriver
 
 class DriverFactory(private val context: Context) {
 

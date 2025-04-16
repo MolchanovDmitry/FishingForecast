@@ -9,6 +9,7 @@ val profileRepositoryModule = module {
         ProfileRepositoryImpl(
             profileQueries = get(),
             appSettings = get(),
+            get(),
             get()
         )
     }

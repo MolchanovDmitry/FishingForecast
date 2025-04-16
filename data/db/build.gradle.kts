@@ -15,6 +15,8 @@ dependencies {
     arrayOf(
         projects.core,
         projects.domain,
+
+        libs.kotlinx.coroutines.core,
         libs.koin.core,
         libs.sqldelight.android.driver,
         libs.sqldelight.coroutines.ext,

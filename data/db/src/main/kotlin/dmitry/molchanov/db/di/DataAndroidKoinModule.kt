@@ -36,18 +36,20 @@ val dbModule = module {
     single<MapPointRepository> {
         MapPointRepositoryImpl(
             profileMapper = get(), mapPointQueries = get(),
-            mapDispatcher = get()
+            mapDispatcher = get(),
+            get()
         )
     }
 
     single<ForecastSettingsRepository> {
-        ForecastSettingRepositoryImpl(forecastSettingQueries = get(), get())
+        ForecastSettingRepositoryImpl(forecastSettingQueries = get(), get(), get())
     }
 
     single<WeatherDataRepository> {
         WeatherDataRepositoryImpl(
             weatherDataQueries = get<AppDatabase>().weatherDataQueries,
             mapPointRepository = get(),
+            get(),
             get()
         )
     }
@@ -58,6 +60,7 @@ val dbModule = module {
             profileMapper = get(),
             mapPointMapper = get(),
             resultToWeatherDataQueries = get<AppDatabase>().resultToWeatherDataQueries,
+            get(),
             get()
         )
     }

@@ -2,14 +2,24 @@ package dmitry.molchanov.preference
 
 import com.russhwolf.settings.ObservableSettings
 import com.russhwolf.settings.set
+import kotlinx.coroutines.withContext
+import dmitry.molchanov.core.DispatcherIo
 import dmitry.molchanov.domain.repository.AppPreferenceRepository
 
 class AppPreferenceRepositoryImpl(
     private val appSettings: ObservableSettings,
+    private val dispatcherIo: DispatcherIo,
 ) : AppPreferenceRepository {
-    override var lastRequestTime: Long?
-        get() = appSettings.getLongOrNull(LAST_REQUEST_TIME)
-        set(value) = appSettings.set(LAST_REQUEST_TIME, value)
+
+    override suspend fun getLastRequestTime(): Long? =
+        withContext(dispatcherIo) {
+            appSettings.getLongOrNull(LAST_REQUEST_TIME)
+        }
+
+    override suspend fun setLastRequestTime(lastRequestTime: Long): Unit =
+        withContext(dispatcherIo) {
+            appSettings[LAST_REQUEST_TIME] = lastRequestTime
+        }
 
     private companion object {
         const val LAST_REQUEST_TIME = "LAST_REQUEST_TIME"

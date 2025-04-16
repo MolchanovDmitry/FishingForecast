@@ -3,6 +3,7 @@ package dmitry.molchanov.db
 import app.cash.sqldelight.coroutines.asFlow
 import app.cash.sqldelight.coroutines.mapToList
 import dmitry.molchanov.core.DispatcherDefault
+import dmitry.molchanov.core.DispatcherIo
 import dmitry.molchanov.domain.model.DeltaForecastMark
 import dmitry.molchanov.domain.model.ExactValueForecastMark
 import dmitry.molchanov.domain.model.ForecastMark
@@ -13,32 +14,45 @@ import dmitry.molchanov.domain.model.MinValueForecastMark
 import dmitry.molchanov.domain.model.SimpleProfile
 import dmitry.molchanov.domain.repository.ForecastSettingsRepository
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.withContext
 import dmitry.molchanov.db.ForecastSetting as DataForecastSetting
 
 class ForecastSettingRepositoryImpl(
     private val forecastSettingQueries: ForecastSettingQueries,
-    private val mapDispatcher: DispatcherDefault,
+    private val dispatcherDefault: DispatcherDefault,
+    private val dispatcherIo: DispatcherIo,
 
-) : ForecastSettingsRepository {
+    ) : ForecastSettingsRepository {
 
     override fun fetchForecastSettingsFlow(profile: SimpleProfile?): Flow<List<ForecastSetting>> =
         forecastSettingQueries.selectAll()
             .asFlow()
-            .mapToList(mapDispatcher)
+            .flowOn(dispatcherIo)
+            .mapToList(dispatcherDefault)
             .map { it.toDomainForecastSetting(profile) }
+            .flowOn(dispatcherDefault)
 
     override suspend fun fetchForecastSettings(profile: SimpleProfile?): List<ForecastSetting> =
-        forecastSettingQueries.selectAll().executeAsList().toDomainForecastSetting(profile)
+        withContext(dispatcherIo) {
+            forecastSettingQueries.selectAll().executeAsList().toDomainForecastSetting(profile)
+        }
 
-    override suspend fun deleteForecastSetting(profile: SimpleProfile?, forecastSetting: ForecastSetting) {
+    override suspend fun deleteForecastSetting(
+        profile: SimpleProfile?,
+        forecastSetting: ForecastSetting
+    ) = withContext(dispatcherIo) {
         forecastSettingQueries.delete(
             profileName = profile?.name,
             forecastSettingItemLabel = forecastSetting.forecastSettingsItem.name,
         )
     }
 
-    override suspend fun saveForecastSettings(profile: SimpleProfile?, forecastSetting: ForecastSetting) {
+    override suspend fun saveForecastSettings(
+        profile: SimpleProfile?,
+        forecastSetting: ForecastSetting
+    ) = withContext(dispatcherIo) {
         var minValue: Double? = null
         var maxValue: Double? = null
         var deltaValue: Double? = null
@@ -75,7 +89,7 @@ class ForecastSettingRepositoryImpl(
             ForecastSetting(
                 forecastSettingsItem = ForecastSettingsItem.values()
                     .associateBy(ForecastSettingsItem::name)
-                        [it.forecastSettingItemLabel]
+                    [it.forecastSettingItemLabel]
                     ?: error("Невозможно соотнести forecastSettingItemLabel к ForecastSettingsItem"),
                 forecastMarks = forecastMarks
             )

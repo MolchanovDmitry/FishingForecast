@@ -17,7 +17,7 @@ lifecycleRuntimeKtx = "2.8.7"
 composeActivity = "1.10.1"
 koin = "3.5.0"
 sqlDelightVersion = "2.0.2"
-ktorVersion = "1.6.5"
+ktorVersion = "3.1.1"
 composeViewmodel = "2.8.7"
 composeNavigation = "2.8.9"
 composeConstraintlayout = "1.1.1"
@@ -51,6 +51,9 @@ sqldelight-coroutines-ext = { module = "app.cash.sqldelight:coroutines-extension
 
 ktor-core = { module = "io.ktor:ktor-client-core", version.ref = "ktorVersion" }
 ktor-serialization = { module = "io.ktor:ktor-client-serialization-jvm", version.ref = "ktorVersion" }
+ktor-negotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktorVersion" }
+ktor-serialization-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktorVersion" }
+ktor-client-logging = { module = "io.ktor:ktor-client-logging", version.ref = "ktorVersion" }
 ktor-okhttp = { module = "io.ktor:ktor-client-okhttp", version.ref = "ktorVersion" }
 ktor-android = { module = "io.ktor:ktor-client-android", version.ref = "ktorVersion" }
 ktor-interceptor = { module = "com.squareup.okhttp3:logging-interceptor", version = "4.12.0" }

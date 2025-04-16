@@ -9,7 +9,7 @@ import org.koin.dsl.module
 val preferenceModule = module {
 
         single<AppPreferenceRepository> {
-            AppPreferenceRepositoryImpl(appSettings = get())
+            AppPreferenceRepositoryImpl(appSettings = get(), get())
         }
 
         single<ObservableSettings> {

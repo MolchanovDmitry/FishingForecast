@@ -4,8 +4,11 @@ plugins {
 
 dependencies {
     arrayOf(
+        projects.core,
         projects.domain,
+
         libs.koin.core,
+        libs.kotlinx.coroutines.core,
         libs.multiplatform.settings,
         libs.multiplatform.settings.coroutines.native.mt,
     ).forEach(::implementation)

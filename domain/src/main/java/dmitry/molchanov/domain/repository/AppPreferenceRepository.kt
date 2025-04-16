@@ -2,5 +2,7 @@ package dmitry.molchanov.domain.repository
 
 interface AppPreferenceRepository {
 
-    var lastRequestTime: Long?
+    suspend fun getLastRequestTime(): Long?
+
+    suspend fun setLastRequestTime(lastRequestTime: Long)
 }
