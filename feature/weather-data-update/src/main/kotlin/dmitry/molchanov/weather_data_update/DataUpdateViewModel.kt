@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import dmitry.molchanov.domain.model.MapPoint
 import dmitry.molchanov.domain.model.WeatherData
 import dmitry.molchanov.domain.repository.WeatherDataRepository
-import dmitry.molchanov.domain.usecase.SaveWeatherDataUseCase
+import dmitry.molchanov.domain.usecase.FetchAndSaveWeatherDataUseCase
 import dmitry.molchanov.domain.utils.getDayCount
 import dmitry.molchanov.domain.utils.getMonthCount
 import dmitry.molchanov.weather_data_update.UpdateStatus.ERROR
@@ -25,7 +25,7 @@ import kotlinx.coroutines.launch
 
 class DataUpdateViewModel(
     weatherDataRepository: WeatherDataRepository,
-    private val saveWeatherDataUseCase: SaveWeatherDataUseCase
+    private val fetchAndSaveWeatherDataUseCase: FetchAndSaveWeatherDataUseCase
 ) : ViewModel() {
 
     private val _weatherDataStateFlow = MutableStateFlow(WeatherDataState())
@@ -47,7 +47,7 @@ class DataUpdateViewModel(
             .groupBy { it.mapPoint }
             .map { pointToWeatherMap ->
                 val mapPoint = pointToWeatherMap.key
-                val lastDate = pointToWeatherMap.value.maxOf { it.date.raw }
+                val lastDate = pointToWeatherMap.value.maxOf { it.date.roundedValue }
                 UiWeatherData(
                     mapPoint = mapPoint,
                     lastUpdateTime = lastDate,
@@ -64,7 +64,7 @@ class DataUpdateViewModel(
             _weatherDataStateFlow.value.list
                 .filter { uiWeatherData -> shouldUpdate(uiWeatherData.lastUpdateTime) }
                 .forEach { uiWeatherData ->
-                    saveWeatherDataUseCase.execute(uiWeatherData.mapPoint)
+                    fetchAndSaveWeatherDataUseCase.execute(uiWeatherData.mapPoint)
                         .onFailure { error ->
                             _weatherDataStateFlow.value =
                                 weatherDataStateFlow.value.list

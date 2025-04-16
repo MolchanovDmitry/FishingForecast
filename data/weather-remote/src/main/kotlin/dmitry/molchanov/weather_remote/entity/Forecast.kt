@@ -8,7 +8,7 @@ data class Forecast (
     @SerialName("date")
     val date: String,
     @SerialName("date_ts")
-    val dateTs: Int? = null,
+    val dateTs: Long? = null,
     @SerialName("week")
     val week: Int,
     @SerialName("sunrise")

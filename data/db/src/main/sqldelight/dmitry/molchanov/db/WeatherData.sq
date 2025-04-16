@@ -32,3 +32,16 @@ INSERT OR REPLACE INTO WeatherData(mapPointId, date, tempAvg, tempWater, windSpe
 pressureMm, pressurePa, humidity, moonCode)
 VALUES (?,?,?,?,?,?,?,?,?,?,?)
 ;
+
+get:
+SELECT *
+FROM WeatherData
+WHERE date = ? AND mapPointId = ?
+;
+
+getLast:
+SELECT *
+FROM WeatherData
+ORDER BY date DESC
+LIMIT 1
+;

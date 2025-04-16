@@ -4,6 +4,7 @@ import dmitry.molchanov.domain.mapper.MapPointMapper
 import dmitry.molchanov.domain.mapper.ProfileMapper
 import dmitry.molchanov.domain.usecase.DeleteForecastSettingUseCase
 import dmitry.molchanov.domain.usecase.DeleteProfileUseCase
+import dmitry.molchanov.domain.usecase.FetchAndSaveWeatherDataUseCase
 import dmitry.molchanov.domain.usecase.GetCurrentProfileUseCase
 import dmitry.molchanov.domain.usecase.GetForecastSettingMarksUseCase
 import dmitry.molchanov.domain.usecase.GetForecastUseCase
@@ -19,7 +20,6 @@ import dmitry.molchanov.domain.usecase.SaveForecastSettingMarkUseCase
 import dmitry.molchanov.domain.usecase.SaveMapPointUseCase
 import dmitry.molchanov.domain.usecase.SaveProfileUseCase
 import dmitry.molchanov.domain.usecase.SaveResultUseCase
-import dmitry.molchanov.domain.usecase.SaveWeatherDataUseCase
 import dmitry.molchanov.domain.usecase.SelectProfileUseCase
 import org.koin.dsl.module
 
@@ -29,8 +29,8 @@ val domainKoinModule = module {
         DeleteProfileUseCase(profileRepository = get())
     }
 
-    factory<SaveWeatherDataUseCase> {
-        SaveWeatherDataUseCase(yandexWeatherRepository = get(), weatherDataRepository = get())
+    factory<FetchAndSaveWeatherDataUseCase> {
+        FetchAndSaveWeatherDataUseCase(yandexWeatherRepository = get(), weatherDataRepository = get())
     }
 
     factory<GetForecastUseCase> {

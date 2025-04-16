@@ -1,8 +1,10 @@
 package dmitry.molchanov.fishingforecast.android.ui.weather
 
 import android.icu.text.SimpleDateFormat
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -13,12 +15,17 @@ import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import dmitry.molchanov.domain.model.CommonProfile
 import dmitry.molchanov.domain.model.MapPoint
 import dmitry.molchanov.domain.model.WeatherData
@@ -68,14 +75,30 @@ fun DrawMoonPhase(
                         15 -> R.drawable.ic_moon_15
                         else -> null
                     }?.let { drawableId ->
-                        Icon(
-                            painter = painterResource(drawableId),
-                            contentDescription = null,
+                        Box(
                             modifier = Modifier
                                 .align(CenterHorizontally)
                                 .width(50.dp)
-                                .height(50.dp),
-                        )
+                                .height(50.dp)
+                        ) {
+                            Icon(
+                                painter = painterResource(drawableId),
+                                contentDescription = null,
+                                modifier = Modifier.fillMaxSize()
+                            )
+                            Text(
+                                weatherItem.moonCode.toString(),
+                                color = Color.White,
+                                modifier = Modifier.align(Center),
+                                style = TextStyle(
+                                    fontSize = 25.sp,
+                                    shadow = Shadow(
+                                        color = Color.Black,
+                                        blurRadius = 10f
+                                    )
+                                )
+                            )
+                        }
                     }
 
                     Text(
@@ -93,7 +116,7 @@ fun DrawMoonPhase(
                         modifier = Modifier.align(CenterHorizontally)
                     )
                     Text(
-                        text = formatter.format(weatherItem.date.raw),
+                        text = formatter.format(weatherItem.date.roundedValue),
                         modifier = Modifier.align(CenterHorizontally)
                     )
                 }
@@ -106,7 +129,13 @@ private fun getPreviewWeatherDataByMoonCodes(moonCodes: List<Int>) =
     moonCodes.map { moonCode ->
         WeatherData(
             id = 0,
-            date = WeatherDate(raw = 5242, year = 1984, month = 6039, day = 5087, dayPart = DayPart.NIGHT),
+            date = WeatherDate(
+                roundedValue = 5242,
+                year = 1984,
+                month = 6039,
+                day = 5087,
+                dayPart = DayPart.NIGHT
+            ),
             mapPoint = MapPoint(
                 id = 0,
                 name = "",

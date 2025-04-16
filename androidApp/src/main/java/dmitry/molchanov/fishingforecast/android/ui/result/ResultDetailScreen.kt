@@ -50,7 +50,7 @@ fun ResultDetailScreen(result: Result = previewResult) {
         val point = LatLng(result.mapPoint.latitude, result.mapPoint.longitude)
         position = CameraPosition.fromLatLngZoom(point, 12f)
     }*/
-    val sortedWeatherData = state.value.weatherData.sortedBy { it.date.raw }
+    val sortedWeatherData = state.value.weatherData.sortedBy { it.date.roundedValue }
     if (sortedWeatherData.isNotEmpty()) {
         LaunchedEffect(Unit) {
             sortedWeatherData.lastOrNull()?.let { vm.onAction(OnDateSelected(it.date)) }
@@ -134,7 +134,7 @@ fun ResultDetailScreen(result: Result = previewResult) {
 private fun ResultDetailColumn(weatherDateItem: WeatherData) {
     val simpleDateFormat =
         remember { SimpleDateFormat("dd MMMM yyyy", java.util.Locale.getDefault()) }
-    val dataStr = simpleDateFormat.format(weatherDateItem.date.raw)
+    val dataStr = simpleDateFormat.format(weatherDateItem.date.roundedValue)
 
     ResultDetailItemRow(title = stringResource(R.string.date), value = dataStr)
 

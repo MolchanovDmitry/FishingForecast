@@ -17,10 +17,12 @@ class MainActivity : AppCompatActivity() {
         setContent {
             MainScreen(vm)
         }
-        schedule(
-            hour = 11,
-            minute = 0,
-            intent = Intent(this, AlarmReceiver::class.java)
-        )
+        if (!isWeatherDataWorkManagerScheduled()) {
+            schedule(
+                hour = 11,
+                minute = 0,
+                intent = Intent(this, AlarmReceiver::class.java)
+            )
+        }
     }
 }

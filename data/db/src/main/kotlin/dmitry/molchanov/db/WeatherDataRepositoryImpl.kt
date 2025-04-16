@@ -14,8 +14,10 @@ import dmitry.molchanov.domain.model.WindDir
 import dmitry.molchanov.domain.repository.MapPointRepository
 import dmitry.molchanov.domain.repository.WeatherDataRepository
 import dmitry.molchanov.domain.utils.TimeMs
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
 
 class WeatherDataRepositoryImpl(
     private val weatherDataQueries: WeatherDataQueries,
@@ -29,6 +31,12 @@ class WeatherDataRepositoryImpl(
             .map { weatherData ->
                 weatherData.mapNotNull { dataWeatherData -> getDomainWeatherData(dataWeatherData) }
             }
+    }
+
+    override suspend fun getLastWeatherData(): DomainWeatherData? {
+        return weatherDataQueries.getLast()
+            .executeAsOneOrNull()
+            ?.let { weatherData -> getDomainWeatherData(weatherData) }
     }
 
     override fun fetchWeatherDataFlow(
@@ -47,23 +55,48 @@ class WeatherDataRepositoryImpl(
             }
     }
 
+    /**
+     * Сохраняем фактические погодные данные.
+     * 1. Сначала пробуем получить уже имеющууся запись из базы
+     * 2. Затем перезаписываем фактические данные поверх сохраненных
+     */
     override suspend fun saveRawWeatherData(weatherData: List<RawWeatherData>) {
-        weatherData
-            .forEach { weatherDataItem ->
-                weatherDataQueries.insert(
-                    mapPointId = weatherDataItem.mapPoint.id,
-                    date = weatherDataItem.date,
-                    tempAvg = weatherDataItem.temperature?.avg?.toDouble(),
-                    tempWater = weatherDataItem.temperature?.water?.toDouble(),
-                    windSpeed = weatherDataItem.wind?.speed?.toDouble(),
-                    windGust = weatherDataItem.wind?.gust?.toDouble(),
-                    windDir = weatherDataItem.wind?.dir?.value,
-                    pressureMm = weatherDataItem.pressure?.mm?.toDouble(),
-                    pressurePa = weatherDataItem.pressure?.pa?.toDouble(),
-                    humidity = weatherDataItem.humidity?.toDouble(),
-                    moonCode = weatherDataItem.moonCode?.toLong()
-                )
-            }
+        coroutineScope {
+            weatherData
+                .forEach { weatherDataItem ->
+                    launch {
+
+                        val roundedWeatherDate = weatherDataItem.date.toWeatherDate().roundedValue
+                        val savedWeatherDataItem = weatherDataQueries.get(
+                            date = roundedWeatherDate,
+                            mapPointId = weatherDataItem.mapPoint.id
+                        ).executeAsOneOrNull()
+
+                        weatherDataQueries.insert(
+                            mapPointId = weatherDataItem.mapPoint.id,
+                            date = roundedWeatherDate,
+                            tempAvg = weatherDataItem.temperature?.avg?.toDouble()
+                                ?: savedWeatherDataItem?.tempAvg,
+                            tempWater = weatherDataItem.temperature?.water?.toDouble()
+                                ?: savedWeatherDataItem?.tempWater,
+                            windSpeed = weatherDataItem.wind?.speed?.toDouble()
+                                ?: savedWeatherDataItem?.windSpeed,
+                            windGust = weatherDataItem.wind?.gust?.toDouble()
+                                ?: savedWeatherDataItem?.windGust,
+                            windDir = weatherDataItem.wind?.dir?.value
+                                ?: savedWeatherDataItem?.windDir,
+                            pressureMm = weatherDataItem.pressure?.mm?.toDouble()
+                                ?: savedWeatherDataItem?.pressureMm,
+                            pressurePa = weatherDataItem.pressure?.pa?.toDouble()
+                                ?: savedWeatherDataItem?.pressurePa,
+                            humidity = weatherDataItem.humidity?.toDouble()
+                                ?: savedWeatherDataItem?.humidity,
+                            moonCode = weatherDataItem.moonCode?.toLong()
+                                ?: savedWeatherDataItem?.moonCode
+                        )
+                    }
+                }
+        }
     }
 
     override suspend fun saveWeatherData(weatherData: List<DomainWeatherData>) {
@@ -71,7 +104,7 @@ class WeatherDataRepositoryImpl(
             .forEach { weatherDataItem ->
                 weatherDataQueries.insert(
                     mapPointId = weatherDataItem.mapPoint.id,
-                    date = weatherDataItem.date.raw,
+                    date = weatherDataItem.date.roundedValue,
                     tempAvg = weatherDataItem.temperature?.avg?.toDouble(),
                     tempWater = weatherDataItem.temperature?.water?.toDouble(),
                     windSpeed = weatherDataItem.wind?.speed?.toDouble(),

@@ -68,6 +68,7 @@ dependencies {
         Deps.Koin.core,
         Deps.Koin.compose,
 
-        Deps.yandexMaps
+        Deps.yandexMaps,
+        "androidx.work:work-runtime-ktx:2.8.1"
     ).forEach(::implementation)
 }

@@ -8,23 +8,23 @@ data class Part(
     @SerialName("part_name")
     val partName: String? = null,
     @SerialName("temp_min")
-    val tempMin: Int? = null,
+    val tempMin: Float? = null,
     @SerialName("temp_avg")
-    val tempAvg: Int? = null,
+    val tempAvg: Float? = null,
     @SerialName("temp_max")
-    val tempMax: Int? = null,
+    val tempMax: Float? = null,
     @SerialName("wind_speed")
-    val windSpeed: Double? = null,
+    val windSpeed: Float? = null,
     @SerialName("wind_gust")
-    val windGust: Double? = null,
+    val windGust: Float? = null,
     @SerialName("wind_dir")
     val windDir: String? = null,
     @SerialName("pressure_mm")
-    val pressureMm: Double? = null,
+    val pressureMm: Float? = null,
     @SerialName("pressure_pa")
-    val pressurePa: Double? = null,
+    val pressurePa: Float? = null,
     @SerialName("humidity")
-    val humidity: Int,
+    val humidity: Float,
     @SerialName("prec_mm")
     val precMm: Double? = null,
     @SerialName("prec_prob")

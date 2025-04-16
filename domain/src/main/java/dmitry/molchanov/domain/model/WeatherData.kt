@@ -65,9 +65,15 @@ class Pressure(
     val pa: Float?,
 )
 
+/**
+ * Представление погодного времени
+ *
+ * @param roundedValue округленное значение до [DayPart]
+ * @param dayPart часть дня [утро, день, вечер, ночь]
+ */
 @Serializable
 data class WeatherDate(
-    val raw: Long,
+    val roundedValue: Long,
     val year: Int,
     val month: Int,
     val day: Int,

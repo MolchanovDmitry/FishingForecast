@@ -12,11 +12,11 @@ import dmitry.molchanov.domain.model.WeatherData
 import dmitry.molchanov.domain.repository.WeatherDataRepository
 import dmitry.molchanov.domain.repository.YandexWeatherRepository
 import dmitry.molchanov.domain.usecase.DeleteForecastSettingUseCase
+import dmitry.molchanov.domain.usecase.FetchAndSaveWeatherDataUseCase
 import dmitry.molchanov.domain.usecase.GetCurrentProfileUseCase
 import dmitry.molchanov.domain.usecase.GetForecastSettingMarksUseCase
 import dmitry.molchanov.domain.usecase.GetMapPointsUseCase
 import dmitry.molchanov.domain.usecase.SaveForecastSettingMarkUseCase
-import dmitry.molchanov.domain.usecase.SaveWeatherDataUseCase
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -30,7 +30,7 @@ class MainViewModel(
     getMapPointsUseCase: GetMapPointsUseCase,
     commonProfileFetcher: CommonProfileFetcher,
     getCurrentProfileUseCase: GetCurrentProfileUseCase,
-    private val saveWeatherDataUseCase: SaveWeatherDataUseCase,
+    private val fetchAndSaveWeatherDataUseCase: FetchAndSaveWeatherDataUseCase,
     private val deleteForecastSettings: Lazy<DeleteForecastSettingUseCase>,
     private val getForecastSettingMarks: GetForecastSettingMarksUseCase,
     private val saveForecastSettingMarkUseCase: Lazy<SaveForecastSettingMarkUseCase>,
@@ -88,7 +88,7 @@ class MainViewModel(
     private fun fetchWeatherData() {
         viewModelScope.launch {
             state.value.mapPoints.forEach { mapPoint ->
-                saveWeatherDataUseCase.execute(mapPoint)
+                fetchAndSaveWeatherDataUseCase.execute(mapPoint)
                     .onFailure {
                         it.printStackTrace()
                     }

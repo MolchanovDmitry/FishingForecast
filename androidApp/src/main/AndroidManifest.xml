@@ -33,7 +33,6 @@
             </intent-filter>
         </activity>
 
-
         <receiver
             android:name=".notifier.BootReceiver"
             android:enabled="true"
@@ -43,10 +42,10 @@
             </intent-filter>
         </receiver>
 
-        <receiver
+        <!--<receiver
             android:name=".notifier.AlarmReceiver"
             android:enabled="true"
-            android:exported="true" />
+            android:exported="true" />-->
 
         <provider
             android:name="androidx.core.content.FileProvider"
@@ -59,6 +58,17 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths"></meta-data>
         </provider>
+
+        <receiver
+            android:name=".FishWidgetProvider"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget" />
+        </receiver>
     </application>
 
 </manifest>

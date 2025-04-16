@@ -77,7 +77,7 @@ fun DrawWindDir(weatherData: List<WeatherData>) {
                         modifier = Modifier.align(CenterHorizontally)
                     )
                     Text(
-                        text = formatter.format(weatherItem.date.raw),
+                        text = formatter.format(weatherItem.date.roundedValue),
                         modifier = Modifier.align(CenterHorizontally)
                     )
                 }

@@ -28,7 +28,7 @@ val appKoinModule = module {
         WeatherNotifierPresenter(
             getCurrentWeatherDataUseCase = get(),
             getMapPointsUseCase = get(),
-            saveWeatherDataUseCase = get(),
+            fetchAndSaveWeatherDataUseCase = get(),
         )
     }
 
@@ -54,7 +54,7 @@ val appKoinModule = module {
             yandexWeatherRepository = get(),
             weatherDataRepository = get(),
             commonProfileFetcher = get(),
-            saveWeatherDataUseCase = get()
+            fetchAndSaveWeatherDataUseCase = get()
         )
     }
 
@@ -87,6 +87,6 @@ val appKoinModule = module {
     }
 
     viewModel<DataUpdateViewModel> {
-        DataUpdateViewModel(weatherDataRepository = get(), saveWeatherDataUseCase = get())
+        DataUpdateViewModel(weatherDataRepository = get(), fetchAndSaveWeatherDataUseCase = get())
     }
 }

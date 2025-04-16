@@ -13,7 +13,7 @@ import dmitry.molchanov.weather_remote.entity.WeatherResponseRoot
 
 class YandexWeatherNetworkDataSourceImpl(
     private val apiKey: String,
-): YandexWeatherRepository {
+) : YandexWeatherRepository {
 
     override suspend fun getYandexWeatherDate(mapPoint: MapPoint): Result<List<RawWeatherData>> {
         val result = NetworkClient.loadData<WeatherResponseRoot>(
@@ -46,9 +46,34 @@ class YandexWeatherNetworkDataSourceImpl(
                 speed = fact.windSpeed,
             ),
             humidity = fact.humidity,
-            moonCode = fact.moonCode
+            moonCode = null
         )
-        return listOf(factData) // TODO добавить промежуточных значений.
+        val forecastData = this.forecast.parts
+            .mapNotNull { part ->
+                RawWeatherData(
+                    date = (this.forecast.dateTs ?: return@mapNotNull null) * ONE_SEC,
+                    mapPoint = mapPoint,
+                    pressure = Pressure(
+                        mm = part.pressureMm,
+                        pa = part.pressurePa
+                    ),
+                    temperature = Temperature(
+                        avg = part.tempAvg,
+                        water = null
+                    ),
+                    wind = Wind(
+                        dir = part.windDir?.let(WindDir::getByValue),
+                        gust = part.windGust,
+                        speed = part.windSpeed,
+                    ),
+                    humidity = part.humidity,
+                    moonCode = this.forecast.moonCode
+                )
+            }
+        return mutableListOf<RawWeatherData>().apply {
+            add(factData)
+            addAll(forecastData)
+        }
     }
 
 }

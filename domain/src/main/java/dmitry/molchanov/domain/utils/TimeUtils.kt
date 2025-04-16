@@ -2,6 +2,7 @@ package dmitry.molchanov.domain.utils
 
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.Month
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toInstant
 import kotlinx.datetime.toLocalDateTime
@@ -60,6 +61,12 @@ fun TimeMs.getMonthCount(): Int {
     val nowMilliSec = Instant.fromEpochMilliseconds(this)
     val datetimeInUtc: LocalDateTime = nowMilliSec.toLocalDateTime(TimeZone.currentSystemDefault())
     return datetimeInUtc.monthNumber
+}
+
+fun TimeMs.getMonth(): Month {
+    val nowMilliSec = Instant.fromEpochMilliseconds(this)
+    val datetimeInUtc: LocalDateTime = nowMilliSec.toLocalDateTime(TimeZone.currentSystemDefault())
+    return datetimeInUtc.month
 }
 
 fun TimeMs.getYearCount(): Int {

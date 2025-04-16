@@ -107,7 +107,7 @@ fun WeatherScreen(mapPointId: MapPoint, forecastSettings: List<ForecastSetting>)
 }
 
 private fun List<WeatherData>.isOnlyOneDigitDays(): Boolean {
-    return this.find { it.date.raw.length() > 1 } != null
+    return this.find { it.date.roundedValue.length() > 1 } != null
 }
 
 private fun Long.length(): Int = this.toString().length
