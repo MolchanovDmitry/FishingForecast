@@ -1,10 +1,14 @@
 package dmitry.molchanov.fishingforecast
 
+import android.appwidget.AppWidgetManager
+import android.content.ComponentName
 import android.content.Context
+import android.widget.RemoteViews
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import dmitry.molchanov.domain.usecase.FetchAndSaveWeatherDataUseCase
 import dmitry.molchanov.domain.usecase.GetMapPointsUseCase
+import dmitry.molchanov.domain.usecase.WeatherDataUpdate
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.supervisorScope
@@ -25,19 +29,23 @@ class UpdateWeatherDataWorkManager(
             mapPoints.map { mapPoint ->
                 async {
                     getWeatherDataUseCase.execute(mapPoint)
-                        //.onSuccess(::updateWidgetViews)
-                        .onFailure (::println)
+                        .onSuccess(::updateWidgetViews)
+                        .onFailure(::println)
                 }
             }.awaitAll()
         }
         return Result.success()
     }
 
-    /*private fun updateWidgetViews(weatherDataUpdate: WeatherDataUpdate) {
+    private fun updateWidgetViews(weatherDataUpdate: WeatherDataUpdate) {
+        val weatherDataDate = weatherDataUpdate.lastWeatherDataDate
         val appWidgetManager = AppWidgetManager.getInstance(applicationContext)
         val remoteViews = RemoteViews(applicationContext.packageName, R.layout.widget)
-        val thisWidget = ComponentName(context, MyWidget::class.java)
-        remoteViews.setTextViewText(R.id.my_text_view, "myText" + System.currentTimeMillis())
+        val thisWidget = ComponentName(applicationContext, FishWidgetProvider::class.java)
+        remoteViews.setTextViewText(
+            R.id.lastWeatherDate,
+            weatherDataDate.run { "$year.$month.$day.$dayPart" }
+        )
         appWidgetManager.updateAppWidget(thisWidget, remoteViews)
-    }*/
+    }
 }
