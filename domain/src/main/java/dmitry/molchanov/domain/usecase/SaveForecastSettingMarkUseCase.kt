@@ -18,7 +18,7 @@ class SaveForecastSettingMarkUseCase(private val repository: ForecastSettingsRep
      */
     suspend fun execute(
         profile: SimpleProfile?,
-        forecastSetting: ForecastSetting,
+        forecastSetting: ForecastSetting
     ) = withContext(ioDispatcher) {
         repository.saveForecastSettings(profile, forecastSetting)
     }

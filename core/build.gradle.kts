@@ -1,7 +1,8 @@
 plugins {
     id("com.android.library")
     id("org.jetbrains.kotlin.android")
-    id(GradlePlugins.Id.KTLINT)
+    id("org.jetbrains.kotlin.plugin.compose")
+    id("org.jlleitschuh.gradle.ktlint")
 }
 
 android {
@@ -26,33 +27,38 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "17"
     }
 }
 
 dependencies {
+    val composeBom = platform(libs.compose.bom)
+    api(composeBom)
+
     arrayOf(
-        Deps.Coroutines.android,
-        Deps.Sqldelight.runtime,
-        Deps.Sqldelight.coroutinesExt,
-        Deps.Sqldelight.android_driver,
-        Deps.Ktor.core,
-        Deps.Ktor.okhttp,
-        Deps.Ktor.serialization,
-        Deps.Ktor.interceptor,
-        Deps.Koin.core,
-        Deps.compose_activity,
-        Deps.compose_ui,
-        Deps.compose_ui_tooling,
-        Deps.compose_foundation,
-        Deps.compose_material,
-        Deps.compose_icons_core,
-        Deps.compose_icons_extended,
-        Deps.compose_view_model,
-        Deps.compose_navigation,
+        libs.coroutines.android,
+        libs.sqldelight.android.driver,
+        libs.sqldelight.coroutines.ext,
+        libs.ktor.client.core,
+        libs.ktor.client.okhttp,
+        libs.ktor.client.content.negotiation,
+        libs.ktor.serialization.kotlinx.json,
+        libs.ktor.client.logging,
+        libs.okhttp,
+        libs.okhttp.logging.interceptor,
+        libs.koin.core,
+        libs.compose.activity,
+        libs.compose.ui,
+        libs.compose.ui.tooling,
+        libs.compose.foundation,
+        libs.compose.material,
+        libs.compose.material.icons.core,
+        libs.compose.material.icons.extended,
+        libs.compose.viewmodel,
+        libs.compose.navigation
     ).forEach(::api)
 }

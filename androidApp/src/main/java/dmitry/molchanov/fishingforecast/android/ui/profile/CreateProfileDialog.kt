@@ -40,54 +40,58 @@ fun CreateProfileDialog(
         AlertDialog(modifier = Modifier.fillMaxWidth(), onDismissRequest = {
             openDialog.value = false
         }, text = {
-            Column {
-                Text(
-                    text = "Создайте новый профиль",
-                    color = MaterialTheme.colors.primary,
-                    fontSize = 20.sp,
+                Column {
+                    Text(
+                        text = "Создайте новый профиль",
+                        color = MaterialTheme.colors.primary,
+                        fontSize = 20.sp,
+                        modifier = Modifier
+                            .padding(8.dp)
+                            .padding(bottom = 8.dp)
+                    )
+                    TextField(value = profileEdit, onValueChange = {
+                        profileEdit = it
+                        checkText = when {
+                            it.isEmpty() -> "Пустой профиль"
+                            it in profiles.map { it.name } -> "Профиль уже создан"
+                            else -> ""
+                        }
+                    })
+                    Text(checkText, color = Color.Red)
+                }
+            }, buttons = {
+                Row(
                     modifier = Modifier
-                        .padding(8.dp)
-                        .padding(bottom = 8.dp)
-                )
-                TextField(value = profileEdit, onValueChange = {
-                    profileEdit = it
-                    checkText = when {
-                        it.isEmpty() -> "Пустой профиль"
-                        it in profiles.map { it.name } -> "Профиль уже создан"
-                        else -> ""
-                    }
-                })
-                Text(checkText, color = Color.Red)
-            }
-        }, buttons = {
-            Row(
-                modifier = Modifier
-                    .padding(all = 8.dp)
-                    .fillMaxWidth(),
-                horizontalArrangement = Arrangement.End
-            ) {
-                Text("Отменить",
-                    color = MaterialTheme.colors.primary,
-                    fontSize = 18.sp,
-                    modifier = Modifier
-                        .padding(8.dp)
-                        .clickable {
-                            openDialog.value = false
-                            release()
-                        })
-                Text("Сохранить",
-                    color = MaterialTheme.colors.primary,
-                    fontSize = 18.sp,
-                    modifier = Modifier
-                        .padding(8.dp)
-                        .clickable {
-                            if (checkText.isEmpty()) {
+                        .padding(all = 8.dp)
+                        .fillMaxWidth(),
+                    horizontalArrangement = Arrangement.End
+                ) {
+                    Text(
+                        "Отменить",
+                        color = MaterialTheme.colors.primary,
+                        fontSize = 18.sp,
+                        modifier = Modifier
+                            .padding(8.dp)
+                            .clickable {
                                 openDialog.value = false
-                                profileTyped(SimpleProfile(profileEdit))
                                 release()
                             }
-                        })
-            }
-        })
+                    )
+                    Text(
+                        "Сохранить",
+                        color = MaterialTheme.colors.primary,
+                        fontSize = 18.sp,
+                        modifier = Modifier
+                            .padding(8.dp)
+                            .clickable {
+                                if (checkText.isEmpty()) {
+                                    openDialog.value = false
+                                    profileTyped(SimpleProfile(profileEdit))
+                                    release()
+                                }
+                            }
+                    )
+                }
+            })
     }
 }

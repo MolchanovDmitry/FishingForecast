@@ -9,7 +9,7 @@ import kotlinx.coroutines.withContext
 
 class GetWeatherDataByResultUseCase(
     private val resultDataRepository: ResultDataRepository,
-    private val weatherDataRepository: WeatherDataRepository,
+    private val weatherDataRepository: WeatherDataRepository
 ) {
 
     suspend fun execute(result: Result): List<WeatherData> = withContext(ioDispatcher) {

@@ -5,5 +5,5 @@ import kotlinx.serialization.Serializable
 @Serializable
 class SharedResult(
     val result: Result,
-    val weatherData: List<WeatherData>,
+    val weatherData: List<WeatherData>
 )

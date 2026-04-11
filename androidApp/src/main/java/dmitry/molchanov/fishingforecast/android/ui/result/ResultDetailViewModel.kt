@@ -13,7 +13,7 @@ import kotlinx.coroutines.launch
 
 class ResultDetailViewModel(
     result: Result,
-    getWeatherDataByResultUseCase: GetWeatherDataByResultUseCase,
+    getWeatherDataByResultUseCase: GetWeatherDataByResultUseCase
 ) : ViewModel() {
 
     private val _stateFlow = MutableStateFlow(ResultDetailState())
@@ -31,7 +31,6 @@ class ResultDetailViewModel(
             is OnDateSelected -> _stateFlow.update { it.copy(selectedDate = action.date) }
         }
     }
-
 }
 
 data class ResultDetailState(

@@ -36,9 +36,9 @@ class FetchAndSaveWeatherDataUseCase(
     }
 
     private fun WeatherDate.isSameDay(weatherDate: WeatherDate): Boolean =
-        this.day == weatherDate.day
-                && this.month == weatherDate.month
-                && this.year == weatherDate.year
+        this.day == weatherDate.day &&
+            this.month == weatherDate.month &&
+            this.year == weatherDate.year
 }
 
 class WeatherDataAlreadyExistError :

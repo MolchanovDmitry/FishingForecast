@@ -11,7 +11,7 @@ interface ResultDataRepository {
         resultName: String,
         weatherDataIds: List<Long>,
         profile: SimpleProfile?,
-        mapPoint: MapPoint,
+        mapPoint: MapPoint
     )
 
     fun getResultsFlow(): Flow<List<Result>>

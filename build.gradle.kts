@@ -7,27 +7,20 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.7.20")
-        classpath("org.jetbrains.kotlin:kotlin-serialization:1.7.20")
-        classpath("com.android.tools.build:gradle:7.3.1")
-        classpath("com.squareup.sqldelight:gradle-plugin:1.5.4")
-    }
-}
-
-allprojects {
-    repositories {
-        google()
-        mavenCentral()
-        maven("https://maven.google.com/")
+        classpath(libs.gradle.plugin.kotlin)
+        classpath(libs.gradle.plugin.kotlin.serialization)
+        classpath(libs.gradle.plugin.android)
+        classpath(libs.gradle.plugin.sqldelight)
+        classpath("org.jetbrains.kotlin:compose-compiler-gradle-plugin:2.1.0")
     }
 }
 
 tasks.register("clean", Delete::class) {
-    delete(rootProject.buildDir)
+    delete(layout.buildDirectory)
 }
 
 plugins {
-    id("org.jlleitschuh.gradle.ktlint") version "11.0.0" apply true
+    id("org.jlleitschuh.gradle.ktlint") version "11.6.1" apply true
 }
 
 ktlint {

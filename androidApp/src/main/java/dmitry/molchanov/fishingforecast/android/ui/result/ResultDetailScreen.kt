@@ -87,7 +87,8 @@ fun ResultDetailScreen(result: Result = previewResult) {
                         ViewProvider(
                             TextView(context).apply {
                                 text = result.name
-                            }, false
+                            },
+                            false
                         )
                     )
                     mapView.map.move(
@@ -95,7 +96,10 @@ fun ResultDetailScreen(result: Result = previewResult) {
                             Point(
                                 result.mapPoint.latitude,
                                 result.mapPoint.longitude
-                            ), 12.0f, 0.0f, 0.0f
+                            ),
+                            12.0f,
+                            0.0f,
+                            0.0f
                         )
                     )
                 }
@@ -115,7 +119,7 @@ fun ResultDetailScreen(result: Result = previewResult) {
                                 drawCircle(
                                     alpha = if (weatherDataItem.date == state.value.selectedDate) 1F else 0.4F,
                                     color = Color.Blue,
-                                    radius = this.size.height / 1.4F,
+                                    radius = this.size.height / 1.4F
                                 )
                             }
                             .clickable {
@@ -160,17 +164,20 @@ private fun ResultDetailColumn(weatherDateItem: WeatherData) {
         ResultDetailItemRow(stringResource(R.string.value_pres_pa), pa)
     }
     weatherDateItem.wind?.dir?.let { dir ->
-        ResultDetailItemRow(stringResource(R.string.value_wind_dir), when (dir) {
-            WindDir.NW -> R.string.wind_dir_nw
-            WindDir.N -> R.string.wind_dir_n
-            WindDir.NE -> R.string.wind_dir_ne
-            WindDir.E -> R.string.wind_dir_e
-            WindDir.SE -> R.string.wind_dir_se
-            WindDir.S -> R.string.wind_dir_s
-            WindDir.SW -> R.string.wind_dir_sw
-            WindDir.W -> R.string.wind_dir_w
-            WindDir.C -> R.string.wind_dir_c
-        }.let { strId -> stringResource(strId) })
+        ResultDetailItemRow(
+            stringResource(R.string.value_wind_dir),
+            when (dir) {
+                WindDir.NW -> R.string.wind_dir_nw
+                WindDir.N -> R.string.wind_dir_n
+                WindDir.NE -> R.string.wind_dir_ne
+                WindDir.E -> R.string.wind_dir_e
+                WindDir.SE -> R.string.wind_dir_se
+                WindDir.S -> R.string.wind_dir_s
+                WindDir.SW -> R.string.wind_dir_sw
+                WindDir.W -> R.string.wind_dir_w
+                WindDir.C -> R.string.wind_dir_c
+            }.let { strId -> stringResource(strId) }
+        )
     }
     weatherDateItem.wind?.gust?.toString()?.let { gust ->
         ResultDetailItemRow(stringResource(R.string.value_wind_gust), gust)

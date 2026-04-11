@@ -10,7 +10,7 @@ interface WeatherDataRepository {
 
     fun fetchAllWeatherData(): Flow<List<WeatherData>>
 
-    suspend fun getLastWeatherData() : WeatherData?
+    suspend fun getLastWeatherData(): WeatherData?
 
     fun fetchWeatherDataFlow(
         mapPoint: MapPoint,

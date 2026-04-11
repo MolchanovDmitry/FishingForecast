@@ -47,7 +47,9 @@ val domainKoinModule = module {
 
     factory<GetProfilesUseCase> {
         GetProfilesUseCase(
-            profileRepository = get(), commonProfileFetcher = get(), profileMapper = get()
+            profileRepository = get(),
+            commonProfileFetcher = get(),
+            profileMapper = get()
         )
     }
 
@@ -105,7 +107,8 @@ val domainKoinModule = module {
 
     factory<GetWeatherDataByResultUseCase> {
         GetWeatherDataByResultUseCase(
-            resultDataRepository = get(), weatherDataRepository = get()
+            resultDataRepository = get(),
+            weatherDataRepository = get()
         )
     }
 

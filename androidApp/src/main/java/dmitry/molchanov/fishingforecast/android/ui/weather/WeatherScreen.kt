@@ -45,7 +45,6 @@ fun WeatherScreen(mapPointId: MapPoint, forecastSettings: List<ForecastSetting>)
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
     ) {
-
         Text(text = "Общая оценка = $positiveCount из ${forecasts.size}")
 
         DrawWindDir(weatherData)
@@ -117,7 +116,6 @@ fun WeatherData.getDataPointByValue(value: Float, shouldMonthInclude: Boolean): 
     val x = if (shouldMonthInclude) date.month else date.day
     return DataPoint(x.toFloat(), value)
 }
-
 
 @Composable
 private fun List<Forecast>.GetItemForecast(forecastSettingsItem: ForecastSettingsItem) {

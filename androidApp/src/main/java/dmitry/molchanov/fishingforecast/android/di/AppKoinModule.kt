@@ -28,7 +28,7 @@ val appKoinModule = module {
         WeatherNotifierPresenter(
             getCurrentWeatherDataUseCase = get(),
             getMapPointsUseCase = get(),
-            fetchAndSaveWeatherDataUseCase = get(),
+            fetchAndSaveWeatherDataUseCase = get()
         )
     }
 

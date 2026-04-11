@@ -6,5 +6,5 @@ import kotlinx.serialization.Serializable
 class Result(
     val id: Long,
     val name: String,
-    val mapPoint: MapPoint,
+    val mapPoint: MapPoint
 )

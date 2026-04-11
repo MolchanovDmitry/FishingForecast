@@ -94,8 +94,9 @@ private fun RowScope.SettingItem(title: String, value: Float? = null) {
             .weight(1F),
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
         onValueChange = { inputValue ->
-            //inputValue.toIntOrNull()?.let { startPosition = it }
-        })
+            // inputValue.toIntOrNull()?.let { startPosition = it }
+        }
+    )
 }
 
 private val previewForecastSetting =

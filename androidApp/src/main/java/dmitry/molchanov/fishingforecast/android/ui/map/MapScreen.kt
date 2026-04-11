@@ -68,18 +68,20 @@ fun MapView(state: State<MapViewState>, vm: MapViewModel) {
                 mapView.map.addInputListener(tapListener)
             }
         }, update = {
-            state.value.mapPoints.forEach { mapPoint ->
-                mapView.map.mapObjects.addPlacemark(Point(mapPoint.latitude, mapPoint.longitude))
-            }
-            state.value.mapPoints.lastOrNull()?.let { mapPoint ->
-                mapView.map.move(
-                    CameraPosition(
-                        Point(mapPoint.latitude, mapPoint.longitude),
-                        14.0f, 0.0f, 0.0f
+                state.value.mapPoints.forEach { mapPoint ->
+                    mapView.map.mapObjects.addPlacemark(Point(mapPoint.latitude, mapPoint.longitude))
+                }
+                state.value.mapPoints.lastOrNull()?.let { mapPoint ->
+                    mapView.map.move(
+                        CameraPosition(
+                            Point(mapPoint.latitude, mapPoint.longitude),
+                            14.0f,
+                            0.0f,
+                            0.0f
+                        )
                     )
-                )
-            }
-        })
+                }
+            })
     }
     CreateMapPointDialog(
         openDialog = isOpedDialog,

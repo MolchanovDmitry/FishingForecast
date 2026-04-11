@@ -39,13 +39,15 @@ fun BaseDialog(
                         .fillMaxWidth(),
                     horizontalArrangement = Arrangement.End
                 ) {
-                    Text("Отменить",
+                    Text(
+                        "Отменить",
                         modifier = Modifier
                             .padding(8.dp)
                             .clickable {
                                 onNegative()
                                 openDialog.value = false
-                            })
+                            }
+                    )
                     Text(
                         "Сохранить",
                         modifier = Modifier
@@ -53,7 +55,8 @@ fun BaseDialog(
                             .clickable {
                                 onPositive()
                                 openDialog.value = false
-                            })
+                            }
+                    )
                 }
             }
         )

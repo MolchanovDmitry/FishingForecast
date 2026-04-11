@@ -21,7 +21,7 @@ class SaveMapPointUseCase(private val repository: MapPointRepository) {
             name = pointName,
             latitude = latitude,
             longitude = longitude,
-            profile = profile as? SimpleProfile,
+            profile = profile as? SimpleProfile
         )
     }
 }

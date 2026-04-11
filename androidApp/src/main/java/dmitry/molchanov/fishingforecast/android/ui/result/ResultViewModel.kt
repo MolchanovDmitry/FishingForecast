@@ -23,13 +23,6 @@ import dmitry.molchanov.domain.utils.ONE_DAY
 import dmitry.molchanov.domain.utils.TimeMs
 import dmitry.molchanov.domain.utils.nightTime
 import dmitry.molchanov.fishingforecast.android.mapper.CommonProfileFetcherImpl
-import java.io.BufferedReader
-import java.io.File
-import java.io.FileOutputStream
-import java.io.InputStream
-import java.io.InputStreamReader
-import java.text.SimpleDateFormat
-import java.util.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -39,6 +32,13 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.io.BufferedReader
+import java.io.File
+import java.io.FileOutputStream
+import java.io.InputStream
+import java.io.InputStreamReader
+import java.text.SimpleDateFormat
+import java.util.*
 
 class ResultViewModel(
     getResultUseCase: GetResultsUseCase,
@@ -49,7 +49,7 @@ class ResultViewModel(
     private val getMapPointsUseCase: Lazy<GetMapPointsUseCase>,
     private val importSharedResultUseCase: Lazy<ImportSharedResultUseCase>,
     private val getSavedWeatherDataUseCase: Lazy<GetSavedWeatherDataUseCase>,
-    private val getWeatherDataByResultUseCase: Lazy<GetWeatherDataByResultUseCase>,
+    private val getWeatherDataByResultUseCase: Lazy<GetWeatherDataByResultUseCase>
 ) : ViewModel() {
 
     private val _messageFlow = MutableSharedFlow<ResultEvent>(replay = 1)
@@ -86,7 +86,7 @@ class ResultViewModel(
                     nightTime - ONE_DAY,
                     nightTime - ONE_DAY - ONE_DAY,
                     nightTime - ONE_DAY - ONE_DAY - ONE_DAY,
-                    nightTime - ONE_DAY - ONE_DAY - ONE_DAY - ONE_DAY,
+                    nightTime - ONE_DAY - ONE_DAY - ONE_DAY - ONE_DAY
                 )
             )
         }
@@ -178,7 +178,7 @@ class ResultViewModel(
                 resultName = resultName,
                 weatherData = weatherData,
                 mapPoint = selectedMapPoint,
-                profile = stateFlow.value.selectedProfile,
+                profile = stateFlow.value.selectedProfile
             )
         }
     }
@@ -200,7 +200,8 @@ class ResultViewModel(
             val mapPoints = getMapPointsUseCase.value.execute()
             _stateFlow.update {
                 it.copy(
-                    mapPoints = mapPoints, selectedMapPoint = mapPoints.firstOrNull()
+                    mapPoints = mapPoints,
+                    selectedMapPoint = mapPoints.firstOrNull()
                 )
             }
         }
@@ -230,7 +231,7 @@ data class ResultScreenState(
     val shouldShowDialog: Boolean = false,
     val profiles: List<Profile> = emptyList(),
     val mapPoints: List<MapPoint> = emptyList(),
-    val results: List<Result> = emptyList(),
+    val results: List<Result> = emptyList()
 )
 
 sealed class ResultEvent

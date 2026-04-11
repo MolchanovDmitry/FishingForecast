@@ -124,4 +124,3 @@ fun TimeMs.string(): String {
 enum class DayPart(val hour: Int) {
     NIGHT(0), MORNING(6), MIDDAY(12), EVENING(18)
 }
-

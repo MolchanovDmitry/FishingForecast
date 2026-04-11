@@ -1,5 +1,6 @@
 package dmitry.molchanov.http
 
+import io.ktor.client.call.body
 import io.ktor.client.request.get
 import io.ktor.client.request.headers
 import io.ktor.http.HttpMethod
@@ -19,6 +20,6 @@ object NetworkClient {
                         append(it.key, it.value)
                     }
                 }
-            }
+            }.body<T>()
         }
 }

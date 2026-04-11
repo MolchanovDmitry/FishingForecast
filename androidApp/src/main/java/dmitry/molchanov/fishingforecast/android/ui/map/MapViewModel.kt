@@ -22,7 +22,7 @@ class MapViewModel(
     getMapPointsUseCase: GetMapPointsUseCase,
     getCurrentProfileUseCase: GetCurrentProfileUseCase,
     commonProfileFetcher: CommonProfileFetcherImpl,
-    private val saveMapPointUseCase: Lazy<SaveMapPointUseCase>,
+    private val saveMapPointUseCase: Lazy<SaveMapPointUseCase>
 ) : ViewModel() {
 
     private val stateFlow =
@@ -96,7 +96,7 @@ class MapViewModel(
                 pointName = action.title,
                 profile = action.profile,
                 latitude = action.latitude,
-                longitude = action.longitude,
+                longitude = action.longitude
             )
         }
     }
@@ -105,7 +105,7 @@ class MapViewModel(
 data class MapViewState(
     val currentProfile: Profile,
     val mapPoints: List<MapPoint> = emptyList(),
-    val profiles: List<Profile> = emptyList(),
+    val profiles: List<Profile> = emptyList()
 )
 
 sealed class MapAction

@@ -50,7 +50,8 @@ fun TypedDropDown(
                 Icon(
                     imageVector = icon,
                     contentDescription = null,
-                    modifier = Modifier.clickable { expanded.value = !expanded.value })
+                    modifier = Modifier.clickable { expanded.value = !expanded.value }
+                )
             }
         )
         DropdownMenu(

@@ -1,25 +1,31 @@
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
 plugins {
-    id("java-library")
     id("org.jetbrains.kotlin.jvm")
-    id(GradlePlugins.Id.kotlinx_serialization)
-    id(GradlePlugins.Id.KTLINT)
+    id("org.jetbrains.kotlin.plugin.serialization")
+    id("org.jlleitschuh.gradle.ktlint")
 }
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_1_8
-    targetCompatibility = JavaVersion.VERSION_1_8
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+}
+
+tasks.withType<KotlinCompile> {
+    compilerOptions {
+        jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17)
+    }
 }
 
 dependencies {
-    arrayOf(
-        Deps.Koin.core,
-        Deps.Coroutines.core,
-        Deps.Serialization.kotlinx_core,
-        Deps.Serialization.kotlinx_json,
-        Deps.Kotlinx.datetime
+    listOf(
+        libs.koin.core,
+        libs.coroutines.core,
+        libs.kotlinx.serialization.json,
+        libs.kotlinx.datetime
     ).forEach(::implementation)
 
-    arrayOf(
-        Deps.junit
+    listOf(
+        libs.junit
     ).forEach(::testImplementation)
 }

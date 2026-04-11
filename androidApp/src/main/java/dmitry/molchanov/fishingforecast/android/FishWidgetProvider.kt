@@ -14,7 +14,6 @@ class FishWidgetProvider : AppWidgetProvider() {
         appWidgetManager: AppWidgetManager?,
         appWidgetIds: IntArray?
     ) {
-
         val isFishWorkerScheduled = context?.isWeatherDataWorkManagerScheduled() ?: return
 
         if (!isFishWorkerScheduled) {

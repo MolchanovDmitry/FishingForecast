@@ -98,7 +98,7 @@ val forecastSettingItemToMarkConformity: List<ForecastSettingItemToMarkConformit
                 forecastMarkTypes = listOf(
                     MinValueForecastMark::class,
                     MaxValueForecastMark::class,
-                    DeltaForecastMark::class,
+                    DeltaForecastMark::class
                 )
             )
         )

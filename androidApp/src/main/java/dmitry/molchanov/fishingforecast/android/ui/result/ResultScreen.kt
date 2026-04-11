@@ -35,10 +35,10 @@ import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import dmitry.molchanov.domain.model.Result
-import java.io.File
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import org.koin.androidx.compose.koinViewModel
+import java.io.File
 
 @Composable
 fun ResultScreen(onResultClick: (Result) -> Unit) {
@@ -68,7 +68,6 @@ fun ResultScreen(onResultClick: (Result) -> Unit) {
     }
 
     Box(modifier = Modifier.fillMaxSize()) {
-
         LazyColumn(modifier = Modifier.fillMaxSize()) {
             items(items = results) { result ->
                 Row(modifier = Modifier.fillMaxWidth()) {
@@ -95,7 +94,8 @@ fun ResultScreen(onResultClick: (Result) -> Unit) {
             Button(modifier = Modifier.padding(4.dp), onClick = {
                 // TODO
                 if (ContextCompat.checkSelfPermission(
-                        context, WRITE_EXTERNAL_STORAGE
+                        context,
+                        WRITE_EXTERNAL_STORAGE
                     ) != PERMISSION_GRANTED
                 ) {
                     writePermissionLauncher.launch(WRITE_EXTERNAL_STORAGE)
@@ -106,7 +106,8 @@ fun ResultScreen(onResultClick: (Result) -> Unit) {
             }
             Button(modifier = Modifier.padding(4.dp), onClick = {
                 if (ContextCompat.checkSelfPermission(
-                        context, WRITE_EXTERNAL_STORAGE
+                        context,
+                        WRITE_EXTERNAL_STORAGE
                     ) != PERMISSION_GRANTED
                 ) {
                     readPermissionLauncher.launch(READ_EXTERNAL_STORAGE)
@@ -145,7 +146,6 @@ fun importFile() {
 }
 
 private fun shareFile(context: Context, filePath: String) {
-
     val contentUri: Uri =
         FileProvider.getUriForFile(context, "com.example.app.fileprovider", File(filePath))
 

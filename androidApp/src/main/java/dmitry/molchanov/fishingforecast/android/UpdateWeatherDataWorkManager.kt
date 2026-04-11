@@ -10,7 +10,6 @@ import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.supervisorScope
 import org.koin.java.KoinJavaComponent.get
 
-
 class UpdateWeatherDataWorkManager(
     appContext: Context,
     workerParams: WorkerParameters
@@ -25,8 +24,8 @@ class UpdateWeatherDataWorkManager(
             mapPoints.map { mapPoint ->
                 async {
                     getWeatherDataUseCase.execute(mapPoint)
-                        //.onSuccess(::updateWidgetViews)
-                        .onFailure (::println)
+                        // .onSuccess(::updateWidgetViews)
+                        .onFailure(::println)
                 }
             }.awaitAll()
         }

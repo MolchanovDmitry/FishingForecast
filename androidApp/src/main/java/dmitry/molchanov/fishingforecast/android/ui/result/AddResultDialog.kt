@@ -86,7 +86,6 @@ fun AddResultDialog(vm: ResultViewModel) {
                     label = { Text("Наименование результата") }
                 )
             }
-
         },
         buttons = {
             Row(

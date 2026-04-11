@@ -28,7 +28,7 @@ import dmitry.molchanov.fishingforecast.android.SaveForecastSettingMark
 
 @Composable
 fun ForecastSettingsList(
-    vm: MainViewModel,
+    vm: MainViewModel
 ) {
     val state = vm.state.collectAsState()
     var showDialog by remember { mutableStateOf(false) }
@@ -63,7 +63,7 @@ fun ForecastSettingsList(
                         SaveForecastSettingMark(
                             ForecastSetting(
                                 forecastMarks = it.second,
-                                forecastSettingsItem = it.first,
+                                forecastSettingsItem = it.first
                             )
                         )
                     )

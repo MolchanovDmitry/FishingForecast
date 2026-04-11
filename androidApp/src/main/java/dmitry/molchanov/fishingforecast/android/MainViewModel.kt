@@ -35,7 +35,7 @@ class MainViewModel(
     private val getForecastSettingMarks: GetForecastSettingMarksUseCase,
     private val saveForecastSettingMarkUseCase: Lazy<SaveForecastSettingMarkUseCase>,
     private val yandexWeatherRepository: YandexWeatherRepository,
-    private val weatherDataRepository: WeatherDataRepository,
+    private val weatherDataRepository: WeatherDataRepository
 ) : ViewModel() {
 
     private val _state =
@@ -99,7 +99,8 @@ class MainViewModel(
     private fun deleteForecastSetting(event: DeleteForecastSetting) {
         viewModelScope.launch {
             deleteForecastSettings.value.execute(
-                profile = state.value.currentProfile, forecastSetting = event.forecastSetting
+                profile = state.value.currentProfile,
+                forecastSetting = event.forecastSetting
             )
         }
     }

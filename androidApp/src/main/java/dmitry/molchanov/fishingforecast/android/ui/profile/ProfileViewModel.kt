@@ -23,7 +23,7 @@ class ProfileViewModel(
     getCurrentProfileNameUseCase: GetCurrentProfileUseCase,
     private val saveProfileUseCase: Lazy<SaveProfileUseCase>,
     private val deleteProfileUseCase: Lazy<DeleteProfileUseCase>,
-    private val selectProfileUseCase: Lazy<SelectProfileUseCase>,
+    private val selectProfileUseCase: Lazy<SelectProfileUseCase>
 ) : ViewModel() {
 
     private val stateFlow =
@@ -72,7 +72,7 @@ class ProfileViewModel(
 
 data class ProfileViewState(
     val currentProfile: Profile,
-    val profiles: List<Profile> = emptyList(),
+    val profiles: List<Profile> = emptyList()
 )
 
 sealed class ProfileAction

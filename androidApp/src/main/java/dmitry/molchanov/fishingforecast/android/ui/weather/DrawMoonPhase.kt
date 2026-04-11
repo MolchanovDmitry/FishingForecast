@@ -141,7 +141,7 @@ private fun getPreviewWeatherDataByMoonCodes(moonCodes: List<Int>) =
                 name = "",
                 profile = CommonProfile(name = ""),
                 latitude = 0.0,
-                longitude = 0.0,
+                longitude = 0.0
             ),
             pressure = null,
             temperature = null,

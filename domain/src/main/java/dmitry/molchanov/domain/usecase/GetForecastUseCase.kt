@@ -47,7 +47,7 @@ class GetForecastUseCase {
     /** Получить прогноз по периоду наблюдения. */
     private fun getForecastForPeriodObservation(
         weatherData: List<WeatherData>,
-        mark: ForecastMark,
+        mark: ForecastMark
     ): Forecast {
         val realPeriod = getPeriodObservation(weatherData)
         val checkValue = (mark as? ExactValueForecastMark)?.value
@@ -82,16 +82,19 @@ class GetForecastUseCase {
         val realDelta = maxValue - minValue
         when (mark) {
             is MinValueForecastMark -> {
-                if (minValue > mark.value)
+                if (minValue > mark.value) {
                     return Forecast(forecastSettingsItem, false)
+                }
             }
             is MaxValueForecastMark -> {
-                if (maxValue < mark.value)
+                if (maxValue < mark.value) {
                     return Forecast(forecastSettingsItem, false)
+                }
             }
             is DeltaForecastMark -> {
-                if (realDelta > mark.value)
+                if (realDelta > mark.value) {
                     return Forecast(forecastSettingsItem, false)
+                }
             }
             else -> error("Недопустимый вид прогнозирования для ${mark::class.simpleName}")
         }

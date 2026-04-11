@@ -7,7 +7,6 @@ import dmitry.molchanov.domain.utils.getMonthCount
 import dmitry.molchanov.domain.utils.getYearCount
 import java.util.*
 
-
 /** Мапит [long] представление в модель [WeatherDate] */
 
 fun Long.toWeatherDate(): WeatherDate {

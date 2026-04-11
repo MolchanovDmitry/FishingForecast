@@ -2,12 +2,16 @@ import java.util.*
 
 plugins {
     id("com.android.application")
-    kotlin("android")
-    kotlin("kapt")
-    id(GradlePlugins.Id.KTLINT)
+    id("org.jetbrains.kotlin.android")
+    id("org.jetbrains.kotlin.kapt")
+    id("org.jetbrains.kotlin.plugin.compose")
+    id("org.jlleitschuh.gradle.ktlint")
+    id("androidx.baselineprofile") version "1.3.3"
 }
 
 android {
+
+    namespace = "dmitry.molchanov.fishingforecast.android"
 
     val properties = Properties()
     val q: File = rootProject.file("local.properties")
@@ -27,27 +31,37 @@ android {
         buildConfigField("String", "YANDEX_MAP_API_KEY", yandexMapApiKey)
     }
     buildTypes {
-        getByName("release") {
+        release {
             isMinifyEnabled = false
+            signingConfig = signingConfigs.getByName("debug")
+            isShrinkResources = false
+            isDebuggable = false
         }
     }
+    lint {
+        checkReleaseBuilds = false
+        abortOnError = false
+    }
     buildFeatures {
-        compose = true
+        buildConfig = true
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = "1.8"
-    }
-
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.3.2"
+        jvmTarget = "17"
     }
 }
 
 dependencies {
+    val composeBom = platform(libs.compose.bom)
+    implementation(composeBom)
+    androidTestImplementation(composeBom)
+
+    // Baseline Profile — генерируется в benchmark модуле
+    "baselineProfile"(project(":benchmark"))
+
     listOf(
         project(Modules.CORE),
         project(Modules.DOMAIN),
@@ -58,17 +72,17 @@ dependencies {
         project(Modules.WEATHER_REMOTE),
         project(Modules.GRAPH),
 
-        Deps.material,
-        Deps.androidx_appcompat,
-        Deps.Coroutines.android,
+        libs.material,
+        libs.androidx.appcompat,
+        libs.coroutines.android,
 
-        Deps.androidx_lifecycle_runtime_ktx,
-        Deps.androidx_activity_ktx,
+        libs.androidx.lifecycle.runtime.ktx,
+        libs.androidx.activity.ktx,
 
-        Deps.Koin.core,
-        Deps.Koin.compose,
+        libs.koin.core,
+        libs.koin.compose,
 
-        Deps.yandexMaps,
-        "androidx.work:work-runtime-ktx:2.8.1"
+        libs.yandex.maps,
+        libs.androidx.work
     ).forEach(::implementation)
 }

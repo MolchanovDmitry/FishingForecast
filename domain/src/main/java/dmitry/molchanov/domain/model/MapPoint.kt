@@ -11,5 +11,5 @@ data class MapPoint(
     val name: String,
     val profile: Profile,
     val latitude: Double,
-    val longitude: Double,
+    val longitude: Double
 )

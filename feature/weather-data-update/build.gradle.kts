@@ -1,7 +1,8 @@
 plugins {
     id("com.android.library")
     id("org.jetbrains.kotlin.android")
-    id(GradlePlugins.Id.KTLINT)
+    id("org.jetbrains.kotlin.plugin.compose")
+    id("org.jlleitschuh.gradle.ktlint")
 }
 
 android {
@@ -26,43 +27,43 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "17"
     }
     buildFeatures {
         compose = true
     }
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.3.2"
-    }
 }
 
 dependencies {
+    val composeBom = platform(libs.compose.bom)
+    implementation(composeBom)
+
     listOf(
         project(Modules.DOMAIN),
 
-        Deps.material,
-        Deps.androidx_appcompat,
-        Deps.Coroutines.android,
+        libs.material,
+        libs.androidx.appcompat,
+        libs.coroutines.android,
 
-        Deps.androidx_lifecycle_runtime_ktx,
-        Deps.androidx_activity_ktx,
+        libs.androidx.lifecycle.runtime.ktx,
+        libs.androidx.activity.ktx,
 
-        Deps.compose_activity,
-        Deps.compose_ui,
-        Deps.compose_ui_tooling,
-        Deps.compose_foundation,
-        Deps.compose_material,
-        Deps.compose_icons_core,
-        Deps.compose_icons_extended,
-        Deps.compose_view_model,
-        Deps.compose_navigation,
+        libs.compose.activity,
+        libs.compose.ui,
+        libs.compose.ui.tooling,
+        libs.compose.foundation,
+        libs.compose.material,
+        libs.compose.material.icons.core,
+        libs.compose.material.icons.extended,
+        libs.compose.viewmodel,
+        libs.compose.navigation,
 
-        Deps.Koin.core,
-        Deps.Koin.compose,
-        Deps.Koin.android,
+        libs.koin.core,
+        libs.koin.compose,
+        libs.koin.android
     ).forEach(::implementation)
 }

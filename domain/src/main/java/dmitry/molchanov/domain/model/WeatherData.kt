@@ -31,7 +31,7 @@ data class WeatherData(
     val temperature: Temperature? = null,
     val wind: Wind? = null,
     val moonCode: Int?,
-    val humidity: Float? = null,
+    val humidity: Float? = null
 )
 
 data class RawWeatherData(
@@ -49,20 +49,20 @@ class Temperature(
     val min: Float? = null,
     val avg: Float? = null,
     val max: Float? = null,
-    val water: Float? = null,
+    val water: Float? = null
 )
 
 @Serializable
 class Wind(
     val speed: Float?,
     val gust: Float?,
-    val dir: WindDir?,
+    val dir: WindDir?
 )
 
 @Serializable
 class Pressure(
     val mm: Float?,
-    val pa: Float?,
+    val pa: Float?
 )
 
 /**

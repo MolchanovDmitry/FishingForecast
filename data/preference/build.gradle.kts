@@ -1,7 +1,7 @@
 plugins {
     id("com.android.library")
     id("org.jetbrains.kotlin.android")
-    id(GradlePlugins.Id.KTLINT)
+    id("org.jlleitschuh.gradle.ktlint")
 }
 
 android {
@@ -26,21 +26,19 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "17"
     }
 }
 
 dependencies {
-    arrayOf(
+    listOf(
         project(Modules.DOMAIN),
-        project(Modules.CORE)
+        project(Modules.CORE),
+        libs.multiplatform.settings.android,
+        libs.multiplatform.settings.coroutines
     ).forEach(::implementation)
-    // TODO заменить на data store
-    val settingsVersion = "0.8.1"
-    implementation("com.russhwolf:multiplatform-settings:$settingsVersion")
-    implementation("com.russhwolf:multiplatform-settings-coroutines-native-mt:$settingsVersion")
 }

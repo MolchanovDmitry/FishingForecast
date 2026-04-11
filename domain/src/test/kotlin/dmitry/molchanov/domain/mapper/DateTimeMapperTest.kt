@@ -1,22 +1,22 @@
 package dmitry.molchanov.domain.mapper
 
 import dmitry.molchanov.domain.utils.DayPart
+import dmitry.molchanov.domain.utils.dayPart
 import dmitry.molchanov.domain.utils.getHour
-import java.text.SimpleDateFormat
 import org.junit.Assert.assertEquals
 import org.junit.Test
+import java.text.SimpleDateFormat
 
 /**
  * Проверяем парсинг времени
  */
 class DateTimeMapperTest {
 
-    private val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+    private val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'")
 
     @Test
     fun test24() {
         val rawHourToDayPart = mapOf(
-            24 to DayPart.NIGHT,
             0 to DayPart.NIGHT,
             1 to DayPart.NIGHT,
             2 to DayPart.NIGHT,
@@ -40,18 +40,18 @@ class DateTimeMapperTest {
             20 to DayPart.EVENING,
             21 to DayPart.EVENING,
             22 to DayPart.EVENING,
-            23 to DayPart.EVENING,
+            23 to DayPart.EVENING
         )
 
         rawHourToDayPart.forEach { (hour, dayPart) ->
-            val rawDate = dateFormat.parse("1945-05-09T${hour}:00:00Z").time
+            val rawDate = dateFormat.parse("1945-05-09T$hour:00:00Z").time
             val parsedHour = rawDate.getHour()
-            val parsedDayPart = rawDate.toWeatherDate().dayPart
+            val parsedDayPart = rawDate.dayPart
             assertEquals(
                 "hour: $hour, " +
-                        "parsedHour: $parsedHour, " +
-                        "expected day part: ${dayPart.name}, " +
-                        "parsed day part: ${parsedDayPart.name}",
+                    "parsedHour: $parsedHour, " +
+                    "expected day part: ${dayPart.name}, " +
+                    "parsed day part: ${parsedDayPart.name}",
                 dayPart,
                 parsedDayPart
             )

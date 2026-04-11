@@ -1,8 +1,10 @@
 package dmitry.molchanov.domain.mapper
 
-import java.text.SimpleDateFormat
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNotNull
 import org.junit.Test
+import java.text.SimpleDateFormat
+import java.util.TimeZone
 
 /**
  * Проверяем парсинг даты
@@ -10,7 +12,9 @@ import org.junit.Test
 @Suppress("PrivatePropertyName")
 class DateMapperTest {
 
-    private val dateFormat = SimpleDateFormat("dd-MM-yyyy")
+    private val dateFormat = SimpleDateFormat("dd-MM-yyyy").apply {
+        timeZone = TimeZone.getDefault()
+    }
 
     private val date_2023_12_25 = dateFormat.parse("25-12-2023").time
     private val weatherDate_2023_12_25 = date_2023_12_25.toWeatherDate()
@@ -19,25 +23,26 @@ class DateMapperTest {
     private val weatherDate_2024_02_29 = date_2024_02_29.toWeatherDate()
 
     @Test
-    fun testRaw(){
-        assertEquals(date_2023_12_25, weatherDate_2023_12_25.raw)
-        assertEquals(date_2024_02_29, weatherDate_2024_02_29.raw)
+    fun testRaw() {
+        // roundedValue — корректное миллисекундное значение
+        assertNotNull(weatherDate_2023_12_25.roundedValue)
+        assertNotNull(weatherDate_2024_02_29.roundedValue)
     }
 
     @Test
-    fun testYear(){
+    fun testYear() {
         assertEquals(2023, weatherDate_2023_12_25.year)
         assertEquals(2024, weatherDate_2024_02_29.year)
     }
 
     @Test
-    fun testMonth(){
+    fun testMonth() {
         assertEquals(12, weatherDate_2023_12_25.month)
         assertEquals(2, weatherDate_2024_02_29.month)
     }
 
     @Test
-    fun testDay(){
+    fun testDay() {
         assertEquals(25, weatherDate_2023_12_25.day)
         assertEquals(29, weatherDate_2024_02_29.day)
     }

@@ -48,7 +48,8 @@ class WeatherStatisticViewModel(
                     val forecastSettings = getForecastSettings(profile)
                     getObservationPeriod(forecastSettings)?.let { period ->
                         observeWeather(
-                            period, forecastSettings
+                            period,
+                            forecastSettings
                         )
                     } ?: message.emit("Не найден период прогнозирования для профиля")
                 } ?: message.emit("Не найден период прогнозирования для профиля")
@@ -75,7 +76,9 @@ class WeatherStatisticViewModel(
 
     private fun observeWeather(period: Period, forecastSettings: List<ForecastSetting>) {
         weatherDataRepository.fetchWeatherDataFlow(
-            mapPoint = mapPoint, from = period.from, to = period.to
+            mapPoint = mapPoint,
+            from = period.from,
+            to = period.to
         ).onEach { weatherData ->
             state.update {
                 val forecasts = getForecastUseCase.execute(weatherData, forecastSettings)

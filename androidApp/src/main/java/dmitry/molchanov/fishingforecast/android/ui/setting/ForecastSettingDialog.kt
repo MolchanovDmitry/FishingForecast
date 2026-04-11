@@ -52,80 +52,88 @@ fun ForecastSettingDialog(
     AlertDialog(modifier = Modifier.fillMaxWidth(), onDismissRequest = {
         onDismiss()
     }, text = {
-        Column {
-            DropDown(modifier = Modifier.fillMaxWidth(),
-                label = "some label",
-                suggestions = notSelectedItemToMarks.map {
-                    it.forecastSettingsItem.toString(LocalContext.current)
-                },
-                defaultSelectedIndex = 0,
-                onSelectIndex = { index ->
-                    activeForecastSettingsItem = notSelectedItemToMarks[index].forecastSettingsItem
-                })
-            Row(modifier = Modifier.fillMaxWidth()) {
-                selectedForecastMarks.clear()
-                forecastSettingItemToMarkConformity.firstOrNull { it.forecastSettingsItem == activeForecastSettingsItem }?.forecastMarkTypes?.forEach { forecastMarkClass ->
-                    when (forecastMarkClass) {
-                        MinValueForecastMark::class -> SettingItem(title = "min:") { minValue ->
-                            shouldAddHint = false
-                            MinValueForecastMark(minValue).let(selectedForecastMarks::replaceOrAdd)
-                        }
-                        MaxValueForecastMark::class -> SettingItem(title = "max:") { maxValue ->
-                            shouldAddHint = false
-                            MaxValueForecastMark(maxValue).let(selectedForecastMarks::replaceOrAdd)
-                        }
-                        DeltaForecastMark::class -> SettingItem(title = "delta:") { delta ->
-                            shouldAddHint = false
-                            DeltaForecastMark(delta).let(selectedForecastMarks::replaceOrAdd)
-                        }
-                        ExactValueForecastMark::class -> SettingItem(title = "значение") { value ->
-                            shouldAddHint = false
-                            ExactValueForecastMark(value).let(selectedForecastMarks::replaceOrAdd)
+            Column {
+                DropDown(
+                    modifier = Modifier.fillMaxWidth(),
+                    label = "some label",
+                    suggestions = notSelectedItemToMarks.map {
+                        it.forecastSettingsItem.toString(LocalContext.current)
+                    },
+                    defaultSelectedIndex = 0,
+                    onSelectIndex = { index ->
+                        activeForecastSettingsItem = notSelectedItemToMarks[index].forecastSettingsItem
+                    }
+                )
+                Row(modifier = Modifier.fillMaxWidth()) {
+                    selectedForecastMarks.clear()
+                    forecastSettingItemToMarkConformity.firstOrNull { it.forecastSettingsItem == activeForecastSettingsItem }?.forecastMarkTypes?.forEach { forecastMarkClass ->
+                        when (forecastMarkClass) {
+                            MinValueForecastMark::class -> SettingItem(title = "min:") { minValue ->
+                                shouldAddHint = false
+                                MinValueForecastMark(minValue).let(selectedForecastMarks::replaceOrAdd)
+                            }
+                            MaxValueForecastMark::class -> SettingItem(title = "max:") { maxValue ->
+                                shouldAddHint = false
+                                MaxValueForecastMark(maxValue).let(selectedForecastMarks::replaceOrAdd)
+                            }
+                            DeltaForecastMark::class -> SettingItem(title = "delta:") { delta ->
+                                shouldAddHint = false
+                                DeltaForecastMark(delta).let(selectedForecastMarks::replaceOrAdd)
+                            }
+                            ExactValueForecastMark::class -> SettingItem(title = "значение") { value ->
+                                shouldAddHint = false
+                                ExactValueForecastMark(value).let(selectedForecastMarks::replaceOrAdd)
+                            }
                         }
                     }
                 }
+                if (shouldAddHint) {
+                    Text(
+                        text = "Заполните хотя бы одно значение",
+                        color = Color.Red
+                    )
+                }
             }
-            if (shouldAddHint) {
+        }, buttons = {
+            Row(
+                modifier = Modifier
+                    .padding(all = 8.dp)
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.End
+            ) {
                 Text(
-                    text = "Заполните хотя бы одно значение", color = Color.Red,
+                    "Отменить",
+                    color = MaterialTheme.colors.primary,
+                    fontSize = 18.sp,
+                    modifier = Modifier
+                        .padding(8.dp)
+                        .clickable {
+                            onDismiss()
+                        }
+                )
+                Text(
+                    "Сохранить",
+                    color = MaterialTheme.colors.primary,
+                    fontSize = 18.sp,
+                    modifier = Modifier
+                        .padding(8.dp)
+                        .clickable {
+                            if (selectedForecastMarks.isEmpty()) {
+                                shouldAddHint = true
+                            } else {
+                                onSuccess(activeForecastSettingsItem to selectedForecastMarks)
+                            }
+                        }
                 )
             }
-        }
-    }, buttons = {
-        Row(
-            modifier = Modifier
-                .padding(all = 8.dp)
-                .fillMaxWidth(),
-            horizontalArrangement = Arrangement.End
-        ) {
-            Text("Отменить",
-                color = MaterialTheme.colors.primary,
-                fontSize = 18.sp,
-                modifier = Modifier
-                    .padding(8.dp)
-                    .clickable {
-                        onDismiss()
-                    })
-            Text("Сохранить",
-                color = MaterialTheme.colors.primary,
-                fontSize = 18.sp,
-                modifier = Modifier
-                    .padding(8.dp)
-                    .clickable {
-                        if (selectedForecastMarks.isEmpty()) {
-                            shouldAddHint = true
-                        } else {
-                            onSuccess(activeForecastSettingsItem to selectedForecastMarks)
-                        }
-                    })
-        }
-    })
+        })
 }
 
 @Composable
 private fun RowScope.SettingItem(title: String, value: Float? = null, onChange: (Float) -> Unit) {
     var result by remember { mutableStateOf(value?.toString()) }
-    OutlinedTextField(value = result ?: "",
+    OutlinedTextField(
+        value = result ?: "",
         label = { Text(title) },
         modifier = Modifier
             .padding(8.dp)
