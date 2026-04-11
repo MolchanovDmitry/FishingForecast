@@ -26,7 +26,7 @@ import kotlin.reflect.KClass
  * @property TEMPERATURE_WATER настройка температуры воды.
  * @property HUMIDITY настройка влажности.
  */
-enum class ForecastSettingsItem() {
+enum class ForecastSettingsItem {
     OBSERVATION_PERIOD,
     PRESSURE_MM,
     PRESSURE_PA,

@@ -57,7 +57,6 @@ fun GraphItem(
     val maxY = maxBorderPoints?.firstOrNull()?.y ?: Float.MAX_VALUE
     val minY = minBorderPoints?.firstOrNull()?.y ?: Float.MIN_VALUE
     val xOffset = remember { mutableStateOf(0f) }
-    val yOffset = remember { mutableStateOf(0f) }
     val cardWidth = remember { mutableStateOf(0) }
     val visibility = remember { mutableStateOf(false) }
     val points = remember { mutableStateOf(listOf<DataPoint>()) }

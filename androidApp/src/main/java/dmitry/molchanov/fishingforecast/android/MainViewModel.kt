@@ -10,7 +10,6 @@ import dmitry.molchanov.domain.model.Profile
 import dmitry.molchanov.domain.model.SimpleProfile
 import dmitry.molchanov.domain.model.WeatherData
 import dmitry.molchanov.domain.repository.WeatherDataRepository
-import dmitry.molchanov.domain.repository.YandexWeatherRepository
 import dmitry.molchanov.domain.usecase.DeleteForecastSettingUseCase
 import dmitry.molchanov.domain.usecase.FetchAndSaveWeatherDataUseCase
 import dmitry.molchanov.domain.usecase.GetCurrentProfileUseCase
@@ -34,7 +33,6 @@ class MainViewModel(
     private val deleteForecastSettings: Lazy<DeleteForecastSettingUseCase>,
     private val getForecastSettingMarks: GetForecastSettingMarksUseCase,
     private val saveForecastSettingMarkUseCase: Lazy<SaveForecastSettingMarkUseCase>,
-    private val yandexWeatherRepository: YandexWeatherRepository,
     private val weatherDataRepository: WeatherDataRepository
 ) : ViewModel() {
 

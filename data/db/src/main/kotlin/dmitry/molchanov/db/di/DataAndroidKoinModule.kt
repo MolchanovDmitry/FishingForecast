@@ -51,7 +51,6 @@ val dbModule = module {
     single<ResultDataRepository> {
         ResultDataRepositoryImpl(
             resultQueries = get<AppDatabase>().resultQueries,
-            profileMapper = get(),
             mapPointMapper = get(),
             resultToWeatherDataQueries = get<AppDatabase>().resultToWeatherDataQueries
         )

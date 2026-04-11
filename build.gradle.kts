@@ -1,4 +1,4 @@
-import org.jlleitschuh.gradle.ktlint.reporter.ReporterType
+import io.gitlab.arturbosch.detekt.Detekt
 
 buildscript {
     repositories {
@@ -20,15 +20,25 @@ tasks.register("clean", Delete::class) {
 }
 
 plugins {
-    id("org.jlleitschuh.gradle.ktlint") version "11.6.1" apply true
+    id("io.gitlab.arturbosch.detekt") version "1.23.6" apply true
 }
 
-ktlint {
-    android.set(true)
-    ignoreFailures.set(false)
-    reporters {
-        reporter(ReporterType.PLAIN)
-        reporter(ReporterType.CHECKSTYLE)
-        reporter(ReporterType.SARIF)
+detekt {
+    buildUponDefaultConfig = true
+    allRules = false
+    ignoreFailures = false
+    config.setFrom(files("$rootDir/config/detekt/detekt.yml"))
+}
+
+tasks.withType<Detekt>().configureEach {
+    jvmTarget = "17"
+    languageVersion = "1.9"
+    parallel = true
+    
+    reports {
+        html.required.set(true)
+        xml.required.set(true)
+        txt.required.set(true)
+        sarif.required.set(true)
     }
 }

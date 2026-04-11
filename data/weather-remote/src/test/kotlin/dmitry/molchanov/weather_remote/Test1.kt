@@ -5,11 +5,6 @@ import org.junit.Test
 class Test1 {
 
     @Test
-    fun test(){
+    fun test() = Unit
 
-    }
-
-    private companion object{
-
-    }
 }

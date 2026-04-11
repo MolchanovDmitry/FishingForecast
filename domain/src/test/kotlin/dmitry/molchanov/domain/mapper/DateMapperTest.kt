@@ -16,34 +16,34 @@ class DateMapperTest {
         timeZone = TimeZone.getDefault()
     }
 
-    private val date_2023_12_25 = dateFormat.parse("25-12-2023").time
-    private val weatherDate_2023_12_25 = date_2023_12_25.toWeatherDate()
+    private val _date_2023_12_25 = dateFormat.parse("25-12-2023").time
+    private val _weatherDate_2023_12_25 = _date_2023_12_25.toWeatherDate()
 
-    private val date_2024_02_29 = dateFormat.parse("29-02-2024").time
-    private val weatherDate_2024_02_29 = date_2024_02_29.toWeatherDate()
+    private val _date_2024_02_29 = dateFormat.parse("29-02-2024").time
+    private val _weatherDate_2024_02_29 = _date_2024_02_29.toWeatherDate()
 
     @Test
     fun testRaw() {
         // roundedValue — корректное миллисекундное значение
-        assertNotNull(weatherDate_2023_12_25.roundedValue)
-        assertNotNull(weatherDate_2024_02_29.roundedValue)
+        assertNotNull(_weatherDate_2023_12_25.roundedValue)
+        assertNotNull(_weatherDate_2024_02_29.roundedValue)
     }
 
     @Test
     fun testYear() {
-        assertEquals(2023, weatherDate_2023_12_25.year)
-        assertEquals(2024, weatherDate_2024_02_29.year)
+        assertEquals(2023, _weatherDate_2023_12_25.year)
+        assertEquals(2024, _weatherDate_2024_02_29.year)
     }
 
     @Test
     fun testMonth() {
-        assertEquals(12, weatherDate_2023_12_25.month)
-        assertEquals(2, weatherDate_2024_02_29.month)
+        assertEquals(12, _weatherDate_2023_12_25.month)
+        assertEquals(2, _weatherDate_2024_02_29.month)
     }
 
     @Test
     fun testDay() {
-        assertEquals(25, weatherDate_2023_12_25.day)
-        assertEquals(29, weatherDate_2024_02_29.day)
+        assertEquals(25, _weatherDate_2023_12_25.day)
+        assertEquals(29, _weatherDate_2024_02_29.day)
     }
 }

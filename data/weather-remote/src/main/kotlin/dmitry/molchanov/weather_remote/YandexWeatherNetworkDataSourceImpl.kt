@@ -25,7 +25,7 @@ class YandexWeatherNetworkDataSourceImpl(
         return result.getOrNull()
             ?.toDomainWeatherData(mapPoint)
             ?.let { weatherData -> Result.success(weatherData) }
-            ?: Result.failure(result.exceptionOrNull() ?: Throwable())
+            ?: Result.failure(result.exceptionOrNull() ?: Throwable("Failed to fetch weather data"))
     }
 
     private fun WeatherResponseRoot.toDomainWeatherData(mapPoint: MapPoint): List<RawWeatherData> {

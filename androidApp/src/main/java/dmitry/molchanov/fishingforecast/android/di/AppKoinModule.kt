@@ -28,7 +28,6 @@ val appKoinModule = module {
         WeatherNotifierPresenter(
             getCurrentWeatherDataUseCase = get(),
             getMapPointsUseCase = get(),
-            fetchAndSaveWeatherDataUseCase = get()
         )
     }
 
@@ -51,7 +50,6 @@ val appKoinModule = module {
             getForecastSettingMarks = get(),
             deleteForecastSettings = inject(),
             saveForecastSettingMarkUseCase = inject(),
-            yandexWeatherRepository = get(),
             weatherDataRepository = get(),
             commonProfileFetcher = get(),
             fetchAndSaveWeatherDataUseCase = get()

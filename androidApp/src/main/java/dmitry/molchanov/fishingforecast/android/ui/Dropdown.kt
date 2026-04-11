@@ -29,7 +29,7 @@ fun DropDown(
     modifier: Modifier = Modifier,
     label: String = "",
     suggestions: List<String> = listOf("red", "green", "blue"),
-    defaultSelectedIndex: Int = 0,
+    @Suppress("UnusedParameter") defaultSelectedIndex: Int = 0,
     onSelectIndex: (Int) -> Unit = {}
 ) {
     val expanded = remember { mutableStateOf(false) }

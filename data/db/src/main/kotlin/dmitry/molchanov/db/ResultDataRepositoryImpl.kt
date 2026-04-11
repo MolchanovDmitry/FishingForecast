@@ -4,7 +4,6 @@ import dmitry.molchanov.db.Result as DataResult
 import com.squareup.sqldelight.runtime.coroutines.asFlow
 import com.squareup.sqldelight.runtime.coroutines.mapToList
 import dmitry.molchanov.domain.mapper.MapPointMapper
-import dmitry.molchanov.domain.mapper.ProfileMapper
 import dmitry.molchanov.domain.model.MapPoint
 import dmitry.molchanov.domain.model.Result
 import dmitry.molchanov.domain.model.SimpleProfile
@@ -16,7 +15,6 @@ import kotlinx.coroutines.flow.map
 
 class ResultDataRepositoryImpl(
     private val resultQueries: ResultQueries,
-    private val profileMapper: ProfileMapper,
     private val mapPointMapper: MapPointMapper,
     private val resultToWeatherDataQueries: ResultToWeatherDataQueries,
 ) : ResultDataRepository {

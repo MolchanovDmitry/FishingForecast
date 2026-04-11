@@ -1,3 +1,5 @@
+@file:Suppress("MatchingDeclarationName")
+
 package dmitry.molchanov.preference
 
 import android.content.Context

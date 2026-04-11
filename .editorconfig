@@ -1,3 +1,7 @@
 [*.{kt,kts}]
-ktlint_code_style = intellij_idea
-ktlint_standard_filename = disabled
+indent_size = 4
+indent_style = space
+max_line_length = 120
+
+[*.md]
+max_line_length = off

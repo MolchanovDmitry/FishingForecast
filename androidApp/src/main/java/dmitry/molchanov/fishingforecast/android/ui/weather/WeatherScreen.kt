@@ -59,7 +59,9 @@ fun WeatherScreen(mapPointId: MapPoint, forecastSettings: List<ForecastSetting>)
             GraphItem(
                 title = stringResource(R.string.temperature_avg),
                 dataPoints = avgTemperature,
-                forecastMars = forecastSettings.find { it.forecastSettingsItem == ForecastSettingsItem.TEMPERATURE_AVG }?.forecastMarks
+                forecastMars = forecastSettings.find {
+                    it.forecastSettingsItem == ForecastSettingsItem.TEMPERATURE_AVG
+                }?.forecastMarks
             )
         }
         forecasts.GetItemForecast(ForecastSettingsItem.TEMPERATURE_AVG)
@@ -72,7 +74,9 @@ fun WeatherScreen(mapPointId: MapPoint, forecastSettings: List<ForecastSetting>)
             GraphItem(
                 title = stringResource(R.string.temperature_water),
                 dataPoints = waterTemperature,
-                forecastMars = forecastSettings.find { it.forecastSettingsItem == ForecastSettingsItem.TEMPERATURE_WATER }?.forecastMarks
+                forecastMars = forecastSettings.find {
+                    it.forecastSettingsItem == ForecastSettingsItem.TEMPERATURE_WATER
+                }?.forecastMarks
             )
         }
         forecasts.GetItemForecast(ForecastSettingsItem.TEMPERATURE_WATER)
@@ -85,7 +89,9 @@ fun WeatherScreen(mapPointId: MapPoint, forecastSettings: List<ForecastSetting>)
             GraphItem(
                 title = stringResource(R.string.pressure_mm),
                 dataPoints = pressure,
-                forecastMars = forecastSettings.find { it.forecastSettingsItem == ForecastSettingsItem.PRESSURE_MM }?.forecastMarks
+                forecastMars = forecastSettings.find {
+                    it.forecastSettingsItem == ForecastSettingsItem.PRESSURE_MM
+                }?.forecastMarks
             )
         }
         forecasts.GetItemForecast(ForecastSettingsItem.PRESSURE_MM)
@@ -98,7 +104,9 @@ fun WeatherScreen(mapPointId: MapPoint, forecastSettings: List<ForecastSetting>)
             GraphItem(
                 title = stringResource(R.string.humidity),
                 dataPoints = humidity,
-                forecastMars = forecastSettings.find { it.forecastSettingsItem == ForecastSettingsItem.HUMIDITY }?.forecastMarks
+                forecastMars = forecastSettings.find {
+                    it.forecastSettingsItem == ForecastSettingsItem.HUMIDITY
+                }?.forecastMarks
             )
         }
         forecasts.GetItemForecast(ForecastSettingsItem.HUMIDITY)

@@ -9,7 +9,6 @@ import dmitry.molchanov.domain.usecase.GetMapPointsUseCase
 class WeatherNotifierPresenter(
     private val getCurrentWeatherDataUseCase: FetchAndSaveWeatherDataUseCase,
     private val getMapPointsUseCase: GetMapPointsUseCase,
-    private val fetchAndSaveWeatherDataUseCase: FetchAndSaveWeatherDataUseCase
 ) {
 
     suspend fun getForecast() {
