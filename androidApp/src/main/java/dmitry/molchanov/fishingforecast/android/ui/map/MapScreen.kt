@@ -1,10 +1,12 @@
 package dmitry.molchanov.fishingforecast.android.ui.map
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -13,18 +15,27 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.viewinterop.AndroidView
 import com.yandex.mapkit.geometry.Point
 import com.yandex.mapkit.map.CameraPosition
 import com.yandex.mapkit.map.InputListener
 import com.yandex.mapkit.map.Map
 import dmitry.molchanov.fishingforecast.android.ui.common.rememberMapViewWithLifecycle
+import kotlinx.coroutines.flow.onEach
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun MapScreen() {
     val vm = koinViewModel<MapViewModel>()
     val state = vm.state.collectAsState()
+    val context = LocalContext.current
+
+    LaunchedEffect(Unit) {
+        vm.messageFlow.collect { message ->
+            Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+        }
+    }
 
     Column(
         modifier = Modifier

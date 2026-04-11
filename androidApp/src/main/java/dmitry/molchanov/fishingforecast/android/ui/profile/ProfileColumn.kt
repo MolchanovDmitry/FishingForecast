@@ -58,7 +58,7 @@ fun ProfileColumn(
             )
         }
         LazyColumn(modifier = Modifier.fillMaxWidth()) {
-            items(items = profiles) { profile ->
+            items(items = profiles, key = { it.name }) { profile ->
                 Row(
                     modifier = Modifier
                         .padding(all = 16.dp)

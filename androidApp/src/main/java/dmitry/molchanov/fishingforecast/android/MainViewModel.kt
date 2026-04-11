@@ -17,8 +17,10 @@ import dmitry.molchanov.domain.usecase.GetForecastSettingMarksUseCase
 import dmitry.molchanov.domain.usecase.GetMapPointsUseCase
 import dmitry.molchanov.domain.usecase.SaveForecastSettingMarkUseCase
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -35,6 +37,9 @@ class MainViewModel(
     private val saveForecastSettingMarkUseCase: Lazy<SaveForecastSettingMarkUseCase>,
     private val weatherDataRepository: WeatherDataRepository
 ) : ViewModel() {
+
+    private val _messageFlow = MutableSharedFlow<String>(replay = 0)
+    val messageFlow = _messageFlow.asSharedFlow()
 
     private val _state =
         MutableStateFlow(MainViewState(currentProfile = commonProfileFetcher.instance))
@@ -85,21 +90,31 @@ class MainViewModel(
 
     private fun fetchWeatherData() {
         viewModelScope.launch {
-            state.value.mapPoints.forEach { mapPoint ->
-                fetchAndSaveWeatherDataUseCase.execute(mapPoint)
-                    .onFailure {
-                        it.printStackTrace()
-                    }
+            try {
+                state.value.mapPoints.forEach { mapPoint ->
+                    fetchAndSaveWeatherDataUseCase.execute(mapPoint)
+                        .onFailure {
+                            it.printStackTrace()
+                        }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                _messageFlow.tryEmit(e.message ?: "Ошибка загрузки погоды")
             }
         }
     }
 
     private fun deleteForecastSetting(event: DeleteForecastSetting) {
         viewModelScope.launch {
-            deleteForecastSettings.value.execute(
-                profile = state.value.currentProfile,
-                forecastSetting = event.forecastSetting
-            )
+            try {
+                deleteForecastSettings.value.execute(
+                    profile = state.value.currentProfile,
+                    forecastSetting = event.forecastSetting
+                )
+            } catch (e: Exception) {
+                e.printStackTrace()
+                _messageFlow.tryEmit(e.message ?: "Ошибка удаления настройки")
+            }
         }
     }
 
@@ -115,10 +130,15 @@ class MainViewModel(
 
     private fun saveForecastSettingMark(event: SaveForecastSettingMark) {
         viewModelScope.launch {
-            saveForecastSettingMarkUseCase.value.execute(
-                profile = state.value.currentProfile as? SimpleProfile,
-                forecastSetting = event.forecastSetting
-            )
+            try {
+                saveForecastSettingMarkUseCase.value.execute(
+                    profile = state.value.currentProfile as? SimpleProfile,
+                    forecastSetting = event.forecastSetting
+                )
+            } catch (e: Exception) {
+                e.printStackTrace()
+                _messageFlow.tryEmit(e.message ?: "Ошибка сохранения настройки")
+            }
         }
     }
 }

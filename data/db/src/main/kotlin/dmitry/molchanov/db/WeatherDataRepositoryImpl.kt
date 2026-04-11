@@ -14,10 +14,10 @@ import dmitry.molchanov.domain.model.WindDir
 import dmitry.molchanov.domain.repository.MapPointRepository
 import dmitry.molchanov.domain.repository.WeatherDataRepository
 import dmitry.molchanov.domain.utils.TimeMs
-import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class WeatherDataRepositoryImpl(
     private val weatherDataQueries: WeatherDataQueries,
@@ -57,45 +57,41 @@ class WeatherDataRepositoryImpl(
 
     /**
      * Сохраняем фактические погодные данные.
-     * 1. Сначала пробуем получить уже имеющууся запись из базы
+     * 1. Сначала пробуем получить уже имеющуюся запись из базы
      * 2. Затем перезаписываем фактические данные поверх сохраненных
      */
     override suspend fun saveRawWeatherData(weatherData: List<RawWeatherData>) {
-        coroutineScope {
-            weatherData
-                .forEach { weatherDataItem ->
-                    launch {
+        withContext(Dispatchers.IO) {
+            weatherData.forEach { weatherDataItem ->
+                val roundedWeatherDate = weatherDataItem.date.toWeatherDate().roundedValue
+                val savedWeatherDataItem = weatherDataQueries.get(
+                    date = roundedWeatherDate,
+                    mapPointId = weatherDataItem.mapPoint.id
+                ).executeAsOneOrNull()
 
-                        val roundedWeatherDate = weatherDataItem.date.toWeatherDate().roundedValue
-                        val savedWeatherDataItem = weatherDataQueries.get(
-                            date = roundedWeatherDate,
-                            mapPointId = weatherDataItem.mapPoint.id
-                        ).executeAsOneOrNull()
-
-                        weatherDataQueries.insert(
-                            mapPointId = weatherDataItem.mapPoint.id,
-                            date = roundedWeatherDate,
-                            tempAvg = weatherDataItem.temperature?.avg?.toDouble()
-                                ?: savedWeatherDataItem?.tempAvg,
-                            tempWater = weatherDataItem.temperature?.water?.toDouble()
-                                ?: savedWeatherDataItem?.tempWater,
-                            windSpeed = weatherDataItem.wind?.speed?.toDouble()
-                                ?: savedWeatherDataItem?.windSpeed,
-                            windGust = weatherDataItem.wind?.gust?.toDouble()
-                                ?: savedWeatherDataItem?.windGust,
-                            windDir = weatherDataItem.wind?.dir?.value
-                                ?: savedWeatherDataItem?.windDir,
-                            pressureMm = weatherDataItem.pressure?.mm?.toDouble()
-                                ?: savedWeatherDataItem?.pressureMm,
-                            pressurePa = weatherDataItem.pressure?.pa?.toDouble()
-                                ?: savedWeatherDataItem?.pressurePa,
-                            humidity = weatherDataItem.humidity?.toDouble()
-                                ?: savedWeatherDataItem?.humidity,
-                            moonCode = weatherDataItem.moonCode?.toLong()
-                                ?: savedWeatherDataItem?.moonCode
-                        )
-                    }
-                }
+                weatherDataQueries.insert(
+                    mapPointId = weatherDataItem.mapPoint.id,
+                    date = roundedWeatherDate,
+                    tempAvg = weatherDataItem.temperature?.avg?.toDouble()
+                        ?: savedWeatherDataItem?.tempAvg,
+                    tempWater = weatherDataItem.temperature?.water?.toDouble()
+                        ?: savedWeatherDataItem?.tempWater,
+                    windSpeed = weatherDataItem.wind?.speed?.toDouble()
+                        ?: savedWeatherDataItem?.windSpeed,
+                    windGust = weatherDataItem.wind?.gust?.toDouble()
+                        ?: savedWeatherDataItem?.windGust,
+                    windDir = weatherDataItem.wind?.dir?.value
+                        ?: savedWeatherDataItem?.windDir,
+                    pressureMm = weatherDataItem.pressure?.mm?.toDouble()
+                        ?: savedWeatherDataItem?.pressureMm,
+                    pressurePa = weatherDataItem.pressure?.pa?.toDouble()
+                        ?: savedWeatherDataItem?.pressurePa,
+                    humidity = weatherDataItem.humidity?.toDouble()
+                        ?: savedWeatherDataItem?.humidity,
+                    moonCode = weatherDataItem.moonCode?.toLong()
+                        ?: savedWeatherDataItem?.moonCode
+                )
+            }
         }
     }
 

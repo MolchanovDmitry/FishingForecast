@@ -106,9 +106,14 @@ class ResultViewModel(
     // TODO сделать сериализацию через input stream
     fun importResult(inputStream: InputStream) {
         viewModelScope.launch(Dispatchers.IO) {
-            val result = convertStreamToString(inputStream) ?: TODO()
-            val sharedResults = result.deserialize<List<SharedResult>>()
-            importSharedResultUseCase.value.execute(sharedResults)
+            try {
+                val result = convertStreamToString(inputStream) ?: TODO()
+                val sharedResults = result.deserialize<List<SharedResult>>()
+                importSharedResultUseCase.value.execute(sharedResults)
+            } catch (e: Exception) {
+                e.printStackTrace()
+                _messageFlow.tryEmit(Error(e.message ?: "Ошибка импорта результата"))
+            }
         }
     }
 
@@ -127,25 +132,25 @@ class ResultViewModel(
     // TODO реализовать публикацию только выбранных результатов
     private fun onShareClick() {
         viewModelScope.launch(ioDispatcher) {
-            results?.map { result ->
-                val weatherData = getWeatherDataByResultUseCase.value.execute(result)
-                SharedResult(result, weatherData)
-            }?.string()?.let { resultJson ->
-                val dateFormat = SimpleDateFormat("yyyy-MM-dd-HH-mm-ss", Locale.getDefault())
-                val fileNamePrefix = dateFormat.format(System.currentTimeMillis())
-                val fileName = "$fileNamePrefix.txt"
+            try {
+                results?.map { result ->
+                    val weatherData = getWeatherDataByResultUseCase.value.execute(result)
+                    SharedResult(result, weatherData)
+                }?.string()?.let { resultJson ->
+                    val dateFormat = SimpleDateFormat("yyyy-MM-dd-HH-mm-ss", Locale.getDefault())
+                    val fileNamePrefix = dateFormat.format(System.currentTimeMillis())
+                    val fileName = "$fileNamePrefix.txt"
 
-                val file = File(context.cacheDir, fileName)
-                file.writeText(String(resultJson.toByteArray(), charset("UTF-8")))
+                    val file = File(context.cacheDir, fileName)
+                    file.writeText(String(resultJson.toByteArray(), charset("UTF-8")))
 
-                _messageFlow.tryEmit(ShareFile(file.path))
+                    _messageFlow.tryEmit(ShareFile(file.path))
 
-                // try {
-
-                writeToFile(fileName = fileName, data = resultJson)
-                /*} catch (t: Throwable) {
-                    // ignore
-                }*/
+                    writeToFile(fileName = fileName, data = resultJson)
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                _messageFlow.tryEmit(Error("Ошибка сохранения результата"))
             }
         }
     }
@@ -163,23 +168,28 @@ class ResultViewModel(
 
     private fun tryCreateResult(resultName: String) {
         val selectedMapPoint = _stateFlow.value.selectedMapPoint ?: run {
-            _messageFlow.tryEmit(NullMapPoint())
+            _messageFlow.tryEmit(Error("Выберите точку"))
             return
         }
         val date =
             System.currentTimeMillis() // _stateFlow.value.selectedDate // TODO выбранная дата минус заданое количество
         viewModelScope.launch {
-            val weatherData: List<WeatherData> = getSavedWeatherDataUseCase.value.execute(
-                selectedMapPoint,
-                from = date - (5 * ONE_DAY),
-                to = date + ONE_DAY - 1
-            )
-            saveResultUseCase.value.execute(
-                resultName = resultName,
-                weatherData = weatherData,
-                mapPoint = selectedMapPoint,
-                profile = stateFlow.value.selectedProfile
-            )
+            try {
+                val weatherData: List<WeatherData> = getSavedWeatherDataUseCase.value.execute(
+                    selectedMapPoint,
+                    from = date - (5 * ONE_DAY),
+                    to = date + ONE_DAY - 1
+                )
+                saveResultUseCase.value.execute(
+                    resultName = resultName,
+                    weatherData = weatherData,
+                    mapPoint = selectedMapPoint,
+                    profile = stateFlow.value.selectedProfile
+                )
+            } catch (e: Exception) {
+                e.printStackTrace()
+                _messageFlow.tryEmit(Error("Ошибка создания результата"))
+            }
         }
     }
 
@@ -197,20 +207,30 @@ class ResultViewModel(
 
     private fun updateMapPoints() {
         viewModelScope.launch {
-            val mapPoints = getMapPointsUseCase.value.execute()
-            _stateFlow.update {
-                it.copy(
-                    mapPoints = mapPoints,
-                    selectedMapPoint = mapPoints.firstOrNull()
-                )
+            try {
+                val mapPoints = getMapPointsUseCase.value.execute()
+                _stateFlow.update {
+                    it.copy(
+                        mapPoints = mapPoints,
+                        selectedMapPoint = mapPoints.firstOrNull()
+                    )
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                _messageFlow.tryEmit(Error("Ошибка загрузки точек"))
             }
         }
     }
 
     private fun updateProfiles() {
         viewModelScope.launch {
-            val profiles = getProfilesUseCase.value.execute()
-            _stateFlow.update { it.copy(profiles = profiles) }
+            try {
+                val profiles = getProfilesUseCase.value.execute()
+                _stateFlow.update { it.copy(profiles = profiles) }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                _messageFlow.tryEmit(Error("Ошибка загрузки профилей"))
+            }
         }
     }
 
@@ -235,8 +255,8 @@ data class ResultScreenState(
 )
 
 sealed class ResultEvent
-class NullMapPoint : ResultEvent()
-class ShareFile(val filePath: String) : ResultEvent()
+data class Error(val message: String) : ResultEvent()
+data class ShareFile(val filePath: String) : ResultEvent()
 
 sealed class ResultAction
 class AddResultClickAction : ResultAction()

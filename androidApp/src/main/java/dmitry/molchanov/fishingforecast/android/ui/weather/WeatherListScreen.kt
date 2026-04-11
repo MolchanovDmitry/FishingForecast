@@ -32,7 +32,7 @@ fun WeatherDebugScreen(vm: MainViewModel, onMapPointSelected: (MapPoint) -> Unit
             Text("Получить данные")
         }
         LazyColumn(modifier = Modifier.fillMaxWidth()) {
-            items(state.value.weatherData.map { it.mapPoint }.distinct()) { item ->
+            items(state.value.weatherData.map { it.mapPoint }.distinct(), key = { "${it.name}_${it.profile?.name}" }) { item ->
                 Text(
                     text = item.name,
                     fontSize = 18.sp,

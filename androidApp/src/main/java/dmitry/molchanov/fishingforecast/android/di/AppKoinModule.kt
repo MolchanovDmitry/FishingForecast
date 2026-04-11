@@ -1,6 +1,5 @@
 package dmitry.molchanov.fishingforecast.android.di
 
-import dmitry.molchanov.domain.mapper.CommonProfileFetcher
 import dmitry.molchanov.domain.model.MapPoint
 import dmitry.molchanov.fishingforecast.android.BuildConfig
 import dmitry.molchanov.fishingforecast.android.MainViewModel
@@ -24,15 +23,10 @@ val appKoinModule = module {
     factory<CommonProfileFetcherImpl> { CommonProfileFetcherImpl(get()) }
 
     factory<WeatherNotifierPresenter> {
-        // TODO вынести в отдельный модуль.
         WeatherNotifierPresenter(
             getCurrentWeatherDataUseCase = get(),
             getMapPointsUseCase = get(),
         )
-    }
-
-    factory<CommonProfileFetcher> {
-        CommonProfileFetcherImpl(get())
     }
 
     viewModel<MapViewModel> {

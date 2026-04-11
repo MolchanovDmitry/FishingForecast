@@ -1,5 +1,6 @@
 package dmitry.molchanov.fishingforecast.android.ui.profile
 
+import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -10,12 +11,15 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.PersonAddAlt
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.flow.onEach
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -23,6 +27,13 @@ fun ProfileScreen() {
     val vm = koinViewModel<ProfileViewModel>()
     val state = vm.state.collectAsState()
     val profiles = state.value.profiles
+    val context = LocalContext.current
+
+    LaunchedEffect(Unit) {
+        vm.messageFlow.collect { message ->
+            Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+        }
+    }
 
     val openCreateDialog = remember { mutableStateOf(false) }
     Box(

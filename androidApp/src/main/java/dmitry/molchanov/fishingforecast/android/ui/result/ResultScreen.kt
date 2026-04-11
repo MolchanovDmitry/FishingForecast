@@ -69,7 +69,7 @@ fun ResultScreen(onResultClick: (Result) -> Unit) {
 
     Box(modifier = Modifier.fillMaxSize()) {
         LazyColumn(modifier = Modifier.fillMaxSize()) {
-            items(items = results) { result ->
+            items(items = results, key = { it.id }) { result ->
                 Row(modifier = Modifier.fillMaxWidth()) {
                     Text(
                         text = result.name,
@@ -126,8 +126,7 @@ fun ResultScreen(onResultClick: (Result) -> Unit) {
     LaunchedEffect(key1 = Unit) {
         vm.messageFlow.onEach { event ->
             when (event) {
-                is NullMapPoint -> Toast.makeText(context, "Выберите точку", Toast.LENGTH_SHORT)
-                    .show()
+                is Error -> Toast.makeText(context, event.message, Toast.LENGTH_SHORT).show()
                 is ShareFile -> shareFile(context = context, filePath = event.filePath)
             }
         }.launchIn(this)

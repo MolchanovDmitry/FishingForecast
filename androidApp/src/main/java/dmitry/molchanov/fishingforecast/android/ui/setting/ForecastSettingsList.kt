@@ -34,7 +34,7 @@ fun ForecastSettingsList(
     var showDialog by remember { mutableStateOf(false) }
     Box(modifier = Modifier.fillMaxSize()) {
         LazyColumn(modifier = Modifier.fillMaxWidth()) {
-            items(state.value.forecastSettings) { item ->
+            items(state.value.forecastSettings, key = { it.forecastSettingsItem }) { item ->
                 ForecastSettingItemView(item) { forecastSetting ->
                     vm.onEvent(DeleteForecastSetting(forecastSetting))
                 }

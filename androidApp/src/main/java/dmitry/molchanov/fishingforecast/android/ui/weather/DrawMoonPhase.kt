@@ -50,7 +50,7 @@ fun DrawMoonPhase(
             modifier = Modifier.align(CenterHorizontally)
         )
         LazyRow(modifier = Modifier.fillMaxWidth()) {
-            items(weatherData) { weatherItem ->
+            items(weatherData, key = { it.id }) { weatherItem ->
                 Column(
                     modifier = Modifier
                         .height(IntrinsicSize.Min)

@@ -34,7 +34,7 @@ fun DrawWindDir(weatherData: List<WeatherData>) {
             modifier = Modifier.align(CenterHorizontally)
         )
         LazyRow(modifier = Modifier.fillMaxWidth()) {
-            items(weatherData) { weatherItem ->
+            items(weatherData, key = { it.id }) { weatherItem ->
                 Column(
                     modifier = Modifier
                         .height(IntrinsicSize.Min)

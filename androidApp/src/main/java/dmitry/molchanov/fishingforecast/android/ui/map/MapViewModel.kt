@@ -10,7 +10,9 @@ import dmitry.molchanov.domain.usecase.GetMapPointsUseCase
 import dmitry.molchanov.domain.usecase.GetProfilesUseCase
 import dmitry.molchanov.domain.usecase.SaveMapPointUseCase
 import dmitry.molchanov.fishingforecast.android.mapper.CommonProfileFetcherImpl
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -24,6 +26,9 @@ class MapViewModel(
     commonProfileFetcher: CommonProfileFetcherImpl,
     private val saveMapPointUseCase: Lazy<SaveMapPointUseCase>
 ) : ViewModel() {
+
+    private val _messageFlow = MutableSharedFlow<String>(replay = 0)
+    val messageFlow = _messageFlow.asSharedFlow()
 
     private val stateFlow =
         MutableStateFlow(MapViewState(currentProfile = commonProfileFetcher.instance))
@@ -68,20 +73,6 @@ class MapViewModel(
         getProfilesUseCase.executeFlow().onEach { profiles ->
             stateFlow.update { it.copy(profiles = profiles) }
         }.launchIn(viewModelScope)
-
-        // TODO запрашивать по профилю
-        getMapPointsUseCase.executeFlow().onEach { mapPoints ->
-            // this.allMapPoints = mapPoints
-            stateFlow.update {
-                it.copy(
-                    mapPoints = if (state.value.currentProfile is CommonProfile) {
-                        mapPoints
-                    } else {
-                        mapPoints.filter { it.profile == state.value.currentProfile }
-                    }
-                )
-            }
-        }.launchIn(viewModelScope)
     }
 
     fun onAction(action: MapAction) {
@@ -92,12 +83,17 @@ class MapViewModel(
 
     private fun saveMapPoint(action: SavePoint) {
         viewModelScope.launch {
-            saveMapPointUseCase.value.execute(
-                pointName = action.title,
-                profile = action.profile,
-                latitude = action.latitude,
-                longitude = action.longitude
-            )
+            try {
+                saveMapPointUseCase.value.execute(
+                    pointName = action.title,
+                    profile = action.profile,
+                    latitude = action.latitude,
+                    longitude = action.longitude
+                )
+            } catch (e: Exception) {
+                e.printStackTrace()
+                _messageFlow.tryEmit(e.message ?: "Ошибка сохранения точки")
+            }
         }
     }
 }

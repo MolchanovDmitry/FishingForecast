@@ -10,7 +10,9 @@ import dmitry.molchanov.domain.usecase.GetProfilesUseCase
 import dmitry.molchanov.domain.usecase.SaveProfileUseCase
 import dmitry.molchanov.domain.usecase.SelectProfileUseCase
 import dmitry.molchanov.fishingforecast.android.mapper.CommonProfileFetcherImpl
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -25,6 +27,9 @@ class ProfileViewModel(
     private val deleteProfileUseCase: Lazy<DeleteProfileUseCase>,
     private val selectProfileUseCase: Lazy<SelectProfileUseCase>
 ) : ViewModel() {
+
+    private val _messageFlow = MutableSharedFlow<String>(replay = 0)
+    val messageFlow = _messageFlow.asSharedFlow()
 
     private val stateFlow =
         MutableStateFlow(ProfileViewState(currentProfile = commonProfileFetcher.instance))
@@ -51,20 +56,35 @@ class ProfileViewModel(
 
     private fun selectProfile(profile: Profile) {
         viewModelScope.launch {
-            selectProfileUseCase.value.execute(profile)
+            try {
+                selectProfileUseCase.value.execute(profile)
+            } catch (e: Exception) {
+                e.printStackTrace()
+                _messageFlow.tryEmit(e.message ?: "Ошибка выбора профиля")
+            }
         }
     }
 
     private fun deleteProfile(name: Profile) {
         viewModelScope.launch {
-            deleteProfileUseCase.value.execute(name)
+            try {
+                deleteProfileUseCase.value.execute(name)
+            } catch (e: Exception) {
+                e.printStackTrace()
+                _messageFlow.tryEmit(e.message ?: "Ошибка удаления профиля")
+            }
         }
     }
 
     private fun createProfile(profile: Profile) {
         viewModelScope.launch {
-            (profile as? SimpleProfile)?.let { simpleProfile ->
-                saveProfileUseCase.value.execute(simpleProfile)
+            try {
+                (profile as? SimpleProfile)?.let { simpleProfile ->
+                    saveProfileUseCase.value.execute(simpleProfile)
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                _messageFlow.tryEmit(e.message ?: "Ошибка создания профиля")
             }
         }
     }
