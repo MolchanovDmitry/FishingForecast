@@ -33,10 +33,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
-import androidx.core.content.FileProvider
 import dmitry.molchanov.domain.model.Result
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 import org.koin.androidx.compose.koinViewModel
 import java.io.File
 
@@ -124,34 +121,29 @@ fun ResultScreen(onResultClick: (Result) -> Unit) {
     }
 
     LaunchedEffect(key1 = Unit) {
-        vm.messageFlow.onEach { event ->
+        vm.messageFlow.collect { event ->
             when (event) {
                 is Error -> Toast.makeText(context, event.message, Toast.LENGTH_SHORT).show()
-                is ShareFile -> shareFile(context = context, filePath = event.filePath)
+                is ShareResult -> shareResult(context, event.data, event.fileName)
             }
-        }.launchIn(this)
+        }
     }
 }
 
-@Composable
-fun importFile() {
-    /*val chooseFile: Intent = Intent(Intent.ACTION_GET_CONTENT)
-    chooseFile.addCategory(Intent.CATEGORY_OPENABLE)
-    chooseFile.type = "file/*"
-    val intent = Intent.createChooser(chooseFile, "Choose a file")
-    startActivityForResult(context as Activity, intent,1,null)
-    */
-    */
-}
+private fun shareResult(context: Context, data: String, fileName: String) {
+    val file = java.io.File(context.cacheDir, fileName)
+    file.writeText(data)
 
-private fun shareFile(context: Context, filePath: String) {
-    val contentUri: Uri =
-        FileProvider.getUriForFile(context, "com.example.app.fileprovider", File(filePath))
+    val contentUri: Uri = androidx.core.content.FileProvider.getUriForFile(
+        context,
+        "${context.packageName}.fileprovider",
+        file
+    )
 
-    val shareIntent = Intent()
-    shareIntent.action = Intent.ACTION_SEND
-    shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION) // temp permission for receiving app to read this file
-    shareIntent.setDataAndType(contentUri, context.getContentResolver().getType(contentUri))
-    shareIntent.putExtra(Intent.EXTRA_STREAM, contentUri)
-    context.startActivity(Intent.createChooser(shareIntent, "Choose an app"))
+    val shareIntent = Intent(Intent.ACTION_SEND).apply {
+        addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+        setDataAndType(contentUri, context.contentResolver.getType(contentUri))
+        putExtra(Intent.EXTRA_STREAM, contentUri)
+    }
+    context.startActivity(Intent.createChooser(shareIntent, "Поделиться результатами"))
 }

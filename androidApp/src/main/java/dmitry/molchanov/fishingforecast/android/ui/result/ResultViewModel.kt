@@ -1,7 +1,5 @@
 package dmitry.molchanov.fishingforecast.android.ui.result
 
-import android.content.Context
-import android.os.Environment
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dmitry.molchanov.domain.ioDispatcher
@@ -33,8 +31,6 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.io.BufferedReader
-import java.io.File
-import java.io.FileOutputStream
 import java.io.InputStream
 import java.io.InputStreamReader
 import java.text.SimpleDateFormat
@@ -43,7 +39,6 @@ import java.util.*
 class ResultViewModel(
     getResultUseCase: GetResultsUseCase,
     commonProfileFetcher: Lazy<CommonProfileFetcherImpl>,
-    private val context: Context, // TODO удалить текущую затычку.
     private val saveResultUseCase: Lazy<SaveResultUseCase>,
     private val getProfilesUseCase: Lazy<GetProfilesUseCase>,
     private val getMapPointsUseCase: Lazy<GetMapPointsUseCase>,
@@ -133,33 +128,22 @@ class ResultViewModel(
     private fun onShareClick() {
         viewModelScope.launch(ioDispatcher) {
             try {
-                results?.map { result ->
+                val sharedResults = results?.map { result ->
                     val weatherData = getWeatherDataByResultUseCase.value.execute(result)
                     SharedResult(result, weatherData)
-                }?.string()?.let { resultJson ->
-                    val dateFormat = SimpleDateFormat("yyyy-MM-dd-HH-mm-ss", Locale.getDefault())
-                    val fileNamePrefix = dateFormat.format(System.currentTimeMillis())
-                    val fileName = "$fileNamePrefix.txt"
+                } ?: return@launch
 
-                    val file = File(context.cacheDir, fileName)
-                    file.writeText(String(resultJson.toByteArray(), charset("UTF-8")))
+                val resultJson = sharedResults.string()
+                val dateFormat = SimpleDateFormat("yyyy-MM-dd-HH-mm-ss", Locale.getDefault())
+                val fileNamePrefix = dateFormat.format(System.currentTimeMillis())
+                val fileName = "$fileNamePrefix.txt"
 
-                    _messageFlow.tryEmit(ShareFile(file.path))
-
-                    writeToFile(fileName = fileName, data = resultJson)
-                }
+                _messageFlow.tryEmit(ShareResult(resultJson, fileName))
             } catch (e: Exception) {
                 e.printStackTrace()
                 _messageFlow.tryEmit(Error("Ошибка сохранения результата"))
             }
         }
-    }
-
-    // TODO актуализировать
-    private fun writeToFile(fileName: String, data: String) {
-        val env = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS)
-        val stream = FileOutputStream("$env/$fileName")
-        stream.write(data.toByteArray())
     }
 
     private fun updateDialogStatus(isVisible: Boolean) {
@@ -256,7 +240,7 @@ data class ResultScreenState(
 
 sealed class ResultEvent
 data class Error(val message: String) : ResultEvent()
-data class ShareFile(val filePath: String) : ResultEvent()
+data class ShareResult(val data: String, val fileName: String) : ResultEvent()
 
 sealed class ResultAction
 class AddResultClickAction : ResultAction()
