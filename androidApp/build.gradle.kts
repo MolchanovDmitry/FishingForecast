@@ -27,6 +27,10 @@ android {
         versionCode = 1
         versionName = "1.0"
 
+        ndk {
+            abiFilters += "arm64-v8a"
+        }
+
         buildConfigField("String", "YANDEX_WEATHER_API_KEY", yandexWeatherApiKey)
         buildConfigField("String", "YANDEX_MAP_API_KEY", yandexMapApiKey)
     }
