@@ -56,6 +56,7 @@ benchmark-macro = "1.3.3"
 baselineprofile = "1.3.3"
 test-orchestrator = "1.5.1"
 coroutine-test = "1.10.2"
+kaspresso = "1.6.1"
 
 [libraries]
 # AndroidX Core
@@ -135,6 +136,10 @@ coroutine-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", ver
 # Compose Testing
 compose-test-junit4 = { module = "androidx.compose.ui:ui-test-junit4", version.ref = "compose-test-ui-test" }
 compose-test-manifest = { module = "androidx.compose.ui:ui-test-manifest", version.ref = "compose-test-ui-test" }
+
+# Kaspresso
+kaspresso-core = { module = "com.kaspersky.android-components:kaspresso", version.ref = "kaspresso" }
+kaspresso-compose = { module = "com.kaspersky.android-components:kaspresso-compose-support", version.ref = "kaspresso" }
 
 # AndroidX Testing
 androidx-test-runner = { module = "androidx.test:runner", version.ref = "androidx-test-runner" }

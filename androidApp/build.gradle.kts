@@ -62,6 +62,13 @@ dependencies {
     // Baseline Profile — генерируется в benchmark модуле
     "baselineProfile"(project(":benchmark"))
 
+    // UI Testing — Kaspresso
+    androidTestImplementation(libs.kaspresso.core)
+    androidTestImplementation(libs.kaspresso.compose)
+    androidTestImplementation(libs.androidx.test.runner)
+    androidTestImplementation(libs.androidx.test.rules)
+    androidTestImplementation(libs.androidx.test.ext.junit)
+
     listOf(
         project(Modules.CORE),
         project(Modules.DOMAIN),
