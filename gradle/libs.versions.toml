@@ -24,7 +24,7 @@ androidx-work = "2.10.0"
 androidx-navigation = "2.8.5"
 
 # Coroutines & Serialization
-coroutines = "1.9.0"
+coroutines = "1.10.2"
 kotlinx-datetime = "0.6.1"
 kotlinx-serialization-json = "1.7.3"
 
@@ -35,6 +35,9 @@ koin-compose = "4.0.1"
 # Ktor (v2)
 ktor = "3.1.0"
 okhttp = "4.12.0"
+
+# KSP (standalone, не привязан к версии Kotlin)
+kotlin-ksp = "2.3.6"
 
 # Compose 3rd party
 yandexMaps = "4.3.1-lite"
@@ -52,7 +55,7 @@ compose-test-ui-test = "1.7.8"
 benchmark-macro = "1.3.3"
 baselineprofile = "1.3.3"
 test-orchestrator = "1.5.1"
-coroutine-test = "1.9.0"
+coroutine-test = "1.10.2"
 
 [libraries]
 # AndroidX Core
@@ -189,3 +192,4 @@ kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "ko
 sqldelight = { id = "com.squareup.sqldelight", version.ref = "sqldelight" }
 ktlint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlint" }
 baselineprofile = { id = "androidx.baselineprofile", version.ref = "baselineprofile" }
+ksp = { id = "com.google.devtools.ksp", version.ref = "kotlin-ksp" }
