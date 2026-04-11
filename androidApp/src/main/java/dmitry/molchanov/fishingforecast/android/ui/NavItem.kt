@@ -1,7 +1,7 @@
 package dmitry.molchanov.fishingforecast.android.ui
 
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.List
+import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.filled.Map
 import androidx.compose.material.icons.filled.People
 import androidx.compose.material.icons.filled.Settings
@@ -21,7 +21,7 @@ enum class NavItem(val label: String, val icon: ImageVector, val destination: Sc
     ),
     WEATHER_LIST(
         label = "Список",
-        icon = Icons.Default.List,
+        icon = Icons.AutoMirrored.Filled.List,
         destination = Screen.WeatherList
     ),
     RESULTS(
