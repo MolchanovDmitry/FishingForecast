@@ -8,9 +8,11 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
@@ -28,13 +30,27 @@ fun DrawWindDir(weatherData: List<WeatherData>) {
     val formatter = remember {
         SimpleDateFormat("MM-dd", Locale.getDefault())
     }
+    val sortedData = remember(weatherData) {
+        weatherData.sortedBy { it.date.roundedValue }
+    }
+    val listState = rememberLazyListState()
+
+    LaunchedEffect(sortedData.size) {
+        if (sortedData.isNotEmpty()) {
+            listState.scrollToItem(sortedData.size - 1)
+        }
+    }
+
     Column(modifier = Modifier.fillMaxWidth()) {
         Text(
             text = stringResource(R.string.wind_dir_title),
             modifier = Modifier.align(CenterHorizontally)
         )
-        LazyRow(modifier = Modifier.fillMaxWidth()) {
-            items(weatherData, key = { it.id }) { weatherItem ->
+        LazyRow(
+            modifier = Modifier.fillMaxWidth(),
+            state = listState
+        ) {
+            items(sortedData, key = { it.id }) { weatherItem ->
                 Column(
                     modifier = Modifier
                         .height(IntrinsicSize.Min)

@@ -26,6 +26,8 @@
     <string name="value_pres_mm">Давление в мм ртутного столба</string>
     <string name="value_humidity">Влажность</string>
     <string name="date">Дата</string>
+    <string name="description_label">Описание</string>
+    <string name="no_data">нет данных</string>
     <string name="value_pres_pa">Давление в паскалях</string>
     <string name="value_wind_dir">Направление ветра</string>
     <string name="value_wind_gust">Порыв ветра</string>

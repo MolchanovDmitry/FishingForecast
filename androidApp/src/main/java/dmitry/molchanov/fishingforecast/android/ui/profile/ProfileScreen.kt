@@ -8,6 +8,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Scaffold
+import androidx.compose.material.Text
+import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.PersonAddAlt
 import androidx.compose.runtime.Composable
@@ -19,7 +22,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import kotlinx.coroutines.flow.onEach
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -36,33 +38,41 @@ fun ProfileScreen() {
     }
 
     val openCreateDialog = remember { mutableStateOf(false) }
-    Box(
-        modifier = Modifier.fillMaxSize()
-    ) {
-        ProfileColumn(
-            profiles = profiles,
-            defaultOption = state.value.currentProfile,
-            deleteOption = { profile ->
-                vm.onAction(DeleteProfile(profile))
-            },
-            onOptionSelected = { profile ->
-                vm.onAction(SelectProfile(profile))
-            }
-        )
-        Icon(
-            imageVector = Icons.Filled.PersonAddAlt,
-            contentDescription = "Add",
-            tint = MaterialTheme.colors.primary,
+    Scaffold(
+        topBar = {
+            TopAppBar(title = { Text("Профиль") })
+        }
+    ) { innerPadding ->
+        Box(
             modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .size(90.dp)
-                .padding(16.dp)
-                .clickable {
-                    openCreateDialog.value = true
+                .fillMaxSize()
+                .padding(innerPadding)
+        ) {
+            ProfileColumn(
+                profiles = profiles,
+                defaultOption = state.value.currentProfile,
+                deleteOption = { profile ->
+                    vm.onAction(DeleteProfile(profile))
+                },
+                onOptionSelected = { profile ->
+                    vm.onAction(SelectProfile(profile))
                 }
-        )
-        CreateProfileDialog(openCreateDialog, profiles) { profile ->
-            vm.onAction(CreateProfile(profile))
+            )
+            Icon(
+                imageVector = Icons.Filled.PersonAddAlt,
+                contentDescription = "Add",
+                tint = MaterialTheme.colors.primary,
+                modifier = Modifier
+                    .align(Alignment.BottomEnd)
+                    .size(90.dp)
+                    .padding(16.dp)
+                    .clickable {
+                        openCreateDialog.value = true
+                    }
+            )
+            CreateProfileDialog(openCreateDialog, profiles) { profile ->
+                vm.onAction(CreateProfile(profile))
+            }
         }
     }
 }

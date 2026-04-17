@@ -30,6 +30,8 @@ android {
             abiFilters += "arm64-v8a"
         }
 
+        testInstrumentationRunner = "dmitry.molchanov.fishingforecast.android.FishingForecastTestRunner"
+
         buildConfigField("String", "YANDEX_WEATHER_API_KEY", yandexWeatherApiKey)
         buildConfigField("String", "YANDEX_MAP_API_KEY", yandexMapApiKey)
     }
@@ -71,6 +73,8 @@ dependencies {
     androidTestImplementation(libs.androidx.test.runner)
     androidTestImplementation(libs.androidx.test.rules)
     androidTestImplementation(libs.androidx.test.ext.junit)
+    androidTestImplementation(libs.compose.test.junit4)
+    debugImplementation(libs.compose.test.manifest)
 
     listOf(
         project(Modules.CORE),

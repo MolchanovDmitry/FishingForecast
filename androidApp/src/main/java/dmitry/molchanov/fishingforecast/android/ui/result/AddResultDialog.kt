@@ -7,10 +7,17 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.AlertDialog
+import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.filled.StarBorder
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -38,11 +45,16 @@ fun AddResultDialog(vm: ResultViewModel) {
     }
     val context = LocalContext.current
     var commentText by remember { mutableStateOf("") }
+    var descriptionText by remember { mutableStateOf("") }
+    var currentRating by remember { mutableStateOf(0) }
     AlertDialog(
         modifier = Modifier.fillMaxWidth(),
         onDismissRequest = { vm.onAction(CloseAddResultDialog()) },
         text = {
-            Column {
+            Column(
+                modifier = Modifier
+                    .verticalScroll(rememberScrollState())
+            ) {
                 Text("Введите данные для сохранения")
                 DropDown(
                     modifier = Modifier.fillMaxWidth(),
@@ -85,6 +97,30 @@ fun AddResultDialog(vm: ResultViewModel) {
                     onValueChange = { commentText = it },
                     label = { Text("Наименование результата") }
                 )
+                // Звёзды рейтинга
+                Text("Оценка:", modifier = Modifier.padding(top = 8.dp, bottom = 4.dp))
+                Row {
+                    for (i in 1..5) {
+                        Icon(
+                            imageVector = if (i <= currentRating) Icons.Filled.Star else Icons.Filled.StarBorder,
+                            contentDescription = "$i звёзд",
+                            tint = if (i <= currentRating)
+                                androidx.compose.ui.graphics.Color(0xFFFFC107)
+                            else
+                                androidx.compose.ui.graphics.Color.LightGray,
+                            modifier = Modifier
+                                .size(28.dp)
+                                .clickable { currentRating = i }
+                        )
+                    }
+                }
+                TextField(
+                    modifier = Modifier.fillMaxWidth(),
+                    value = descriptionText,
+                    onValueChange = { descriptionText = it },
+                    label = { Text("Описание") },
+                    maxLines = 3
+                )
             }
         },
         buttons = {
@@ -110,7 +146,11 @@ fun AddResultDialog(vm: ResultViewModel) {
                         .padding(8.dp)
                         .clickable {
                             if (commentText.isNotEmpty()) {
-                                vm.onAction(CreateResult(resultName = commentText))
+                                vm.onAction(CreateResultWithDetails(
+                                    resultName = commentText,
+                                    rating = currentRating,
+                                    description = descriptionText
+                                ))
                                 vm.onAction(CloseAddResultDialog())
                             } else {
                                 context.showToast("Не заполнено наименование результата")

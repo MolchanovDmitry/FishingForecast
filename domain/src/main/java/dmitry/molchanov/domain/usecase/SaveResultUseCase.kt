@@ -14,14 +14,22 @@ class SaveResultUseCase(
     private val weatherDataRepository: WeatherDataRepository
 ) {
 
-    suspend fun execute(resultName: String, weatherData: List<WeatherData>, profile: Profile, mapPoint: MapPoint) =
-        withContext(ioDispatcher) {
-            val weatherDataIds = weatherDataRepository.getWeatherDataIds(weatherData)
-            resultDataRepository.saveResult(
-                mapPoint = mapPoint,
-                resultName = resultName,
-                weatherDataIds = weatherDataIds,
-                profile = profile as? SimpleProfile
-            )
-        }
+    suspend fun execute(
+        resultName: String,
+        weatherData: List<WeatherData>,
+        profile: Profile,
+        mapPoint: MapPoint,
+        rating: Int? = null,
+        description: String? = null
+    ) = withContext(ioDispatcher) {
+        val weatherDataIds = weatherDataRepository.getWeatherDataIds(weatherData)
+        resultDataRepository.saveResult(
+            mapPoint = mapPoint,
+            resultName = resultName,
+            weatherDataIds = weatherDataIds,
+            profile = profile as? SimpleProfile,
+            rating = rating,
+            description = description
+        )
+    }
 }

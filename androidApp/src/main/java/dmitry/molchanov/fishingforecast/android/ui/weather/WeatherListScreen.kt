@@ -9,7 +9,9 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Button
 import androidx.compose.material.Divider
+import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
+import androidx.compose.material.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
@@ -26,26 +28,36 @@ fun WeatherDebugScreen(vm: MainViewModel, onMapPointSelected: (MapPoint) -> Unit
     val state = vm.state.collectAsState()
     val lastDate = state.value.weatherData.maxOfOrNull { it.date.roundedValue }
 
-    Column(modifier = Modifier.fillMaxSize()) {
-        Text("Дата последнего запроса: ${lastDate?.string() ?: "не запрашивались"}")
-        Button(modifier = Modifier.fillMaxWidth(), onClick = { vm.onEvent(FetchWeatherData) }) {
-            Text("Получить данные")
+    Scaffold(
+        topBar = {
+            TopAppBar(title = { Text("Список") })
         }
-        LazyColumn(modifier = Modifier.fillMaxWidth()) {
-            items(state.value.weatherData.map { it.mapPoint }.distinct(), key = { "${it.name}_${it.profile?.name}" }) { item ->
-                Text(
-                    text = item.name,
-                    fontSize = 18.sp,
-                    modifier = Modifier
-                        .padding(16.dp)
-                        .clickable {
-                            state.value.weatherData
-                                .firstOrNull { it.mapPoint.name == item.name && it.mapPoint.profile == item.profile }
-                                ?.mapPoint
-                                ?.let { mapPoint -> onMapPointSelected(mapPoint) }
-                        }
-                )
-                Divider(color = Color.LightGray, modifier = Modifier.padding(start = 16.dp))
+    ) { innerPadding ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding)
+        ) {
+            Text("Дата последнего запроса: ${lastDate?.string() ?: "не запрашивались"}")
+            Button(modifier = Modifier.fillMaxWidth(), onClick = { vm.onEvent(FetchWeatherData) }) {
+                Text("Получить данные")
+            }
+            LazyColumn(modifier = Modifier.fillMaxWidth()) {
+                items(state.value.weatherData.map { it.mapPoint }.distinct(), key = { "${it.name}_${it.profile?.name}" }) { item ->
+                    Text(
+                        text = item.name,
+                        fontSize = 18.sp,
+                        modifier = Modifier
+                            .padding(16.dp)
+                            .clickable {
+                                state.value.weatherData
+                                    .firstOrNull { it.mapPoint.name == item.name && it.mapPoint.profile == item.profile }
+                                    ?.mapPoint
+                                    ?.let { mapPoint -> onMapPointSelected(mapPoint) }
+                            }
+                    )
+                    Divider(color = Color.LightGray, modifier = Modifier.padding(start = 16.dp))
+                }
             }
         }
     }

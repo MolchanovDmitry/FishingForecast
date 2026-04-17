@@ -1,8 +1,8 @@
 package dmitry.molchanov.db
 
-import dmitry.molchanov.db.Result as DataResult
 import com.squareup.sqldelight.runtime.coroutines.asFlow
 import com.squareup.sqldelight.runtime.coroutines.mapToList
+import dmitry.molchanov.db.Result as DataResult
 import dmitry.molchanov.domain.mapper.MapPointMapper
 import dmitry.molchanov.domain.model.MapPoint
 import dmitry.molchanov.domain.model.Result
@@ -33,12 +33,16 @@ class ResultDataRepositoryImpl(
         weatherDataIds: List<Long>,
         profile: SimpleProfile?,
         mapPoint: MapPoint,
+        rating: Int?,
+        description: String?
     ) {
 
         resultQueries.insert(
             name = resultName,
             profileName = profile?.name,
             mapPointId = mapPoint.id,
+            rating = rating?.toLong(),
+            description = description
         )
 
         val resultId = resultQueries.lastInsertResultId().executeAsOneOrNull() ?: throw NullResultId()
@@ -54,9 +58,49 @@ class ResultDataRepositoryImpl(
         resultToWeatherDataQueries.selectWeatherDataResultId(resultId = result.id)
             .executeAsList()
 
+    override suspend fun getMinWeatherDateByResult(resultId: Long): Long? =
+        resultToWeatherDataQueries.selectMinWeatherDateByResult(resultId = resultId)
+            .executeAsOneOrNull()?.MIN
+
+    override suspend fun getMaxWeatherDateByResult(resultId: Long): Long? =
+        resultToWeatherDataQueries.selectMaxWeatherDateByResult(resultId = resultId)
+            .executeAsOneOrNull()?.MAX
+
+    override suspend fun updateResultName(resultId: Long, newName: String) {
+        resultQueries.updateName(name = newName, id = resultId)
+    }
+
+    override suspend fun updateResultRating(resultId: Long, rating: Int) {
+        resultQueries.updateRating(rating = rating.toLong(), id = resultId)
+    }
+
+    override suspend fun updateResultDescription(resultId: Long, description: String) {
+        resultQueries.updateDescription(description = description, id = resultId)
+    }
+
+    override fun getResultsFlowOrderByDate(): Flow<List<Result>> =
+        resultQueries.selectAllOrderByDate()
+            .asFlow()
+            .mapToList()
+            .map { dataResults -> mapToResult(dataResults) }
+
+    override fun getResultsFlowOrderByRating(): Flow<List<Result>> =
+        resultQueries.selectAllOrderByRating()
+            .asFlow()
+            .mapToList()
+            .map { dataResults -> mapToResult(dataResults) }
+
     private suspend fun mapToResult(dataResults: List<DataResult>): List<Result> =
         dataResults.mapNotNull { resultItem ->
             val mapPoint = mapPointMapper.getMapPointById(resultItem.mapPointId)
-            mapPoint?.let { Result(id = resultItem.id, mapPoint = mapPoint, name = resultItem.name) }
+            mapPoint?.let {
+                Result(
+                    id = resultItem.id,
+                    mapPoint = mapPoint,
+                    name = resultItem.name,
+                    rating = resultItem.rating?.toInt(),
+                    description = resultItem.description
+                )
+            }
         }
 }

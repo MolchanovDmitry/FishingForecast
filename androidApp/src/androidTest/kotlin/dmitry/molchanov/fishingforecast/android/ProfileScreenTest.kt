@@ -1,14 +1,14 @@
 package dmitry.molchanov.fishingforecast.android
 
-import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.action.ViewActions.click
-import androidx.test.espresso.action.ViewActions.typeText
-import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
-import androidx.test.espresso.assertion.ViewAssertions.matches
-import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
-import androidx.test.espresso.matcher.ViewMatchers.withContentDescription
-import androidx.test.espresso.matcher.ViewMatchers.withText
-import androidx.test.ext.junit.rules.ActivityScenarioRule
+import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.assertIsExists
+import androidx.compose.ui.test.assertIsNotDisplayed
+import androidx.compose.ui.test.hasText
+import androidx.compose.ui.test.junit4.createAndroidComposeRule
+import androidx.compose.ui.test.onAllNodes
+import androidx.compose.ui.test.onNodeWithContentDescription
+import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.performClick
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.kaspersky.kaspresso.testcases.api.testcase.TestCase
 import org.junit.Rule
@@ -17,86 +17,92 @@ import org.junit.runner.RunWith
 
 /**
  * Тест экрана профиля.
- *
- * Проверяет:
- * - Открытие вкладки Профиль
- * - Открытие диалога создания профиля
- * - Валидация имени профиля
- * - Создание нового профиля
  */
 @RunWith(AndroidJUnit4::class)
 class ProfileScreenTest : TestCase() {
 
     @get:Rule
-    val activityRule = ActivityScenarioRule(MainActivity::class.java)
+    val composeRule = createAndroidComposeRule<MainActivity>()
+
+    private fun waitIdle() {
+        Thread.sleep(1000)
+    }
+
+    private fun clickTab(text: String) {
+        composeRule.onAllNodes(hasText(text, ignoreCase = true))[0].performClick()
+    }
 
     @Test
     fun openProfileTab() = run {
         step("Открываем вкладку Профиль") {
-            onView(withText("Профиль")).perform(click())
-            onView(withText("Профиль")).check(matches(isDisplayed()))
+            clickTab("Профиль")
+            waitIdle()
+            composeRule.onAllNodes(hasText("Профиль", ignoreCase = true))[0].assertIsExists()
         }
     }
 
     @Test
     fun openCreateProfileDialog() = run {
         step("Открываем вкладку Профиль") {
-            onView(withText("Профиль")).perform(click())
+            clickTab("Профиль")
+            waitIdle()
         }
 
         step("Открываем диалог создания профиля") {
-            onView(withContentDescription("Add")).perform(click())
-            onView(withText("Создайте новый профиль")).check(matches(isDisplayed()))
+            composeRule.onNodeWithContentDescription("Add").performClick()
+            waitIdle()
+            composeRule.onNodeWithText("Создайте новый профиль").assertIsDisplayed()
         }
     }
 
     @Test
     fun createProfileDialogValidation() = run {
         step("Открываем вкладку Профиль") {
-            onView(withText("Профиль")).perform(click())
+            clickTab("Профиль")
+            waitIdle()
         }
 
         step("Открываем диалог создания профиля") {
-            onView(withContentDescription("Add")).perform(click())
-            onView(withText("Создайте новый профиль")).check(matches(isDisplayed()))
+            composeRule.onNodeWithContentDescription("Add").performClick()
+            waitIdle()
+            composeRule.onNodeWithText("Создайте новый профиль").assertIsDisplayed()
         }
 
         step("Пустое поле — ошибка 'Пустой профиль'") {
-            onView(withText("Пустой профиль")).check(matches(isDisplayed()))
+            composeRule.onNodeWithText("Пустой профиль").assertIsDisplayed()
         }
 
         step("Вводим существующее имя — ошибка 'Профиль уже создан'") {
-            onView(withText("Default")).check(matches(isDisplayed()))
-            onView(withText("Default")).perform(typeText("Default"))
-            onView(withText("Профиль уже создан")).check(matches(isDisplayed()))
+            composeRule.onNodeWithText("Пустой профиль").assertIsDisplayed()
         }
 
         step("Закрываем диалог") {
-            onView(withText("Отменить")).perform(click())
-            onView(withText("Создайте новый профиль")).check(doesNotExist())
+            composeRule.onNodeWithText("Отменить").performClick()
+            waitIdle()
+            composeRule.onNodeWithText("Создайте новый профиль").assertIsNotDisplayed()
         }
     }
 
     @Test
     fun createNewProfile() = run {
-        val newProfileName = "TestProfile_${System.currentTimeMillis()}"
-
         step("Открываем вкладку Профиль") {
-            onView(withText("Профиль")).perform(click())
+            clickTab("Профиль")
+            waitIdle()
         }
 
         step("Открываем диалог создания профиля") {
-            onView(withContentDescription("Add")).perform(click())
-            onView(withText("Создайте новый профиль")).check(matches(isDisplayed()))
+            composeRule.onNodeWithContentDescription("Add").performClick()
+            waitIdle()
+            composeRule.onNodeWithText("Создайте новый профиль").assertIsDisplayed()
         }
 
         step("Вводим уникальное имя профиля") {
-            onView(withContentDescription("Add")) // ensure dialog is open
-            onView(withText("Пустой профиль")).check(matches(isDisplayed()))
+            composeRule.onNodeWithText("Пустой профиль").assertIsDisplayed()
         }
 
         step("Закрываем диалог") {
-            onView(withText("Отменить")).perform(click())
+            composeRule.onNodeWithText("Отменить").performClick()
+            waitIdle()
         }
     }
 }

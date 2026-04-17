@@ -2,9 +2,12 @@ package dmitry.molchanov.fishingforecast.android.ui.weather
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
+import androidx.compose.material.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
@@ -28,23 +31,21 @@ fun WeatherScreen(mapPointId: MapPoint, forecastSettings: List<ForecastSetting>)
     val isOnlyOneDigitDays = weatherData.isOnlyOneDigitDays()
     val forecasts = state.value.forecasts
     var positiveCount = 0
-
-    // LaunchedEffect(key1 = Unit) {
-    /*weatherViewModel.messageFlow
-        .onEach { message -> Toast.makeText(context, message, Toast.LENGTH_SHORT).show() }
-        .launchIn(this)*/
-    // }
-
     forecasts.forEach { forecast ->
         if (forecast.isGood) positiveCount += 1
     }
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .fillMaxSize()
-            .verticalScroll(rememberScrollState())
-    ) {
+    Scaffold(
+        topBar = {
+            TopAppBar(title = { Text("Погода — ${mapPointId.name}") })
+        }
+    ) { innerPadding ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding)
+                .verticalScroll(rememberScrollState())
+        ) {
         Text(text = "Общая оценка = $positiveCount из ${forecasts.size}")
 
         DrawWindDir(weatherData)
@@ -95,7 +96,6 @@ fun WeatherScreen(mapPointId: MapPoint, forecastSettings: List<ForecastSetting>)
             )
         }
         forecasts.GetItemForecast(ForecastSettingsItem.PRESSURE_MM)
-
         weatherData.mapNotNull {
             it.humidity?.let { value ->
                 it.getDataPointByValue(value, shouldMonthInclude = !isOnlyOneDigitDays)
@@ -110,6 +110,7 @@ fun WeatherScreen(mapPointId: MapPoint, forecastSettings: List<ForecastSetting>)
             )
         }
         forecasts.GetItemForecast(ForecastSettingsItem.HUMIDITY)
+        }
     }
 }
 

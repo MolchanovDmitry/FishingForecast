@@ -21,6 +21,11 @@ import dmitry.molchanov.domain.utils.ONE_DAY
 import dmitry.molchanov.domain.utils.TimeMs
 import dmitry.molchanov.domain.utils.nightTime
 import dmitry.molchanov.fishingforecast.android.mapper.CommonProfileFetcherImpl
+import java.io.BufferedReader
+import java.io.InputStream
+import java.io.InputStreamReader
+import java.text.SimpleDateFormat
+import java.util.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -30,11 +35,6 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import java.io.BufferedReader
-import java.io.InputStream
-import java.io.InputStreamReader
-import java.text.SimpleDateFormat
-import java.util.*
 
 class ResultViewModel(
     getResultUseCase: GetResultsUseCase,
@@ -44,7 +44,8 @@ class ResultViewModel(
     private val getMapPointsUseCase: Lazy<GetMapPointsUseCase>,
     private val importSharedResultUseCase: Lazy<ImportSharedResultUseCase>,
     private val getSavedWeatherDataUseCase: Lazy<GetSavedWeatherDataUseCase>,
-    private val getWeatherDataByResultUseCase: Lazy<GetWeatherDataByResultUseCase>
+    private val getWeatherDataByResultUseCase: Lazy<GetWeatherDataByResultUseCase>,
+    private val resultDataRepository: dmitry.molchanov.domain.repository.ResultDataRepository
 ) : ViewModel() {
 
     private val _messageFlow = MutableSharedFlow<ResultEvent>(replay = 1)
@@ -57,16 +58,30 @@ class ResultViewModel(
     private var results: List<Result>? = null
 
     init {
-        observeResults(getResultUseCase)
         updateDates()
         updateProfiles()
         updateMapPoints()
+        observeResults()
     }
 
-    private fun observeResults(getResultUseCase: GetResultsUseCase) {
-        getResultUseCase.executeFlow().onEach { results ->
+    private fun observeResults() {
+        val flow = if (_stateFlow.value.sortByRating) {
+            resultDataRepository.getResultsFlowOrderByRating()
+        } else {
+            resultDataRepository.getResultsFlowOrderByDate()
+        }
+        flow.onEach { results ->
             this.results = results
-            _stateFlow.update { it.copy(results = results) }
+            val resultsWithDates = results.map { result ->
+                val minDate = kotlin.runCatching {
+                    resultDataRepository.getMinWeatherDateByResult(result.id)
+                }.getOrNull()
+                val maxDate = kotlin.runCatching {
+                    resultDataRepository.getMaxWeatherDateByResult(result.id)
+                }.getOrNull()
+                ResultWithDates(result, minDate, maxDate)
+            }
+            _stateFlow.update { it.copy(resultsWithDates = resultsWithDates) }
         }.launchIn(viewModelScope)
     }
 
@@ -92,10 +107,16 @@ class ResultViewModel(
         is CloseAddResultDialog -> closeAddResultDialog()
         is DateSelected -> updateSelectedDate(action.date)
         is CreateResult -> tryCreateResult(action.resultName)
+        is CreateResultWithDetails -> tryCreateResultWithDetails(action.resultName, action.rating, action.description)
         is ProfileSelected -> updateSelectedProfile(action.profile)
         is MapPointSelected -> updateSelectedMapPoint(action.mapPoint)
         is ChangeDialogStatus -> updateDialogStatus(action.isVisible)
         is SaveToStorageAndShareClick -> onShareClick()
+        is EditResultClick -> showEditDialog(action.result)
+        is CloseEditDialog -> closeEditDialog()
+        is SaveEditedResult -> saveEditedResult(action.resultId, action.newName, action.newRating, action.newDescription)
+        is SetRating -> setRating(action.resultId, action.rating)
+        is ToggleSortOrder -> toggleSortOrder()
     }
 
     // TODO сделать сериализацию через input stream
@@ -177,6 +198,36 @@ class ResultViewModel(
         }
     }
 
+    private fun tryCreateResultWithDetails(resultName: String, rating: Int, description: String) {
+        val selectedMapPoint = _stateFlow.value.selectedMapPoint ?: run {
+            _messageFlow.tryEmit(Error("Выберите точку"))
+            return
+        }
+        val date = System.currentTimeMillis()
+        viewModelScope.launch {
+            try {
+                val weatherData: List<WeatherData> = getSavedWeatherDataUseCase.value.execute(
+                    selectedMapPoint,
+                    from = date - (5 * ONE_DAY),
+                    to = date + ONE_DAY - 1
+                )
+                val actualRating = if (rating > 0) rating else null
+                val actualDescription = if (description.isNotBlank()) description else null
+                saveResultUseCase.value.execute(
+                    resultName = resultName,
+                    weatherData = weatherData,
+                    mapPoint = selectedMapPoint,
+                    profile = stateFlow.value.selectedProfile,
+                    rating = actualRating,
+                    description = actualDescription
+                )
+            } catch (e: Exception) {
+                e.printStackTrace()
+                _messageFlow.tryEmit(Error("Ошибка создания результата"))
+            }
+        }
+    }
+
     private fun updateSelectedDate(date: TimeMs) {
         _stateFlow.update { it.copy(selectedDate = date) }
     }
@@ -225,7 +276,64 @@ class ResultViewModel(
     private fun showAddDialog() {
         _stateFlow.update { it.copy(shouldShowDialog = true) }
     }
+
+    companion object {
+        private val dateFormat = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
+        fun formatDate(timestamp: Long): String = dateFormat.format(timestamp)
+    }
+
+    private fun showEditDialog(result: Result) {
+        _stateFlow.update { it.copy(shouldShowEditDialog = true, editingResult = result) }
+    }
+
+    private fun closeEditDialog() {
+        _stateFlow.update { it.copy(shouldShowEditDialog = false, editingResult = null) }
+    }
+
+    private fun saveEditedResult(resultId: Long, newName: String, newRating: Int, newDescription: String) {
+        if (newName.isBlank()) {
+            _messageFlow.tryEmit(Error("Название не может быть пустым"))
+            return
+        }
+        viewModelScope.launch {
+            try {
+                resultDataRepository.updateResultName(resultId, newName)
+                if (newRating > 0) {
+                    resultDataRepository.updateResultRating(resultId, newRating)
+                }
+                if (newDescription.isNotBlank()) {
+                    resultDataRepository.updateResultDescription(resultId, newDescription)
+                }
+                closeEditDialog()
+            } catch (e: Exception) {
+                e.printStackTrace()
+                _messageFlow.tryEmit(Error("Ошибка сохранения"))
+            }
+        }
+    }
+
+    private fun setRating(resultId: Long, rating: Int) {
+        viewModelScope.launch {
+            try {
+                resultDataRepository.updateResultRating(resultId, rating)
+            } catch (e: Exception) {
+                e.printStackTrace()
+                _messageFlow.tryEmit(Error("Ошибка сохранения рейтинга"))
+            }
+        }
+    }
+
+    private fun toggleSortOrder() {
+        _stateFlow.update { it.copy(sortByRating = !it.sortByRating) }
+        observeResults()
+    }
 }
+
+data class ResultWithDates(
+    val result: Result,
+    val minDate: Long?,
+    val maxDate: Long?
+)
 
 data class ResultScreenState(
     val selectedDate: Long = 0,
@@ -233,9 +341,12 @@ data class ResultScreenState(
     val selectedMapPoint: MapPoint? = null,
     val dates: List<TimeMs> = emptyList(),
     val shouldShowDialog: Boolean = false,
+    val shouldShowEditDialog: Boolean = false,
+    val editingResult: Result? = null,
+    val sortByRating: Boolean = false,
     val profiles: List<Profile> = emptyList(),
     val mapPoints: List<MapPoint> = emptyList(),
-    val results: List<Result> = emptyList()
+    val resultsWithDates: List<ResultWithDates> = emptyList()
 )
 
 sealed class ResultEvent
@@ -249,5 +360,11 @@ class DateSelected(val date: Long) : ResultAction()
 class ProfileSelected(val profile: Profile) : ResultAction()
 class MapPointSelected(val mapPoint: MapPoint) : ResultAction()
 class CreateResult(val resultName: String) : ResultAction()
+class CreateResultWithDetails(val resultName: String, val rating: Int, val description: String) : ResultAction()
 class ChangeDialogStatus(val isVisible: Boolean) : ResultAction()
 class SaveToStorageAndShareClick : ResultAction()
+class EditResultClick(val result: Result) : ResultAction()
+class CloseEditDialog : ResultAction()
+class SaveEditedResult(val resultId: Long, val newName: String, val newRating: Int, val newDescription: String) : ResultAction()
+class SetRating(val resultId: Long, val rating: Int) : ResultAction()
+class ToggleSortOrder : ResultAction()

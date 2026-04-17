@@ -17,6 +17,20 @@ FROM ResultToWeatherData
 WHERE resultId = ?
 ;
 
+selectMinWeatherDateByResult:
+SELECT MIN(wd.date)
+FROM ResultToWeatherData rwd
+JOIN WeatherData wd ON rwd.weatherDataId = wd.id
+WHERE rwd.resultId = ?
+;
+
+selectMaxWeatherDateByResult:
+SELECT MAX(wd.date)
+FROM ResultToWeatherData rwd
+JOIN WeatherData wd ON rwd.weatherDataId = wd.id
+WHERE rwd.resultId = ?
+;
+
 insert:
 INSERT OR REPLACE INTO ResultToWeatherData(resultId, weatherDataId)
 VALUES ?

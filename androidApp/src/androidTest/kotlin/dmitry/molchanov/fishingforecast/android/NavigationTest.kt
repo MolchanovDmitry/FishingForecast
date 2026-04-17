@@ -1,12 +1,9 @@
 package dmitry.molchanov.fishingforecast.android
 
-import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.action.ViewActions.click
-import androidx.test.espresso.assertion.ViewAssertions.matches
-import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
-import androidx.test.espresso.matcher.ViewMatchers.withContentDescription
-import androidx.test.espresso.matcher.ViewMatchers.withText
-import androidx.test.ext.junit.rules.ActivityScenarioRule
+import androidx.compose.ui.test.assertCountAtLeast
+import androidx.compose.ui.test.junit4.createAndroidComposeRule
+import androidx.compose.ui.test.onAllNodesWithText
+import androidx.compose.ui.test.performClick
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.kaspersky.kaspresso.testcases.api.testcase.TestCase
 import org.junit.Rule
@@ -15,90 +12,135 @@ import org.junit.runner.RunWith
 
 /**
  * Тест навигации по главным вкладкам приложения.
- *
- * Проверяет:
- * - Запуск MainActivity
- * - Наличие всех 5 вкладок в BottomNavigation
- * - Переключение между вкладками
  */
 @RunWith(AndroidJUnit4::class)
 class NavigationTest : TestCase() {
 
     @get:Rule
-    val activityRule = ActivityScenarioRule(MainActivity::class.java)
+    val composeRule = createAndroidComposeRule<MainActivity>()
+
+    private fun waitIdle() {
+        Thread.sleep(1000)
+    }
+
+    private fun clickTab(text: String) {
+        composeRule.onAllNodesWithText(text)[0].performClick()
+    }
+
+    private fun assertTabExists(text: String) {
+        composeRule.onAllNodesWithText(text).assertCountAtLeast(1)
+    }
 
     @Test
     fun allNavigationTabsAreDisplayed() = run {
+        step("Ждём отрисовки UI") { waitIdle() }
         step("Проверяем наличие всех вкладок навигации") {
-            onView(withText("Карта")).check(matches(isDisplayed()))
-            onView(withText("Профиль")).check(matches(isDisplayed()))
-            onView(withText("Настройки")).check(matches(isDisplayed()))
-            onView(withText("Список")).check(matches(isDisplayed()))
-            onView(withText("Результаты")).check(matches(isDisplayed()))
+            assertTabExists("Карта")
+            assertTabExists("Профиль")
+            assertTabExists("Настройки")
+            assertTabExists("Список")
+            assertTabExists("Результаты")
         }
     }
 
     @Test
     fun switchToProfileTab() = run {
+        step("Ждём отрисовки UI") { waitIdle() }
         step("Переключаемся на вкладку Профиль") {
-            onView(withText("Профиль")).perform(click())
-            onView(withText("Профиль")).check(matches(isDisplayed()))
+            clickTab("Профиль")
+            waitIdle()
+            assertTabExists("Профиль")
         }
     }
 
     @Test
     fun switchToSettingsTab() = run {
+        step("Ждём отрисовки UI") { waitIdle() }
         step("Переключаемся на вкладку Настройки") {
-            onView(withText("Настройки")).perform(click())
-            onView(withText("Настройки")).check(matches(isDisplayed()))
+            clickTab("Настройки")
+            waitIdle()
+            assertTabExists("Настройки")
         }
     }
 
     @Test
     fun switchToWeatherListTab() = run {
+        step("Ждём отрисовки UI") { waitIdle() }
         step("Переключаемся на вкладку Список") {
-            onView(withText("Список")).perform(click())
-            onView(withText("Список")).check(matches(isDisplayed()))
+            clickTab("Список")
+            waitIdle()
+            assertTabExists("Список")
         }
     }
 
     @Test
     fun switchToResultsTab() = run {
+        step("Ждём отрисовки UI") { waitIdle() }
         step("Переключаемся на вкладку Результаты") {
-            onView(withText("Результаты")).perform(click())
-            onView(withText("Результаты")).check(matches(isDisplayed()))
+            clickTab("Результаты")
+            waitIdle()
+            assertTabExists("Результаты")
         }
     }
 
     @Test
     fun navigateThroughAllTabs() = run {
-        step("Начинаем с карты (стартовый экран)") {
-            onView(withText("Карта")).check(matches(isDisplayed()))
+        step("Ждём отрисовки UI") { waitIdle() }
+        step("Начинаем с карты") {
+            assertTabExists("Карта")
         }
-
         step("Переходим в Профиль") {
-            onView(withText("Профиль")).perform(click())
-            onView(withText("Профиль")).check(matches(isDisplayed()))
+            clickTab("Профиль")
+            waitIdle()
+            assertTabExists("Профиль")
         }
-
         step("Переходим в Настройки") {
-            onView(withText("Настройки")).perform(click())
-            onView(withText("Настройки")).check(matches(isDisplayed()))
+            clickTab("Настройки")
+            waitIdle()
+            assertTabExists("Настройки")
         }
-
         step("Переходим в Список") {
-            onView(withText("Список")).perform(click())
-            onView(withText("Список")).check(matches(isDisplayed()))
+            clickTab("Список")
+            waitIdle()
+            assertTabExists("Список")
         }
-
         step("Переходим в Результаты") {
-            onView(withText("Результаты")).perform(click())
-            onView(withText("Результаты")).check(matches(isDisplayed()))
+            clickTab("Результаты")
+            waitIdle()
+            assertTabExists("Результаты")
         }
-
         step("Возвращаемся на Карту") {
-            onView(withText("Карта")).perform(click())
-            onView(withText("Карта")).check(matches(isDisplayed()))
+            clickTab("Карта")
+            waitIdle()
+            assertTabExists("Карта")
+        }
+    }
+
+    @Test
+    fun topAppBarTitlesAreDisplayedOnEachTab() = run {
+        step("Ждём отрисовки UI") { waitIdle() }
+        step("Карта — TopAppBar") {
+            assertTabExists("Карта")
+        }
+        step("Профиль — TopAppBar") {
+            clickTab("Профиль")
+            waitIdle()
+            assertTabExists("Профиль")
+        }
+        step("Настройки — TopAppBar") {
+            clickTab("Настройки")
+            waitIdle()
+            assertTabExists("Настройки")
+        }
+        step("Список — TopAppBar") {
+            clickTab("Список")
+            waitIdle()
+            assertTabExists("Список")
+        }
+        step("Результаты — TopAppBar") {
+            clickTab("Результаты")
+            waitIdle()
+            assertTabExists("Результаты")
         }
     }
 }

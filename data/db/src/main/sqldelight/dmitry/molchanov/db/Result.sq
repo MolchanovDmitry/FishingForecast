@@ -3,6 +3,8 @@ CREATE TABLE Result (
     name TEXT NOT NULL,
     profileName TEXT,
     mapPointId INTEGER NOT NULL,
+    rating INTEGER,
+    description TEXT,
     UNIQUE (profileName, mapPointId),
     FOREIGN KEY(profileName) REFERENCES Profile(name),
     FOREIGN KEY(mapPointId) REFERENCES MapPoint(id)
@@ -21,11 +23,47 @@ WHERE id = ?
 ;
 
 insert:
-INSERT OR REPLACE INTO Result(name, profileName, mapPointId)
-VALUES (?,?,?)
+INSERT OR REPLACE INTO Result(name, profileName, mapPointId, rating, description)
+VALUES (?,?,?,?,?)
+;
+
+updateDescription:
+UPDATE Result
+SET description = ?
+WHERE id = ?
 ;
 
 lastInsertResultId:
 SELECT last_insert_rowid()
+;
+
+updateName:
+UPDATE Result
+SET name = ?
+WHERE id = ?
+;
+
+updateRating:
+UPDATE Result
+SET rating = ?
+WHERE id = ?
+;
+
+selectAllOrderByDate:
+SELECT Result.*
+FROM Result
+LEFT JOIN ResultToWeatherData ON Result.id = ResultToWeatherData.resultId
+LEFT JOIN WeatherData ON ResultToWeatherData.weatherDataId = WeatherData.id
+GROUP BY Result.id
+ORDER BY MAX(WeatherData.date) DESC
+;
+
+selectAllOrderByRating:
+SELECT Result.*
+FROM Result
+LEFT JOIN ResultToWeatherData ON Result.id = ResultToWeatherData.resultId
+LEFT JOIN WeatherData ON ResultToWeatherData.weatherDataId = WeatherData.id
+GROUP BY Result.id
+ORDER BY Result.rating DESC, MAX(WeatherData.date) DESC
 ;
 

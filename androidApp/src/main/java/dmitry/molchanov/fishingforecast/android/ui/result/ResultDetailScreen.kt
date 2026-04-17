@@ -14,7 +14,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Divider
+import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
+import androidx.compose.material.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -46,10 +48,6 @@ fun ResultDetailScreen(result: Result = previewResult) {
     val state = vm.stateFlow.collectAsState()
     val weatherData = state.value.weatherData
     val mapView = rememberMapViewWithLifecycle()
-    /*val cameraPositionState = rememberCameraPositionState {
-        val point = LatLng(result.mapPoint.latitude, result.mapPoint.longitude)
-        position = CameraPosition.fromLatLngZoom(point, 12f)
-    }*/
     val sortedWeatherData = state.value.weatherData.sortedBy { it.date.roundedValue }
     if (sortedWeatherData.isNotEmpty()) {
         LaunchedEffect(Unit) {
@@ -57,11 +55,17 @@ fun ResultDetailScreen(result: Result = previewResult) {
         }
     }
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .verticalScroll(rememberScrollState())
-    ) {
+    Scaffold(
+        topBar = {
+            TopAppBar(title = { Text("Детали — ${result.name}") })
+        }
+    ) { innerPadding ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding)
+                .verticalScroll(rememberScrollState())
+        ) {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -110,27 +114,54 @@ fun ResultDetailScreen(result: Result = previewResult) {
                     .padding(bottom = 8.dp)
             ) {
                 sortedWeatherData.forEach { weatherDataItem ->
+                    val isSelected = weatherDataItem.date == state.value.selectedDate
+                    val isEmpty = weatherDataItem.id < 0
+                    val isResultDay = !isEmpty && weatherDataItem.date.roundedValue == state.value.selectedDate?.roundedValue
+
                     Text(
                         text = weatherDataItem.date.day.toString(),
                         color = Color.White,
                         modifier = Modifier
                             .padding(8.dp)
                             .drawBehind {
-                                drawCircle(
-                                    alpha = if (weatherDataItem.date == state.value.selectedDate) 1F else 0.4F,
-                                    color = Color.Blue,
-                                    radius = this.size.height / 1.4F
-                                )
+                                val radius = this.size.height / 1.4F
+                                val fillColor = when {
+                                    isResultDay -> Color.Green
+                                    isEmpty -> Color.Gray
+                                    else -> Color.Blue
+                                }
+                                drawCircle(color = fillColor, radius = radius)
+                                if (isResultDay) {
+                                    drawCircle(
+                                        color = Color.White,
+                                        radius = radius,
+                                        style = androidx.compose.ui.graphics.drawscope.Stroke(width = 3f)
+                                    )
+                                }
                             }
                             .clickable {
-                                vm.onAction(OnDateSelected(weatherDataItem.date))
+                                if (!isEmpty) {
+                                    vm.onAction(OnDateSelected(weatherDataItem.date))
+                                }
                             }
                     )
                 }
             }
         }
         weatherData.find { it.date == state.value.selectedDate }
-            ?.let { selectedWeatherDataItem -> ResultDetailColumn(selectedWeatherDataItem) }
+            ?.let { selectedWeatherDataItem ->
+                // Описание результата
+                result.description?.let { desc ->
+                    if (desc.isNotBlank()) {
+                        ResultDetailItemRow(
+                            title = stringResource(R.string.description_label),
+                            value = desc
+                        )
+                    }
+                }
+                ResultDetailColumn(selectedWeatherDataItem)
+            }
+        }
     }
 }
 
@@ -139,6 +170,12 @@ private fun ResultDetailColumn(weatherDateItem: WeatherData) {
     val simpleDateFormat =
         remember { SimpleDateFormat("dd MMMM yyyy", java.util.Locale.getDefault()) }
     val dataStr = simpleDateFormat.format(weatherDateItem.date.roundedValue)
+
+    // Пустая ячейка — нет данных
+    if (weatherDateItem.id < 0) {
+        ResultDetailItemRow(title = stringResource(R.string.date), value = "$dataStr — ${stringResource(R.string.no_data)}", showDivider = false)
+        return
+    }
 
     ResultDetailItemRow(title = stringResource(R.string.date), value = dataStr)
 

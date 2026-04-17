@@ -5,6 +5,10 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.Scaffold
+import androidx.compose.material.Text
+import androidx.compose.material.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
@@ -22,7 +26,6 @@ import com.yandex.mapkit.map.CameraPosition
 import com.yandex.mapkit.map.InputListener
 import com.yandex.mapkit.map.Map
 import dmitry.molchanov.fishingforecast.android.ui.common.rememberMapViewWithLifecycle
-import kotlinx.coroutines.flow.onEach
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -37,12 +40,19 @@ fun MapScreen() {
         }
     }
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(color = Color.White)
-    ) {
-        MapView(state, vm)
+    Scaffold(
+        topBar = {
+            TopAppBar(title = { Text("Карта") })
+        }
+    ) { innerPadding ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(color = Color.White)
+                .padding(innerPadding)
+        ) {
+            MapView(state, vm)
+        }
     }
 }
 
@@ -64,21 +74,25 @@ fun MapView(state: State<MapViewState>, vm: MapViewModel) {
 
     Box {
         AndroidView(factory = {
-            mapView.apply {
-                mapView.map.isZoomGesturesEnabled = true
-                state.value.mapPoints.lastOrNull()?.let {
-                    mapView.map.move(
-                        CameraPosition(
-                            Point(it.latitude, it.longitude),
-                            14.0f,
-                            0.0f,
-                            0.0f
+            runCatching {
+                mapView.apply {
+                    mapView.map.isZoomGesturesEnabled = true
+                    state.value.mapPoints.lastOrNull()?.let {
+                        mapView.map.move(
+                            CameraPosition(
+                                Point(it.latitude, it.longitude),
+                                14.0f,
+                                0.0f,
+                                0.0f
+                            )
                         )
-                    )
+                    }
+                    mapView.map.addInputListener(tapListener)
                 }
-                mapView.map.addInputListener(tapListener)
             }
+            mapView
         }, update = {
+            runCatching {
                 state.value.mapPoints.forEach { mapPoint ->
                     mapView.map.mapObjects.addPlacemark(Point(mapPoint.latitude, mapPoint.longitude))
                 }
@@ -92,7 +106,8 @@ fun MapView(state: State<MapViewState>, vm: MapViewModel) {
                         )
                     )
                 }
-            })
+            }
+        })
     }
     CreateMapPointDialog(
         openDialog = isOpedDialog,
